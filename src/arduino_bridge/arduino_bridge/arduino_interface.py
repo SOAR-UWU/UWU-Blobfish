@@ -121,7 +121,7 @@ the number of motors ({NUM_MOTORS})")
             byte_n = n.to_bytes(n_bytes, 'big')
         self.ser.write(byte_n)
 
-    def wait_for_connection(self, startup_char: bytes, timeout: int):
+    def wait_for_connection(self, startup_char: bytes, timeout: int, log):
         """Test for connection with Arduino.
 
         Blocks until either connection is established with the Arduino or the
@@ -132,7 +132,9 @@ the number of motors ({NUM_MOTORS})")
             timeout.
         """
         start = time.time()
-        while self.ser.read() != startup_char:
+        key = self.ser.read()
+        while key != startup_char:
+            log.info(key)
             time.sleep(1)
             current = time.time()
             if timeout > 0 and current - start > timeout:

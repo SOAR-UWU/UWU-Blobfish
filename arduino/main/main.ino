@@ -32,7 +32,7 @@ void setup() {
     Wire.begin();
 
     sensor.setModel(MS5837::MS5837_02BA);
-    sensor.init();
+    // sensor.init();
     
     sensor.setFluidDensity(997); // kg/m^3 (997 freshwater, 1029 for seawater)
     for (int i = 0; i < NUM_MOTORS; i++) {
