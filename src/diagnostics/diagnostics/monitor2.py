@@ -79,7 +79,7 @@ class MonitorApp(App):
     NOTIFICATION_TIMEOUT = 1
     CSS_PATH = "monitor2.tcss"
 
-    app_mode = var(AppMode.VIEW_ONLY, bindings=True)
+    app_mode = var(AppMode.KP, bindings=True)
 
     # NOTE: Due to limitations, the tracked rate is multiple times lower than the actual rate.
     def rate_hz(name: str):

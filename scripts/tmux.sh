@@ -18,6 +18,8 @@ fi
 tmux new -ds ros2 -n launch "source install/setup.bash; ros2 launch launch-all.py" \; \
   neww -dn "monitor" "scripts/teleop.sh" \; \
   neww -dn "routine" "source install/setup.bash; ros2 launch blobfish_control routine.launch.py" \; \
+  neww -dn "cfg_pid" "vim src/blobfish_pid/config/pid.yaml" \; \
+  neww -dn "cfg_rout" "vim src/blobfish_control/config/routine.yaml" \; \
   attach
 
 # TODO: Other tmux scripts for sim and sim-irl hybrid testing.
