@@ -130,7 +130,7 @@ class ThrusterManager(Node):
         out_vals = np.full_like(out_vals, SERVO_NEUTRAL) if self.stopped else out_vals
 
         for name, val in zip(MOTOR_MSG_NAMES, out_vals):
-            setattr(self.motor_vals, name, round(val))
+            setattr(self.motor_vals, name, int(round(val)))
         self.pub_motors()
 
 
