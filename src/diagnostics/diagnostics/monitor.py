@@ -187,19 +187,15 @@ class MonitorNode(Node):
     def motor_actual_callback(self, msg: Motors):
         N = 7
         if self.__motor_order is None:
-            pairs = {f"motor_{i}": getattr(msg, f"motor_{i}") for i in range(1, N + 1)}
+            pairs = {f"m{i}": getattr(msg, f"motor_{i}") for i in range(1, N + 1)}
         else:
             pairs = {
-                f"motor_{i} ({self.__motor_order[i - 1].upper()})": getattr(
+                f"m{i} ({self.__motor_order[i - 1].upper()})": getattr(
                     msg, f"motor_{i}"
                 )
                 for i in range(1, N + 1)
             }
-        self.__motor_actual_str = (
-            self.__pid_str
-            + self.__motor_debug_str
-            + "\t".join((f"{k}: {v:04d}" for k, v in pairs.items()))
-        )
+        self.__motor_actual_str = "\t".join((f"{k}: {v:04d}" for k, v in pairs.items()))
         self.track_rate("motor_actual")
 
     def motor_order_callback(self, msg: String):
@@ -262,7 +258,7 @@ class MonitorNode(Node):
         self.__text_imu_raw.plain = self.__imu_raw_str
         self.__text_imu_cal.plain = self.__imu_cal_str
         self.__text_motors.plain = (
-            self.__pid_str + self.__motor_actual_str + self.__motor_debug_str
+            self.__pid_str + self.__motor_debug_str + self.__motor_actual_str
         )
         # self.__text_fps.plain = "FPS: " + "\t".join(
         #     f"{k}: {v: 5.1f}" for k, v in self.__rate_fps.items()
