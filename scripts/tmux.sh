@@ -15,9 +15,9 @@ if tmux ls | grep -q ros2; then
 fi
 
 # https://man7.org/linux/man-pages/man1/tmux.1.html
-tmux new -ds ros2 -n launch "ros2 launch launch-all.py" \; \
+tmux new -ds ros2 -n launch "source install/setup.bash; ros2 launch launch-all.py" \; \
   neww -dn "monitor" "scripts/teleop.sh" \; \
-  neww -dn "routine" "ros2 launch blobfish_control routine.launch.py" \; \
+  neww -dn "routine" "source install/setup.bash; ros2 launch blobfish_control routine.launch.py" \; \
   attach
 
 # TODO: Other tmux scripts for sim and sim-irl hybrid testing.

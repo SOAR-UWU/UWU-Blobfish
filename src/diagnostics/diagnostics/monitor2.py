@@ -280,8 +280,8 @@ class MonitorApp(App):
 
             await self._loop.run_in_executor(None, spin)
 
-        self._loop.create_task(spin_task())
-        # self.set_interval(1.0 / ROS_UPDATE_RATE, lambda: rclpy.spin_once(node, timeout_sec=0))
+        # self._loop.create_task(spin_task())
+        self.set_interval(1 / 30, lambda: rclpy.spin_once(node, timeout_sec=0))
 
         self.ros_node = node
         self.ros_kp_pub = kp_pub

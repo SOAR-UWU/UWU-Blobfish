@@ -1,4 +1,4 @@
-- speed: [0.0, 0.0, -0.5]
+- rph: [0, 90, 0]
 
 # # Later when we get the depth values
 # - speed: [0.0, 0.0, 0.0]

@@ -52,7 +52,7 @@ def generate_launch_description():
     if hardware_available:
         ld.add_action(arduino_launch)
         ld.add_action(sensors_launch)
-        ld.add_action(cv_launch)
+        # ld.add_action(cv_launch)
     ld.add_action(pid_launch)
     ld.add_action(thruster_launch)
     return ld
