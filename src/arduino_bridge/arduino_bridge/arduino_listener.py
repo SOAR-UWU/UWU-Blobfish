@@ -56,13 +56,19 @@ class ArduinoBridge(Node):
 
         self.get_logger().info("Arduino code compiled")
         
-        subprocess.run(["arduino-cli",
-                        "upload",
-                        "-p",
-                        ARDUINO_PORT,
-                        "--fqbn",
-                        BOARD_FQBN,
-                        INO_FILE], check=True)
+        successful = False
+        while not successful:
+            try:
+                subprocess.run(["arduino-cli",
+                                "upload",
+                                "-p",
+                                ARDUINO_PORT,
+                                "--fqbn",
+                                BOARD_FQBN,
+                                INO_FILE], check=True)
+                successful = True
+            except:
+                pass
 
         self.get_logger().info("Arduino code uploaded")
 
