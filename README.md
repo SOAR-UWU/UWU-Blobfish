@@ -1,35 +1,22 @@
-# UWU-B-NAME-TBC-2023
+# Pre-commit installation
 
-# General Code Structure (wip)
+Pre-commit automatically runs Git hooks to check your code when you commit to this repo.
 
-```
-├── b
-│   ├── b_bringup
-│   ├── b_hardware
-│   ├── b_navigation
-│   ├── b_control
-│   ├── b_description
-│   ├── b_gazebo
+First, install the pre-commit tool: 
+
+```bash 
+pip install pre-commit
 ```
 
+Next, install the pre-commit hooks on your system:
 
+```bash
+pre-commit install
 ```
-├── b_bringup
-│   ├── launch
-|   │   ├── bringup.launch
-|   │   ├── hardware.launch
-|   │   ├── all the launches
+Pre-commit should run automatically when attempting to commit. If it doesn't, run the following after staging your changes:
+
+```bash
+pre-commit run
 ```
 
-```
-├── b_hardware
-│   ├── launch
-│   │   ├── motors.launch
-│   │   ├── imu.launch
-│   │   ├── etc.
-│   ├── scripts
-│   │   ├── motor code for arduino
-│   │   ├── other stuff
-│   │   ├── NO HIGH LEVEL LOGIC
-│   │   ├── just code to send instructions to hardware
-```
+I haven't tested these hooks, so let me know if there's any problems. -Javin
