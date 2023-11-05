@@ -18,16 +18,19 @@ Build
 
 Run with ros2 run (Option 1)
 
-4. (Terminal 1) ros2 run vectornav vectornav
-5. (Terminal 2) ros2 topic echo /vectornav/raw/common
-6. (Terminal 3) ros2 run vectornav vn_sensor_msgs
-7. (Terminal 4) ros2 topic echo /vectornav/imu
+(on all terminals) source install/setup.bash
+
+4. (Terminal 1) chmod 666 /dev/tty{tty port name}
+5. (Terminal 1) ros2 run vectornav vectornav
+6. (Terminal 2) ros2 topic echo /vectornav/raw/common
+7. (Terminal 3) ros2 run vectornav vn_sensor_msgs
+8. (Terminal 4) ros2 topic echo /vectornav/imu
 
 Run with ros2 launch (Option 2, uses parameters from `vectornav.yaml`)
 
-8. (Terminal 1) ros2 launch vectornav vectornav.launch.py
-9. (Terminal 2) ros2 topic echo /vectornav/raw/common
-10. (Terminal 3) ros2 topic echo /vectornav/imu
+9. (Terminal 1) ros2 launch vectornav vectornav.launch.py
+10. (Terminal 2) ros2 topic echo /vectornav/raw/common
+11. (Terminal 3) ros2 topic echo /vectornav/imu
 
 ## vectornav node
 
