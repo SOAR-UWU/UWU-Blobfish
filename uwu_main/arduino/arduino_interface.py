@@ -1,9 +1,27 @@
 """Library with functions to interface with Arduino."""
 
 import time
+from typing import List
 
 import serial
 
+# TODO read from config file instead of hardcode
+NUM_MOTORS = 7
+
+def write_motor_values(ser: serial.Serial, vals: List[int], endianness: str = 'l'):
+    """Write 7 motor values to the serial port (in the form of 7 uint16s in a row).
+
+    Args:
+        ser (serial.Serial): Serial object to write to
+        vals (List[int]): list of motor values
+        endianness (str, optional): Endian-ness setting, 'b' for big and 'l' for little. 
+            Defaults to 'l'.
+    """
+    if len(vals) != NUM_MOTORS:
+        raise ValueError(f"Length of motor values should be the same as the number of motors ({NUM_MOTORS})")
+
+    for val in vals:
+        write_uint16(ser, val, endianness)
 
 def write_uint16(ser: serial.Serial, n: int, endianness: str = 'l'):
     """Write an integer to the serial port as an unsigned 16-bit integer.
