@@ -5,7 +5,7 @@ import time
 import serial
 
 
-def write_uint16(n: int, endianness: str = 'l'):
+def write_uint16(ser: serial.Serial, n: int, endianness: str = 'l'):
     """Write an integer to the serial port as an unsigned 16-bit integer.
 
     Args:
@@ -20,7 +20,7 @@ def write_uint16(n: int, endianness: str = 'l'):
     ser.write(byte_n)
 
 
-def wait_for_connection(timeout: int):
+def wait_for_connection(ser: serial.Serial, startup_char: bytes, timeout: int):
     """Test for connection with Arduino.
 
     Blocks until either connection is established with the Arduino or the
@@ -31,13 +31,13 @@ def wait_for_connection(timeout: int):
         timeout.
     """
     start = time.time()
-    while ser.read() != b'\xff':
+    while ser.read() != startup_char:
         time.sleep(1)
         current = time.time()
         if timeout > 0 and current - start > timeout:
             # timed out, stop attempting to connect
             return False
-
+    ser.write(startup_char)
     # Signal received, connected. Return True.
     return True
 
@@ -46,8 +46,8 @@ if __name__ == '__main__':
     ser = serial.Serial('/dev/ttyUSB0')
     print(ser.name)
     while True:
-        write_uint16(1676)
-        write_uint16(3451)
+        write_uint16(ser, 1676)
+        write_uint16(ser, 3451)
         # ser.write(b'\x0A')
         print(ser.readline())
         time.sleep(0.5)
