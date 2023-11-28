@@ -6,6 +6,9 @@ namespace BlinkPatterns {
 
     int error_pattern[2] = {100, 100};
     void blink_error() { blink_pattern(error_pattern, 10); }
+
+    int timeout_pattern[2] = {10, 10};
+    void blink_timeout() { blink_pattern(timeout_pattern, 1); }
     
     int connecting_pattern[4] = {50, 50, 50, 100};
     void blink_connecting() { blink_pattern(connecting_pattern, 1); }
