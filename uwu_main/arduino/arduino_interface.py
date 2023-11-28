@@ -19,7 +19,11 @@ def write_motor_values(ser: serial.Serial, vals: List[int], endianness: str = 'l
     """
     if len(vals) != NUM_MOTORS:
         raise ValueError(f"Length of motor values should be the same as the number of motors ({NUM_MOTORS})")
+    
+    # First write the init message
+    ser.write(b'M')
 
+    # Then write motor values
     for val in vals:
         write_uint16(ser, val, endianness)
 
@@ -31,12 +35,20 @@ def write_uint16(ser: serial.Serial, n: int, endianness: str = 'l'):
         endianness (str): Character representing endian-ness - 'b' for big and
             'l' for little. Default is little.
     """
+    # TODO some sort of timeout or error handling
     if endianness == 'l':
         byte_n = n.to_bytes(2, 'little')
     else:
         byte_n = n.to_bytes(2, 'big')
     ser.write(byte_n)
 
+def read_uint16(ser: serial.Serial, endianness: str = 'l'):
+    read_bytes = ser.read(2)
+    if endianness == 'l':
+        ret = int.from_bytes(read_bytes, 'little')
+    else:
+        ret = int.from_bytes(read_bytes, 'big')
+    return ret
 
 def wait_for_connection(ser: serial.Serial, startup_char: bytes, timeout: int):
     """Test for connection with Arduino.
