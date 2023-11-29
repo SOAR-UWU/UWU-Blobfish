@@ -6,13 +6,14 @@ import subprocess
 BOARD_FQBN = "arduino:avr:mega"
 ARDUINO_PORT = "/dev/ttyUSB0"
 ARDUINO_TEST_INO = "arduino_test/arduino_test.ino"
+ARDUINO_SOURCE_FILES = "../../arduino"
 
 STARTUP_CHAR = b"S"
 
 @pytest.fixture(scope="module")
 def startup():
     print("Compiling arduino code...")
-    subprocess.run(["arduino-cli", "compile", "--fqbn", BOARD_FQBN, ARDUINO_TEST_INO])
+    subprocess.run(["arduino-cli", "compile", "--fqbn", BOARD_FQBN, ARDUINO_TEST_INO, "--library", ARDUINO_SOURCE_FILES])
     print("Compiled")
 
 def test_connection_init():

@@ -1,6 +1,7 @@
 #include <SimpleSerialProtocol.h>
 #include <stdint.h>
 #include "arduino_error_codes.h"
+#include "arduino_jetson_interface.h"
 
 
 // Constants
@@ -9,7 +10,8 @@ const int BaudRate = 9600;
 const int CharTimeout = 500;  // waittime for timeout between chars, in ms
 const char InitChar = 'S'; // setup char
 
-const int NumMotors = 7;
+#define NUM_MOTORS 7
+
 uint8_t err = 0;
 
 // Functions
@@ -49,45 +51,4 @@ void onError(uint8_t err_num) {
   }
 }
 
-void awaitConnection(SimpleSerialProtocol ssp, char InitChar) {
-  while (true) {
-    char rec = ssp.readChar();
-    if (rec == InitChar) {
-      digitalWrite(LED_BUILTIN, LOW);
-      break;
-    } else {
-      BlinkPatterns::blink_connecting();
-      ssp.writeChar(InitChar);
-    }
-  }
-}
-
-bool recv_motor_values(SimpleSerialProtocol ssp, uint16_t motor_vals[NumMotors]) {
-  err = 0;
-  char message_start = ssp.readChar();
-  
-  // Check for error in reading
-  if (message_start != 'M' || err) {
-    // If reading failed or start character is wrong, reset err_num and return.
-    err = 0;
-    return false;
-  }
-
-  motor_vals[0] = ssp.readUnsignedInt16();
-  if (err) { err = 0; return false; }
-  motor_vals[1] = ssp.readUnsignedInt16();
-  if (err) { err = 0; return false; }
-  motor_vals[2] = ssp.readUnsignedInt16();
-  if (err) { err = 0; return false; }
-  motor_vals[3] = ssp.readUnsignedInt16();
-  if (err) { err = 0; return false; }
-  motor_vals[4] = ssp.readUnsignedInt16();
-  if (err) { err = 0; return false; }
-  motor_vals[5] = ssp.readUnsignedInt16();
-  if (err) { err = 0; return false; }
-  motor_vals[6] = ssp.readUnsignedInt16();
-  if (err) { err = 0; return false; }
-
-  return true;
-}
 
