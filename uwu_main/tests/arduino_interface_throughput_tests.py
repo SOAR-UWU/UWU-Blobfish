@@ -15,11 +15,11 @@ BENCHMARK_END_SIGNAL = b"E"
 
 def startup():
     print("Compiling arduino code...")
-    subprocess.run(["arduino-cli", "compile", "--fqbn", BOARD_FQBN, ARDUINO_TEST_INO, "--library", ARDUINO_SOURCE_FILES])
+    subprocess.run(["arduino-cli", "compile", "--fqbn", BOARD_FQBN, ARDUINO_TEST_INO, "--library", ARDUINO_SOURCE_FILES], check=True)
     print("Compiled")
     
 def arduino_speed_benchmarks(wait_time: int = 30):
-    subprocess.run(["arduino-cli", "upload", "-p", ARDUINO_PORT, "--fqbn", BOARD_FQBN, ARDUINO_TEST_INO])
+    subprocess.run(["arduino-cli", "upload", "-p", ARDUINO_PORT, "--fqbn", BOARD_FQBN, ARDUINO_TEST_INO], check=True)
     print("Uploaded to board.")
 
 

@@ -10,21 +10,22 @@ ARDUINO_SOURCE_FILES = "../../arduino"
 
 STARTUP_CHAR = b"S"
 
+
 @pytest.fixture(scope="module")
 def startup():
     print("Compiling arduino code...")
-    subprocess.run(["arduino-cli", "compile", "--fqbn", BOARD_FQBN, ARDUINO_TEST_INO, "--library", ARDUINO_SOURCE_FILES])
+    subprocess.run(["arduino-cli", "compile", "--fqbn", BOARD_FQBN, ARDUINO_TEST_INO, "--library", ARDUINO_SOURCE_FILES], check=True)
     print("Compiled")
 
-def test_connection_init():
-    subprocess.run(["arduino-cli", "upload", "-p", ARDUINO_PORT, "--fqbn", BOARD_FQBN, ARDUINO_TEST_INO])
+def test_connection_init(startup):
+    subprocess.run(["arduino-cli", "upload", "-p", ARDUINO_PORT, "--fqbn", BOARD_FQBN, ARDUINO_TEST_INO], check=True)
     print("Uploaded to board.")
     ser = serial.Serial(ARDUINO_PORT, timeout=30)
     assert(interface.wait_for_connection(ser, STARTUP_CHAR, 30))
     ser.close()
 
-def test_send_motor_values():
-    subprocess.run(["arduino-cli", "upload", "-p", ARDUINO_PORT, "--fqbn", BOARD_FQBN, ARDUINO_TEST_INO])
+def test_send_motor_values(startup):
+    subprocess.run(["arduino-cli", "upload", "-p", ARDUINO_PORT, "--fqbn", BOARD_FQBN, ARDUINO_TEST_INO], check=True)
     print("Uploaded to board.")
     ser = serial.Serial(ARDUINO_PORT, timeout = 5)
     vals = [133, 434, 512, 123, 364, 125, 126]
@@ -41,4 +42,4 @@ def test_send_motor_values():
     ser.close()
 
 if __name__ == "__main__":
-    test_send_motor_values()
+    startup()
