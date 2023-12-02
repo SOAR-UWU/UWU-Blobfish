@@ -3,7 +3,7 @@ from import_context import arduino_interface as interface
 import serial
 import subprocess
 
-BOARD_FQBN = "arduino:avr:mega"
+BOARD_FQBN = "arduino:avr:nano"
 ARDUINO_PORT = "/dev/ttyUSB0"
 ARDUINO_TEST_INO = "arduino_test/arduino_test.ino"
 ARDUINO_SOURCE_FILES = "../../arduino"
