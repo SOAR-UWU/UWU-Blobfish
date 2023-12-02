@@ -61,6 +61,15 @@ class ArdJetInterface {
     return true;
   }
   
+  void fastblink() {
+      for (int i = 0; i < 10; i++) {
+      digitalWrite(LED_BUILTIN, HIGH);
+      delay(80);
+      digitalWrite(LED_BUILTIN, LOW);
+      delay(80);
+    }
+  }
+
   void onError(uint8_t err_num) {
     switch (err_num)
     {
@@ -68,10 +77,16 @@ class ArdJetInterface {
       blinker.blink_timeout();
       err = 1;
       break;
+    case ERROR_IS_DEAD:
+      break;
     default:
       blinker.blink_generic();
       break;
     }
+  }
+
+  void continue_blinking() {
+    blinker.continue_blinking();
   }
 
   uint8_t check_error() {
