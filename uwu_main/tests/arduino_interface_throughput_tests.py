@@ -26,7 +26,8 @@ def arduino_speed_benchmarks(wait_time: int = 30):
     ser = serial.Serial(ARDUINO_PORT, timeout = 5)
     vals = [133, 434, 512, 123, 364, 125, 126]
     
-    interface.wait_for_connection(ser, STARTUP_CHAR, 30)
+    # Fail if connection is not established
+    assert(interface.wait_for_connection(ser, STARTUP_CHAR, 30))
 
     start_time = time.time()
     end_time = start_time
@@ -36,7 +37,6 @@ def arduino_speed_benchmarks(wait_time: int = 30):
         interface.write_motor_values(ser, vals)
         end_time = time.time()
 
-    recv = []
     time.sleep(1)
 
     ser.write(BENCHMARK_END_SIGNAL)
