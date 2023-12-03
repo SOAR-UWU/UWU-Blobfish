@@ -10,6 +10,16 @@ NUM_MOTORS = 7
 
 EOT_CHAR = b'\n'
 
+def await_eot(ser: serial.Serial, timeout):
+    start_time = time.time()
+    while True:
+        if ser.read() == EOT_CHAR:
+            return True
+
+        current = time.time()
+        if current - start_time > timeout:
+            return False
+
 def write_motor_values(ser: serial.Serial, vals: List[int], endianness: str = 'l'):
     """Write 7 motor values to the serial port (in the form of 7 uint16s in a row).
 
@@ -63,7 +73,6 @@ def _write_bytes(ser: serial.Serial, n: int, endianness: str, n_bytes: int):
     else:
         byte_n = n.to_bytes(n_bytes, 'big')
     ser.write(byte_n)
-    
 
 def wait_for_connection(ser: serial.Serial, startup_char: bytes, timeout: int):
     """Test for connection with Arduino.
@@ -82,6 +91,7 @@ def wait_for_connection(ser: serial.Serial, startup_char: bytes, timeout: int):
         if timeout > 0 and current - start > timeout:
             # timed out, stop attempting to connect
             return False
+
     ser.write(startup_char)
     # Signal received, connected. Return True.
     return True

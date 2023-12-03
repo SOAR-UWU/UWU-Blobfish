@@ -15,6 +15,8 @@ const int BaudRate = 9600;
 const int CharTimeout = 10;  // waittime for timeout between chars, in ms
 const char InitChar = 'S'; // setup char
 
+uint16_t count = 0;  // number of transmissions received
+
 #define NUM_MOTORS 7
 
 void onError(uint8_t err_num);
@@ -26,6 +28,16 @@ void setup() {
   digitalWrite(LED_BUILTIN, LOW);
   ssp.init();
   aji.awaitConnection(InitChar);
+  count = 0;
+}
+
+void fastblink() {
+  for (int i = 0; i < 40; i++) {
+    digitalWrite(LED_BUILTIN, HIGH);
+    delay(30);
+    digitalWrite(LED_BUILTIN, LOW);
+    delay(30);
+  }
 }
 
 void loop() {
@@ -36,7 +48,18 @@ void loop() {
     for (auto val : motor_values) {
       ssp.writeUnsignedInt16(val);
     }
+    count++;
+  } else if (aji.check_last_char() == 'E') {  // multiple transmissions test
+    ssp.writeChar('M');
+    for (auto val : motor_values) {
+      ssp.writeUnsignedInt16(val);
+    }
+    ssp.writeEot();
+    ssp.writeUnsignedInt16(count);
+    ssp.writeEot();
   }
+
+  aji.continue_blinking();
 }
 
 void onError(uint8_t err_num) {
