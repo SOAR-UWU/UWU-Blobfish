@@ -29,7 +29,8 @@ def test_connection_init(startup):
     subprocess.run(["arduino-cli", "upload", "-p", ARDUINO_PORT, "--fqbn", BOARD_FQBN, ARDUINO_TEST_INO], check=True)
     print("Uploaded to board.")
     ser = serial.Serial(ARDUINO_PORT, timeout=timeout, baudrate=BAUD_RATE)
-    conn = interface.wait_for_connection(ser, STARTUP_CHAR, 30)
+    jai = interface.JetsonArduinoInterface(ser)
+    conn = jai.wait_for_connection(STARTUP_CHAR, 30)
     assert(conn)
     ser.close()
 
@@ -42,11 +43,12 @@ def test_send_motor_values(startup):
     subprocess.run(["arduino-cli", "upload", "-p", ARDUINO_PORT, "--fqbn", BOARD_FQBN, ARDUINO_TEST_INO], check=True)
     print("Uploaded to board.")
     ser = serial.Serial(ARDUINO_PORT, timeout=serial_timeout, baudrate=BAUD_RATE)
+    jai = interface.JetsonArduinoInterface(ser)
     vals = [133, 434, 512, 123, 364, 125, 126]
     
     # Fail if connection is not established
-    assert(interface.wait_for_connection(ser, STARTUP_CHAR, 30))
-    interface.write_motor_values(ser, vals)
+    assert(jai.wait_for_connection(STARTUP_CHAR, 30))
+    jai.write_motor_values(vals)
     recv = []
 
     start_time = time.time()
@@ -56,7 +58,7 @@ def test_send_motor_values(startup):
             pytest.fail("Timed out while awaiting response from Arduino")
 
     for _ in vals:
-        recv.append(interface.read_uint16(ser))
+        recv.append(jai.read_uint16())
     assert(recv == vals)
     ser.close()
 
@@ -69,14 +71,15 @@ def test_multiple_transmissions(startup):
     print("Uploaded to board.")
 
     ser = serial.Serial(ARDUINO_PORT, timeout=serial_timeout, baudrate=BAUD_RATE)
+    jai = interface.JetsonArduinoInterface(ser)
     vals = [133, 434, 512, 123, 364, 125, 126]
     
     # Fail if connection is not established
-    assert(interface.wait_for_connection(ser, STARTUP_CHAR, 30))
+    assert(jai.wait_for_connection(STARTUP_CHAR, 30))
 
 
     for _ in range(n_transmissions):
-        interface.write_motor_values(ser, vals)
+        jai.write_motor_values(vals)
 
     time.sleep(1)
 
@@ -91,12 +94,12 @@ def test_multiple_transmissions(startup):
     # Check that the values are received correctly
     recv = []
     for _ in vals:
-        recv.append(interface.read_uint16(ser))
+        recv.append(jai.read_uint16())
     assert(recv == vals)
-    interface.await_eot(ser, 5)
+    jai.await_eot(5)
 
     # Check that the number of messages received is correct
-    num_rec = interface.read_uint16(ser)
+    num_rec = jai.read_uint16()
     ser.close()
     assert(num_rec == n_transmissions)
     
