@@ -31,15 +31,6 @@ void setup() {
   count = 0;
 }
 
-void fastblink() {
-  for (int i = 0; i < 40; i++) {
-    digitalWrite(LED_BUILTIN, HIGH);
-    delay(30);
-    digitalWrite(LED_BUILTIN, LOW);
-    delay(30);
-  }
-}
-
 void loop() {
   uint16_t motor_values[7];
   bool received = aji.recv_motor_values(motor_values);

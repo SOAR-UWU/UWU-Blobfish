@@ -34,15 +34,6 @@ void setup() {
   aji.awaitConnection(InitChar);
 }
 
-void fastblink() {
-    for (int i = 0; i < 10; i++) {
-    digitalWrite(LED_BUILTIN, HIGH);
-    delay(80);
-    digitalWrite(LED_BUILTIN, LOW);
-    delay(80);
-  }
-}
-
 void loop() {
   uint16_t motor_values[7];
   bool received = aji.recv_motor_values(motor_values);
