@@ -14,12 +14,11 @@ class ErrorBlinker {
 
     private:
     ErrorType current_error;
-    int generic_pattern[2] = {100, 100};
-    int timeout_pattern[4] = {200, 200, 200, 400};
+    int generic_pattern[4] = {200, 100, 200, 100};
+    int timeout_pattern[6] = {100, 100, 100, 100, 100, 400};
     int connecting_pattern[4] = {100, 100, 500, 400};
     unsigned long start_time_mark;
     int array_index;
-    int n_rep;
     uint8_t led_num;
 
     public:
@@ -32,7 +31,7 @@ class ErrorBlinker {
 
     private:
     void blink_error(const ErrorType err_type);
-    bool blink_pattern(const int wait_values[], const int length, const int repetitions);
+    bool blink_pattern(const int wait_values[], const int length);
 };
 
 
@@ -49,18 +48,15 @@ void ErrorBlinker::blink_error(const ErrorType err_type) {
         {
         case ErrorType::Generic:
             complete = blink_pattern(generic_pattern,
-                                     sizeof(generic_pattern)/sizeof(generic_pattern[0]),
-                                     2);
+                                     sizeof(generic_pattern)/sizeof(generic_pattern[0]));
             break;
         case ErrorType::Timeout:
             complete = blink_pattern(timeout_pattern,
-                                     sizeof(timeout_pattern)/sizeof(timeout_pattern[0]),
-                                     5);
+                                     sizeof(timeout_pattern)/sizeof(timeout_pattern[0]));
             break;
         case ErrorType::Connecting:
             complete = blink_pattern(connecting_pattern,
-                                     sizeof(connecting_pattern)/sizeof(timeout_pattern[0]),
-                                     1);
+                                     sizeof(connecting_pattern)/sizeof(timeout_pattern[0]));
         default:
             break;
         }
@@ -72,9 +68,8 @@ void ErrorBlinker::blink_error(const ErrorType err_type) {
     }
 }
 
-bool ErrorBlinker::blink_pattern (const int wait_values[], const int length, const int repetition) {
+bool ErrorBlinker::blink_pattern (const int wait_values[], const int length) {
     unsigned long current_time = millis();
-    static int rep_num = 0;
     if (current_time - start_time_mark > wait_values[array_index]) {
         // Go to the next segment
         array_index++;
@@ -82,11 +77,7 @@ bool ErrorBlinker::blink_pattern (const int wait_values[], const int length, con
         if (array_index >= length) {
             // If this is the last element, return true (complete)
             array_index = 0;
-            rep_num++;
-
-            if (rep_num >= repetition) {
-                return true;
-            }
+            return true;
         }
     }
 
