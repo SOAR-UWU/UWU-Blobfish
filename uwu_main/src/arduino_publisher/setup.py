@@ -14,12 +14,13 @@ setup(
     install_requires=['setuptools'],
     zip_safe=True,
     maintainer='javin',
-    maintainer_email='javin@todo.todo',
+    maintainer_email='javinenghp@gmail.com',
     description='TODO: Package description',
     license='TODO: License declaration',
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
+            'arduino_bridge = arduino_publisher.arduino_listener:main'
         ],
     },
 )
