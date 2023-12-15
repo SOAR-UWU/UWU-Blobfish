@@ -8,7 +8,7 @@ import time
 BOARD_FQBN = "arduino:avr:nano"
 ARDUINO_PORT = "/dev/ttyUSB0"
 ARDUINO_TEST_INO = "arduino_throughput/arduino_throughput.ino"
-ARDUINO_SOURCE_FILES = "../../arduino"
+ARDUINO_SOURCE_FILES = "../../../../arduino"
 
 STARTUP_CHAR = b"S"
 BENCHMARK_END_SIGNAL = b"E"
