@@ -4,10 +4,12 @@ This folder contains the code to be uploaded to the Arduino. **Do not place code
 ## Interfacing with the Arduino
 The `arduino-cli` tool is needed to control upload to the Arduino from the commandline, and will be used to soft reset the Arduino when required. Refer to the [installation steps](https://arduino.github.io/arduino-cli/0.35/installation/) to install it.
 
-After installation, install the avr core:
+After installation, install the avr core and code dependencies:
 
 ```bash
 arduino-cli core install arduino:avr
+arduino-cli lib install SimpleSerialProtocol
+arduino-cli lib install Servo
 ```
 
 Compile the code:
