@@ -1,5 +1,0 @@
-[0.000000] (-) TimerEvent: {}
-[0.000360] (arduino_publisher) JobQueued: {'identifier': 'arduino_publisher', 'dependencies': OrderedDict([('arduino_publisher', '/workspaces/isaac_ros-dev/UWU-Blobfish/uwu_main/src/install/arduino_publisher')])}
-[0.000560] (arduino_publisher) JobStarted: {'identifier': 'arduino_publisher'}
-[0.017034] (arduino_publisher) JobEnded: {'identifier': 'arduino_publisher', 'rc': 1}
-[0.027400] (-) EventReactorShutdown: {}
