@@ -1,0 +1,10 @@
+ARG BASE_IMAGE
+FROM ${BASE_IMAGE}
+COPY arduino-cli /bin
+
+# TODO organise these dependencies
+RUN sudo apt update
+RUN sudo apt install tmux
+RUN pip install pyserial
+RUN arduino-cli core install arduino:avr
+RUN arduino-cli lib install SimpleSerialProtocol Servo
