@@ -24,17 +24,18 @@ def arduino_speed_benchmarks(wait_time: int = 30):
 
 
     ser = serial.Serial(ARDUINO_PORT, timeout = 5)
+    jai = interface.JetsonArduinoInterface(ser)
     vals = [133, 434, 512, 123, 364, 125, 126]
     
     # Fail if connection is not established
-    assert(interface.wait_for_connection(ser, STARTUP_CHAR, 30))
+    assert(jai.wait_for_connection(STARTUP_CHAR, 30))
 
     start_time = time.time()
     end_time = start_time
 
     
     while end_time - start_time < wait_time:
-        interface.write_motor_values(ser, vals)
+        jai.write_motor_values(vals)
         end_time = time.time()
 
     time.sleep(1)
@@ -44,7 +45,7 @@ def arduino_speed_benchmarks(wait_time: int = 30):
     # Block until "M" is read
     while ser.read() != b'M': pass
 
-    num_rec = interface.read_uint64(ser)
+    num_rec = jai.read_uint64()
     ser.close()
     return num_rec
 
