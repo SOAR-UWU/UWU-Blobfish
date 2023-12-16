@@ -1,4 +1,6 @@
 # Docker quickstart
+[Read the official NVIDIA documentation on this!](https://nvidia-isaac-ros.github.io/repositories_and_packages/isaac_ros_common/index.html#isaac-ros-docker-development-environment)
+
 This folder contains the Dockerfile to configure the Jetson environment. To start the Docker container:
 
 1. Check that `isaac_ros_common` has been downloaded in the `home` (`~`) directory. If not, follow the instructions in [this document](https://docs.google.com/document/d/1cREZMxORv1iL8ImSttAo6MXFEE-e809aip0bS_fPoG4/edit?usp=sharing) to downlaod and install the Isaac ROS Docker system.
