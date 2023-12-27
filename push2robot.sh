@@ -10,7 +10,7 @@
 
 BOT_IP="soar-uwu@10.42.0.1"
 cd ~/workspaces/isaac_ros-dev;
-if [[-n $1]]    # if a CLI argument has been supplied
+if [[ -n $1 ]]    # if a CLI argument has been supplied
 then
     echo $1 | xargs tar -cf - | ssh ${BOT_IP} -T "cat > ~/pushed";
 else
