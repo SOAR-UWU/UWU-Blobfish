@@ -1,8 +1,13 @@
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
+
+# Add the arduino-cli command
 COPY arduino-cli /bin
 
 # TODO organise these dependencies
+# Install tmux for easier use, pyserial for Serial comms with the Arduino, and some Arduino deps
+
+# TODO add pyserial to rosdep for that package instead
 RUN sudo apt update
 RUN sudo apt install tmux
 RUN pip install pyserial
