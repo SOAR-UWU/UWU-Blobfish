@@ -6,6 +6,7 @@ from motor_msg.msg import Motors
 from .arduino_interface import JetsonArduinoInterface
 import serial
 
+
 class ArduinoBridge(Node):
     def __init__(self):
         super().__init__("arduino_bridge")
@@ -22,16 +23,25 @@ class ArduinoBridge(Node):
         self.get_logger().info("Arduino bridge started")
 
     def listener_callback(self, msg):
-        self.jai.write_motor_values([msg.motor1, msg.motor2, msg.motor3, msg.motor4, msg.motor5, msg.motor6, msg.motor7])
+        self.jai.write_motor_values([
+            msg.motor1,
+            msg.motor2,
+            msg.motor3,
+            msg.motor4,
+            msg.motor5,
+            msg.motor6,
+            msg.motor7])
+
 
 def main(args=None):
     rclpy.init(args=args)
 
     bridge = ArduinoBridge()
     rclpy.spin(bridge)
-    
+
     bridge.destroy_node()
     rclpy.shutdown()
+
 
 if __name__ == "__main__":
     main()

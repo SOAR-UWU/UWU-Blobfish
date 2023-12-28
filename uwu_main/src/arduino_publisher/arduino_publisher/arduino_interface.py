@@ -11,11 +11,12 @@ NUM_MOTORS = 7
 EOT_CHAR = b'\n'
 MOTOR_VALUE_START = b'M'
 
+
 class JetsonArduinoInterface:
     def __init__(self, ser: serial.Serial, endianness: str = 'l'):
         self.ser = ser
         self.endianness = endianness
-    
+
     @property
     def endianness(self):
         return self._endianness
@@ -23,9 +24,11 @@ class JetsonArduinoInterface:
     @endianness.setter
     def endianness(self, endian: str):
         if endian != 'b' and endian != 'l':
-            raise ValueError(f"Endianness should be represented as either 'b' or 'l', not {endian}")
+            raise ValueError(
+                f"Endianness should be represented as either 'b' or 'l', not {endian}"
+            )
         self._endianness = endian
-    
+
     def await_eot(self, timeout):
         """Wait for the EOT signal for timeout seconds.
 
@@ -45,14 +48,16 @@ class JetsonArduinoInterface:
                 return False
 
     def write_motor_values(self, vals: List[int]):
-        """Write 7 motor values to the serial port (in the form of 7 uint16s in a row).
+        """Write 7 motor values to the serial port (in the form of 7 uint16s
+        in a row).
 
         Args:
             vals (List[int]): list of motor values
         """
         if len(vals) != NUM_MOTORS:
-            raise ValueError(f"Length of motor values should be the same as the number of motors ({NUM_MOTORS})")
-        
+            raise ValueError(f"Length of motor values should be the same as \
+the number of motors ({NUM_MOTORS})")
+
         # First write the init message
         self.ser.write(MOTOR_VALUE_START)
 
@@ -88,7 +93,7 @@ class JetsonArduinoInterface:
             ret = int.from_bytes(read_b, 'little')
         else:
             ret = int.from_bytes(read_b, 'big')
-        
+
         return ret
 
     def _write_bytes(self, n: int, n_bytes: int):
