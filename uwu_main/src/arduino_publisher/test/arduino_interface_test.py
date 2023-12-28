@@ -1,14 +1,13 @@
 import time
 import pytest
 from import_context import arduino_interface as interface
+from import_context import ARDUINO_HEADERS, BOARD_FQBN, ARDUINO_PORT
 import serial
 import subprocess
+import os
 
-BOARD_FQBN = "arduino:avr:nano"
-ARDUINO_PORT = "/dev/ttyUSB0"
-ARDUINO_TEST_INO = "arduino_test/arduino_test.ino"
-ARDUINO_SOURCE_FILES = "../../../../arduino"
-BAUD_RATE = 9600
+ARDUINO_TEST_INO = os.path.abspath(os.path.join(os.path.abspath(__file__), "arduino_test", "arduino_test.ino"))
+BAUD_RATE = 19200
 
 STARTUP_CHAR = b"S"
 
@@ -18,7 +17,7 @@ STARTUP_CHAR = b"S"
 @pytest.fixture(scope="module")
 def startup():
     print("Compiling arduino code...")
-    subprocess.run(["arduino-cli", "compile", "--fqbn", BOARD_FQBN, ARDUINO_TEST_INO, "--library", ARDUINO_SOURCE_FILES], check=True)
+    subprocess.run(["arduino-cli", "compile", "--fqbn", BOARD_FQBN, ARDUINO_TEST_INO, "--library", ARDUINO_HEADERS], check=True)
     print("Compiled")
 
 """Test the connection handshake with Arduino. Fails if connection is not established after 30 seconds.
@@ -104,5 +103,5 @@ def test_multiple_transmissions(startup):
     assert(num_rec == n_transmissions)
     
 if __name__ == "__main__":
-    subprocess.run(["arduino-cli", "compile", "--fqbn", BOARD_FQBN, ARDUINO_TEST_INO, "--library", ARDUINO_SOURCE_FILES], check=True)
+    subprocess.run(["arduino-cli", "compile", "--fqbn", BOARD_FQBN, ARDUINO_TEST_INO, "--library", ARDUINO_HEADERS], check=True)
     test_multiple_transmissions(None)

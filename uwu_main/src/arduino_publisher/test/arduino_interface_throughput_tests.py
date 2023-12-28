@@ -1,21 +1,18 @@
-# TODO DISABLE ALL THE BLOCKING STUFF
-
 from import_context import arduino_interface as interface
+from import_context import ARDUINO_HEADERS, BOARD_FQBN, ARDUINO_PORT
 import serial
 import subprocess
 import time
+import os
 
-BOARD_FQBN = "arduino:avr:nano"
-ARDUINO_PORT = "/dev/ttyUSB0"
-ARDUINO_TEST_INO = "arduino_throughput/arduino_throughput.ino"
-ARDUINO_SOURCE_FILES = "../../../../arduino"
+ARDUINO_TEST_INO = os.path.abspath(os.path.join(os.path.abspath(__file__), "arduino_throughput", "arduino_throughput.ino"))
 
 STARTUP_CHAR = b"S"
 BENCHMARK_END_SIGNAL = b"E"
 
 def startup():
     print("Compiling arduino code...")
-    subprocess.run(["arduino-cli", "compile", "--fqbn", BOARD_FQBN, ARDUINO_TEST_INO, "--library", ARDUINO_SOURCE_FILES], check=True)
+    subprocess.run(["arduino-cli", "compile", "--fqbn", BOARD_FQBN, ARDUINO_TEST_INO, "--library", ARDUINO_HEADERS], check=True)
     print("Compiled")
     
 def arduino_speed_benchmarks(wait_time: int = 30):
