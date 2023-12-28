@@ -1,13 +1,12 @@
 import time
 import pytest
 from import_context import arduino_interface as interface
-from import_context import ARDUINO_HEADERS, BOARD_FQBN, ARDUINO_PORT
+from import_context import ARDUINO_HEADERS, BOARD_FQBN, ARDUINO_PORT, BAUD_RATE
 import serial
 import subprocess
 import os
 
 ARDUINO_TEST_INO = os.path.abspath(os.path.join(os.path.abspath(__file__), "arduino_test", "arduino_test.ino"))
-BAUD_RATE = 19200
 
 STARTUP_CHAR = b"S"
 
