@@ -1,10 +1,17 @@
 import rclpy
 from rclpy.node import Node
+import os
 
 from motor_msg.msg import Motors
 
 from .arduino_interface import JetsonArduinoInterface
+from .arduino_interface import BOARD_FQBN, BAUD_RATE, ARDUINO_HEADERS, ARDUINO_PORT
 import serial
+import subprocess
+
+INO_FILE = os.path.abspath(os.path.join(
+    os.path.dirname(__file__), '..', 'arduino', 'main', 'main.ino')
+)
 
 
 class ArduinoBridge(Node):
@@ -17,10 +24,31 @@ class ArduinoBridge(Node):
             10
         )
         self.subscription   # prevent unused variable warning
-        ser = serial.Serial("/dev/ttyUSB0")
+        ser = serial.Serial(ARDUINO_PORT, baudrate=BAUD_RATE)
         self.jai = JetsonArduinoInterface(ser)
+
+        subprocess.run(["arduino-cli",
+                        "compile",
+                        "--fqbn",
+                        BOARD_FQBN,
+                        INO_FILE,
+                        "--library",
+                        ARDUINO_HEADERS], check=True)
+
+        self.get_logger().info("Arduino code compiled")
+        
+        subprocess.run(["arduino-cli",
+                        "upload",
+                        "-p",
+                        ARDUINO_PORT,
+                        "--fqbn",
+                        BOARD_FQBN,
+                        INO_FILE], check=True)
+
+        self.get_logger().info("Arduino code uploaded")
+
         self.jai.wait_for_connection(b'S', 0)
-        self.get_logger().info("Arduino bridge started")
+        self.get_logger().info("Connection established, Arduino bridge started")
 
     def listener_callback(self, msg):
         self.jai.write_motor_values([
