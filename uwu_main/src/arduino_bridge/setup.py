@@ -1,6 +1,6 @@
 from setuptools import find_packages, setup
 
-package_name = 'arduino_publisher'
+package_name = 'arduino_bridge'
 
 setup(
     name=package_name,
@@ -20,7 +20,7 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            'arduino_bridge = arduino_publisher.arduino_listener:main'
+            'bridge = arduino_bridge.arduino_listener:main'
         ],
     },
 )
