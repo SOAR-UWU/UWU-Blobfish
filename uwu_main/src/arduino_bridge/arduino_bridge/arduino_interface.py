@@ -15,7 +15,7 @@ MOTOR_VALUE_START = b'M'
 ARDUINO_HEADERS = os.path.abspath(os.path.join(
     os.path.dirname(__file__), '..', 'arduino')
 )
-BOARD_FQBN = "arduino:avr:nano:cpu=atmega328old"
+BOARD_FQBN = "arduino:avr:mega"
 ARDUINO_PORT = "/dev/ttyUSB0"
 BAUD_RATE = 19200
 
