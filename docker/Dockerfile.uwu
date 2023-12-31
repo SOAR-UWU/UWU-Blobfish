@@ -11,5 +11,7 @@ COPY arduino-cli /bin
 RUN sudo apt update
 RUN sudo apt install tmux
 RUN pip install pyserial
+
+# Bug: these commands don't work for some reason
 RUN arduino-cli core install arduino:avr
 RUN arduino-cli lib install SimpleSerialProtocol Servo
