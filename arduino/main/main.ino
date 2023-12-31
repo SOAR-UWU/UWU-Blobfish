@@ -14,7 +14,7 @@ const byte motor_pins[7] {motor_1,motor_2,motor_3,motor_4,motor_5,motor_6,motor_
 Servo motors[7];
 
 // Serial protocol constants
-const int BaudRate = 9600;
+const int BaudRate = 19200;
 const int CharTimeout = 10;  // waittime for timeout between chars, in ms
 const char InitChar = 'S'; // setup char
 
