@@ -6,4 +6,4 @@ sys.path.insert(0, os.path.abspath(
 )
 
 import arduino_publisher.arduino_interface as arduino_interface
-from arduino_publisher.arduino_interface import ARDUINO_HEADERS, BOARD_FQBN, ARDUINO_PORT, BAUD_RATE
+from arduino_publisher.arduino_interface import ARDUINO_FILES, BOARD_FQBN, ARDUINO_PORT, BAUD_RATE

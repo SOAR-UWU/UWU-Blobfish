@@ -1,5 +1,5 @@
 from import_context import arduino_interface as interface
-from import_context import ARDUINO_HEADERS, BOARD_FQBN, ARDUINO_PORT, BAUD_RATE
+from import_context import ARDUINO_FILES, BOARD_FQBN, ARDUINO_PORT, BAUD_RATE
 import serial
 import subprocess
 import time
@@ -21,7 +21,7 @@ def startup():
                     BOARD_FQBN,
                     ARDUINO_TEST_INO,
                     "--library",
-                    ARDUINO_HEADERS], check=True)
+                    ARDUINO_FILES], check=True)
 
     print("Compiled")
 
