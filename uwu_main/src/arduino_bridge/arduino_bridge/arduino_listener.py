@@ -5,13 +5,11 @@ import os
 from motor_msg.msg import Motors
 
 from .arduino_interface import JetsonArduinoInterface
-from .arduino_interface import BOARD_FQBN, BAUD_RATE, ARDUINO_HEADERS, ARDUINO_PORT
+from .arduino_interface import BOARD_FQBN, BAUD_RATE, ARDUINO_FILES, ARDUINO_PORT
 import serial
 import subprocess
 
-INO_FILE = os.path.abspath(os.path.join(
-    os.path.dirname(__file__), '..', 'arduino', 'main', 'main.ino')
-)
+INO_FILE = os.path.join(ARDUINO_FILES, "main", "main.ino")
 
 
 class ArduinoBridge(Node):
@@ -33,7 +31,7 @@ class ArduinoBridge(Node):
                         BOARD_FQBN,
                         INO_FILE,
                         "--library",
-                        ARDUINO_HEADERS], check=True)
+                        ARDUINO_FILES], check=True)
 
         self.get_logger().info("Arduino code compiled")
         

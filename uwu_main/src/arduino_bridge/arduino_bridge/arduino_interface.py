@@ -12,14 +12,10 @@ NUM_MOTORS = 7
 EOT_CHAR = b'\n'
 MOTOR_VALUE_START = b'M'
 
-ARDUINO_HEADERS = os.path.abspath(os.path.join(
-    os.path.dirname(__file__), '..', 'arduino')
-)
+ARDUINO_FILES = "/workspaces/isaac_ros-dev/UWU-Blobfish/arduino"
 BOARD_FQBN = "arduino:avr:mega"
 ARDUINO_PORT = "/dev/ttyUSB0"
 BAUD_RATE = 19200
-
-
 
 class JetsonArduinoInterface:
     def __init__(self, ser: serial.Serial, endianness: str = 'l'):
