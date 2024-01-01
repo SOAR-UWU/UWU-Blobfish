@@ -1,3 +1,6 @@
+# Development instructions
+The main ROS2 source files are contained in the `uwu_main/src` directory. The `uwu_main` workspace is the primary workspace, and all builds should be run from there. If you are developing a new package, add it in `uwu_main/src`.
+
 # Pre-commit installation
 
 Pre-commit automatically runs Git hooks to check your code when you commit to this repo.
