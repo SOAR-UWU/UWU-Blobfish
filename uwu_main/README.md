@@ -15,10 +15,10 @@ colcon build --packages-select <package_name>
 to build selected packages only.
 
 ## Arduino Bridge
-The Arduino bridge is a node in the `arduino_publisher` package. To start the Arduino bridge node, run
+The Arduino bridge is a node in the `arduino_bridge` package. To start the Arduino bridge node, run
 
 ```bash
-ros2 run arduino_publisher arduino_bridge
+ros2 run arduino_bridge bridge
 ```
 
 The node listens to motor values on the topic `motor_values`. The message format is found in `motor_msg/msg/Motors.msg`.
