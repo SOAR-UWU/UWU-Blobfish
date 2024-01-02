@@ -1,8 +1,6 @@
-from os import error
 from simple_pid.pid import PID
 import rclpy
 from rclpy.node import Node
-from std_msgs.msg import Float64
 from geometry_msgs.msg import Vector3
 
 
