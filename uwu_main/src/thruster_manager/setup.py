@@ -20,6 +20,7 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
+            "thruster_manager = thruster_manager.thruster_manager:main"
         ],
     },
 )
