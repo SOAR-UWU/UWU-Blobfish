@@ -20,6 +20,8 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
+            'offset_calibrator = uwu_pid.pid_offset_calibration:main',
+            'pid_node = uwu_pid.simple_pid:main'
         ],
     },
 )
