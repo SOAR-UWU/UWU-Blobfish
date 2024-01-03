@@ -32,9 +32,9 @@ class PID_Node(Node):
         ki_roll = self.get_parameter("ki_roll").value
         kd_roll = self.get_parameter("kd_roll").value
 
-        self.pid_yaw = PID(kp_yaw, ki_yaw, kd_yaw, output_limits=(-1, 1), sample_time=0.005, setpoint=0)
-        self.pid_pitch = PID(kp_pitch, ki_pitch, kd_pitch, output_limits=(-1, 1), sample_time=0.005, setpoint=0)
-        self.pid_roll = PID(kp_roll, ki_roll, kd_roll, output_limits=(-1, 1), sample_time=0.005, setpoint=0)
+        self.pid_yaw = PID(kp_yaw, ki_yaw, kd_yaw, output_limits=(-1.0, 1.0), sample_time=0.005, setpoint=0)
+        self.pid_pitch = PID(kp_pitch, ki_pitch, kd_pitch, output_limits=(-1.0, 1.0), sample_time=0.005, setpoint=0)
+        self.pid_roll = PID(kp_roll, ki_roll, kd_roll, output_limits=(-1.0, 1.0), sample_time=0.005, setpoint=0)
         
         qos_profile = rclpy.qos.qos_profile_sensor_data
 
