@@ -94,12 +94,12 @@ class PID_Node(Node):
             setpoints.x
         )
         pitch_setpoint = rclpy.parameter.Parameter(
-            "setpoint_yaw",
+            "setpoint_pitch",
             rclpy.Parameter.Type.DOUBLE,
             setpoints.y
         )
         roll_setpoint = rclpy.parameter.Parameter(
-            "setpoint_yaw",
+            "setpoint_roll",
             rclpy.Parameter.Type.DOUBLE,
             setpoints.z
         )
