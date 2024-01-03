@@ -4,7 +4,7 @@
 
 vectornav:
   ros__parameters:
-    port: "/dev/ttyUSB0"
+    port: "/dev/imu0"
     baud: 921600
     adjust_ros_timestamp: True
     reconnect_ms: 500
