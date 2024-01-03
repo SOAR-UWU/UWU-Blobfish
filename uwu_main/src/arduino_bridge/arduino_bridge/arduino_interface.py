@@ -14,7 +14,7 @@ MOTOR_VALUE_START = b'M'
 
 ARDUINO_FILES = "/workspaces/isaac_ros-dev/UWU-Blobfish/arduino"
 BOARD_FQBN = "arduino:avr:nano:cpu=atmega328old"
-ARDUINO_PORT = "/dev/ttyUSB0"
+ARDUINO_PORT = "/dev/arduino0"
 BAUD_RATE = 19200
 
 class JetsonArduinoInterface:
