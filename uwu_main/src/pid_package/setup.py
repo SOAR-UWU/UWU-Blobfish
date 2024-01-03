@@ -1,6 +1,6 @@
 from setuptools import find_packages, setup
 
-package_name = 'simple_pid'
+package_name = 'pid_package'
 
 setup(
     name=package_name,
@@ -20,8 +20,8 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            'offset_calibrator = uwu_pid.pid_offset_calibration:main',
-            'pid_node = uwu_pid.simple_pid:main'
+            'offset_calibrator = pid_package.pid_offset_calibration:main',
+            'pid_node = pid_package.pid_package:main'
         ],
     },
 )

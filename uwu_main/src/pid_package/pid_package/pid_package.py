@@ -1,4 +1,4 @@
-from simple_pid.pid import PID
+from simple_pid import PID
 import rclpy
 from rclpy.node import Node
 from geometry_msgs.msg import Vector3
@@ -7,27 +7,30 @@ from geometry_msgs.msg import Vector3
 class PID_Node(Node):
     def __init__(self):
         super().__init__("pid_node")
-        self.declare_parameter("kp_yaw", 1)
-        self.declare_parameter("ki_yaw", 1)
-        self.declare_parameter("kd_yaw", 1)
-        self.declare_parameter("kp_pitch", 1)
-        self.declare_parameter("ki_pitch", 1)
-        self.declare_parameter("kd_pitch", 1)
-        self.declare_parameter("kp_roll", 1)
-        self.declare_parameter("ki_roll", 1)
-        self.declare_parameter("kd_roll", 1)
+        self.declare_parameter("kp_yaw", 1.0)
+        self.declare_parameter("ki_yaw", 1.0)
+        self.declare_parameter("kd_yaw", 1.0)
+        self.declare_parameter("kp_pitch", 1.0)
+        self.declare_parameter("ki_pitch", 1.0)
+        self.declare_parameter("kd_pitch", 1.0)
+        self.declare_parameter("kp_roll", 1.0)
+        self.declare_parameter("ki_roll", 1.0)
+        self.declare_parameter("kd_roll", 1.0)
+        self.declare_parameter("setpoint_yaw", 0.0)
+        self.declare_parameter("setpoint_pitch", 0.0)
+        self.declare_parameter("setpoint_roll", 0.0)
 
-        kp_yaw = self.get_parameter("kp_yaw")
-        ki_yaw = self.get_parameter("ki_yaw")
-        kd_yaw = self.get_parameter("kd_yaw")
+        kp_yaw = self.get_parameter("kp_yaw").value
+        ki_yaw = self.get_parameter("ki_yaw").value
+        kd_yaw = self.get_parameter("kd_yaw").value
 
-        kp_pitch = self.get_parameter("kp_pitch")
-        ki_pitch = self.get_parameter("ki_pitch")
-        kd_pitch = self.get_parameter("kd_pitch")
+        kp_pitch = self.get_parameter("kp_pitch").value
+        ki_pitch = self.get_parameter("ki_pitch").value
+        kd_pitch = self.get_parameter("kd_pitch").value
 
-        kp_roll = self.get_parameter("kp_roll")
-        ki_roll = self.get_parameter("ki_roll")
-        kd_roll = self.get_parameter("kd_roll")
+        kp_roll = self.get_parameter("kp_roll").value
+        ki_roll = self.get_parameter("ki_roll").value
+        kd_roll = self.get_parameter("kd_roll").value
 
         self.pid_yaw = PID(kp_yaw, ki_yaw, kd_yaw, output_limits=(-1, 1), sample_time=0.005, setpoint=0)
         self.pid_pitch = PID(kp_pitch, ki_pitch, kd_pitch, output_limits=(-1, 1), sample_time=0.005, setpoint=0)
@@ -40,17 +43,17 @@ class PID_Node(Node):
         self.create_subscription(Vector3, 'setpoints/yawpitchroll', self.set_setpoints, 10)
 
     def calculate_pid(self, msg):
-        kp_yaw = self.get_parameter("kp_yaw")
-        ki_yaw = self.get_parameter("ki_yaw")
-        kd_yaw = self.get_parameter("kd_yaw")
+        kp_yaw = self.get_parameter("kp_yaw").value
+        ki_yaw = self.get_parameter("ki_yaw").value
+        kd_yaw = self.get_parameter("kd_yaw").value
 
-        kp_pitch = self.get_parameter("kp_pitch")
-        ki_pitch = self.get_parameter("ki_pitch")
-        kd_pitch = self.get_parameter("kd_pitch")
+        kp_pitch = self.get_parameter("kp_pitch").value
+        ki_pitch = self.get_parameter("ki_pitch").value
+        kd_pitch = self.get_parameter("kd_pitch").value
 
-        kp_roll = self.get_parameter("kp_roll")
-        ki_roll = self.get_parameter("ki_roll")
-        kd_roll = self.get_parameter("kd_roll")
+        kp_roll = self.get_parameter("kp_roll").value
+        ki_roll = self.get_parameter("ki_roll").value
+        kd_roll = self.get_parameter("kd_roll").value
         
         self.pid_yaw.tunings = (kp_yaw, ki_yaw, kd_yaw)
         self.pid_pitch.tunings = (kp_pitch, ki_pitch, kd_pitch)
@@ -60,9 +63,9 @@ class PID_Node(Node):
         current_pitch = msg.y
         current_roll = msg.z
 
-        setpoint_yaw = self.get_parameter("setpoint_yaw")
-        setpoint_pitch = self.get_parameter("setpoint_pitch")
-        setpoint_roll = self.get_parameter("setpoint_roll")
+        setpoint_yaw = self.get_parameter("setpoint_yaw").value
+        setpoint_pitch = self.get_parameter("setpoint_pitch").value
+        setpoint_roll = self.get_parameter("setpoint_roll").value
 
         error_yaw = current_yaw - setpoint_yaw
         if error_yaw < -180:
@@ -106,3 +109,15 @@ class PID_Node(Node):
         
         new_params = [yaw_setpoint, pitch_setpoint, roll_setpoint]
         self.set_paramters(new_params)
+
+def main(args=None):
+    rclpy.init(args=args)
+
+    pid = PID_Node()
+    rclpy.spin(pid)
+
+    pid.destroy_node()
+    rclpy.shutdown()
+    
+if __name__ == "__main__":
+    main()
