@@ -2,13 +2,13 @@
 #include "arduino_jetson_interface.h"
 
 // Just to make it easier to see which pins, doesn't take up too much space
-const byte motor_1 = 9;
-const byte motor_2 = 10;
-const byte motor_3 = 11;
-const byte motor_4 = 12;
-const byte motor_5 = 13;
-const byte motor_6 = 14;
-const byte motor_7 = 15;
+const byte motor_1 = 2;
+const byte motor_2 = 3;
+const byte motor_3 = 5;
+const byte motor_4 = 6;
+const byte motor_5 = 9;
+const byte motor_6 = 10;
+const byte motor_7 = 11;
 
 const byte motor_pins[7] {motor_1,motor_2,motor_3,motor_4,motor_5,motor_6,motor_7};
 Servo motors[7];
