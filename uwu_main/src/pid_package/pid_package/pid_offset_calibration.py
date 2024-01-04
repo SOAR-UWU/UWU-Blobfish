@@ -4,6 +4,7 @@ from rclpy.node import Node
 from geometry_msgs.msg import PoseWithCovarianceStamped, Vector3
 from tf_transformations import euler_from_quaternion
 from rclpy import Parameter
+import math
 
 class Offset_Calibration(Node):
     def __init__(self):
@@ -25,6 +26,7 @@ class Offset_Calibration(Node):
     def callback(self, msg):
         quat = msg.pose.pose.orientation
         euler_angles = euler_from_quaternion([quat.w, quat.x, quat.y, quat.z])
+        euler_angles = list(math.degrees(r) for r in euler_angles)
 
         if self.count < self.imu_data_count:
             self.imu_data_collection += euler_angles[0]
@@ -44,7 +46,7 @@ class Offset_Calibration(Node):
             pid_values.y = euler_angles[1]
             pid_values.z = euler_angles[2]
             self.imu_offset_publisher.publish(pid_values)
-        
+
 
 def main():
     rclpy.init()
