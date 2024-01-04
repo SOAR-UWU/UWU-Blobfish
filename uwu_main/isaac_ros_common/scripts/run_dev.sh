@@ -104,22 +104,6 @@ fi
 
 PLATFORM="$(uname -m)"
 
-BASE_NAME="isaac_ros_dev-$PLATFORM"
-CONTAINER_NAME="$BASE_NAME-container"
-
-# Start existing container if stopped.
-if [ "$(docker ps -a --quiet --filter status=exited --filter name=$CONTAINER_NAME)" ]; then
-    print_info "Starting existing container: $CONTAINER_NAME"
-    docker start $CONTAINER_NAME > /dev/null
-fi
-
-# Re-use existing container.
-if [ "$(docker ps -a --quiet --filter status=running --filter name=$CONTAINER_NAME)" ]; then
-    print_info "Attaching to running container: $CONTAINER_NAME"
-    docker exec -i -t -u admin --workdir /workspaces/isaac_ros-dev $CONTAINER_NAME /bin/bash $@
-    exit 0
-fi
-
 # Determine image layers.
 IMAGE_KEY=ros2_humble
 if [[ ! -z "${CONFIG_IMAGE_KEY}" ]]; then
@@ -136,8 +120,24 @@ if [[ ! -z "${IMAGE_KEY}" ]]; then
     fi
 fi
 
+BASE_NAME="isaac_ros_dev-$BASE_IMAGE_KEY"
+CONTAINER_NAME="isaac_ros_dev-container"
+
+# Start existing container if stopped.
+if [ "$(docker ps -a --quiet --filter status=exited --filter name=$CONTAINER_NAME)" ]; then
+    print_info "Starting existing container: $CONTAINER_NAME"
+    docker start $CONTAINER_NAME > /dev/null
+fi
+
+# Re-use existing container.
+if [ "$(docker ps -a --quiet --filter status=running --filter name=$CONTAINER_NAME)" ]; then
+    print_info "Attaching to running container: $CONTAINER_NAME"
+    docker exec -i -t -u admin --workdir /workspaces/isaac_ros-dev $CONTAINER_NAME /bin/bash $@
+    exit 0
+fi
+
 # Build image.
-print_info "Building $BASE_IMAGE_KEY base as image: $BASE_NAME using key $BASE_IMAGE_KEY"
+print_info "Building $BASE_IMAGE_KEY base as image: $BASE_NAME"
 $ROOT/build_base_image.sh $BASE_IMAGE_KEY $BASE_NAME '' '' ''
 
 if [ $? -ne 0 ]; then
@@ -192,7 +192,7 @@ if [[ -f "$DOCKER_ARGS_FILE" ]]; then
 fi
 
 # Run container from image.
-print_info "Creating $CONTAINER_NAME from $BASE_IMAGE_KEY."
+print_info "Creating $CONTAINER_NAME from $BASE_NAME."
 docker run -it \
     --privileged \
     --network host \
