@@ -1,3 +1,9 @@
 .vscode
 *__pycache__*
 test.py
+build/
+install/
+log/
+
+data/*
+!data/.keep

@@ -1,0 +1,18 @@
+ARG BASE_IMAGE
+FROM ${BASE_IMAGE}
+
+RUN apt-get update && apt-get install -y \
+  # Gazebo
+  ros-${ROS_DISTRO}-ros-gz \
+  && rm -rf /var/lib/apt/lists/* \
+  && apt-get clean
+
+# Hardware acceleration for Gazebo on WSL2. Disable if not using WSL.
+# RUN add-apt-repository -y ppa:kisak/kisak-mesa \
+#   && apt-get update -o Dir::Etc::sourcelist="/etc/apt/sources.list.d/kisak-ubuntu-kisak-mesa-focal.list" \
+#   -o Dir::Etc::sourceparts="-" -o APT::Get::List-Cleanup="1" \
+#   && apt-get upgrade -y \
+#   && apt-get install -y libegl-mesa0 libgbm1 libgl1-mesa-dri libglapi-mesa libglx-mesa0 mesa-va-drivers mesa-vdpau-drivers mesa-vulkan-drivers \
+#   && rm -rf /var/lib/apt/lists/* \
+#   && apt-get clean
+# ENV LD_LIBRARY_PATH="/usr/lib/wsl/lib:${LD_LIBRARY_PATH}"
