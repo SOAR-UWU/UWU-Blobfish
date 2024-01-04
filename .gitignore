@@ -1,0 +1,6 @@
+build/
+install/
+log/
+
+data/*
+!data/.keep
