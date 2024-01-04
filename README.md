@@ -24,6 +24,8 @@ docker rm -f isaac_ros_dev-container
 
 **Note**: Resetting the environment is necessary if any `Dockerfile` is modified, or if `CONFIG_IMAGE_KEY` inside `.isaac_ros_common-config` is changed, in order for the changes to take effect.
 
+**Note**: For an alternative workflow using VSCode Dev Containers (which support Python Intellisense), you can use "> Dev Containers: Attach to Running Container...", see: <https://code.visualstudio.com/docs/devcontainers/attach-container>.
+
 ### Native ROS2
 
 Refer to the documentation on Google Drive.
