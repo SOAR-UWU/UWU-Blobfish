@@ -45,6 +45,20 @@ See respective `README.md` files in each folder for more information.
   - `src/`: First-party ROS2 packages.
   - Other folders are third-party packages added via `git subtree`.
 
+### Git Subtrees Used
+
+Below commands are for updating subtrees. Note for subtrees to remain updatable, **commits must not modify both the subtree and the parent repo simultaneously**! Use two separate commits instead.
+
+```sh
+# NVIDIA-ISAAC-ROS/isaac_ros_common
+git subtree pull --prefix uwu_main/isaac_ros_common https://github.com/NVIDIA-ISAAC-ROS/isaac_ros_common.git main --squash
+
+# ???/vectornav
+# TODO: @javin where did you get it from?
+```
+
+See <https://craftquest.io/guides/git/git-workflow-tools/git-subtrees> for how to use subtrees. See <https://stackoverflow.com/questions/32407634/when-to-use-git-subtree> for when to use subtrees.
+
 ### Pre-commit Installation
 
 Pre-commit automatically runs Git hooks to check your code when you commit to this repo.
