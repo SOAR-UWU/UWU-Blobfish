@@ -35,7 +35,7 @@ void setup()
   digitalWrite(LED_BUILTIN, LOW);
 
   // ssp.init();
-  delay(2000); // delay to allow the ESC to recognize the stopped signal
+  delay(3000); // delay to allow the ESC to recognize the stopped signal
   // aji.awaitConnection(InitChar);
 }
 
