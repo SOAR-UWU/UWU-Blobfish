@@ -50,13 +50,13 @@ class ArduinoBridge(Node):
 
     def listener_callback(self, msg):
         self.jai.write_motor_values([
-            msg.motor1,
-            msg.motor2,
-            msg.motor3,
-            msg.motor4,
-            msg.motor5,
-            msg.motor6,
-            msg.motor7])
+            msg.motor_fr,
+            msg.motor_mr,
+            msg.motor_bm,
+            msg.motor_bl,
+            msg.motor_ml,
+            msg.motor_br,
+            msg.motor_fl])
 
 
 def main(args=None):
