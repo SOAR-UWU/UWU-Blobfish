@@ -18,4 +18,6 @@ rosdep update
 # Restart udev daemon
 sudo service udev restart
 
+sudo touch /.entrypoint_done
+
 $@

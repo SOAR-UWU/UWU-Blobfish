@@ -123,6 +123,11 @@ fi
 BASE_NAME="isaac_ros_dev-$BASE_IMAGE_KEY"
 CONTAINER_NAME="isaac_ros_dev-container"
 
+function attach_container() {
+    docker exec -i -t -u admin --workdir /workspaces/isaac_ros-dev $CONTAINER_NAME /bin/bash $@
+    exit 0
+}
+
 # Start existing container if stopped.
 if [ "$(docker ps -a --quiet --filter status=exited --filter name=$CONTAINER_NAME)" ]; then
     print_info "Starting existing container: $CONTAINER_NAME"
@@ -132,8 +137,7 @@ fi
 # Re-use existing container.
 if [ "$(docker ps -a --quiet --filter status=running --filter name=$CONTAINER_NAME)" ]; then
     print_info "Attaching to running container: $CONTAINER_NAME"
-    docker exec -i -t -u admin --workdir /workspaces/isaac_ros-dev $CONTAINER_NAME /bin/bash $@
-    exit 0
+    attach_container
 fi
 
 # Build image.
@@ -193,7 +197,7 @@ fi
 
 # Run container from image.
 print_info "Creating $CONTAINER_NAME from $BASE_NAME."
-docker run -it \
+docker run -d \
     --privileged \
     --network host \
     ${DOCKER_ARGS[@]} \
@@ -207,4 +211,9 @@ docker run -it \
     --workdir /workspaces/isaac_ros-dev \
     $@ \
     $BASE_NAME \
-    /bin/bash
+    sleep infinity \
+    > /dev/null
+
+print_info "Waiting for entrypoint to finish."
+docker exec $CONTAINER_NAME /bin/bash -c "while [ ! -f /.entrypoint_done ]; do sleep 1; done"
+attach_container
