@@ -108,9 +108,10 @@ PLATFORM="$(uname -m)"
 BASE_NAME="isaac_ros_dev-$PLATFORM"
 CONTAINER_NAME="$BASE_NAME-container"
 
-# Remove any exited containers.
+# Start existing container if stopped.
 if [ "$(docker ps -a --quiet --filter status=exited --filter name=$CONTAINER_NAME)" ]; then
-    docker rm $CONTAINER_NAME > /dev/null
+    print_info "Starting existing container: $CONTAINER_NAME"
+    docker start $CONTAINER_NAME > /dev/null
 fi
 
 # Re-use existing container.
@@ -191,8 +192,8 @@ if [[ -f "$DOCKER_ARGS_FILE" ]]; then
 fi
 
 # Run container from image
-print_info "Running $CONTAINER_NAME"
-docker run -it --rm \
+print_info "Creating $CONTAINER_NAME from $BASE_IMAGE_KEY"
+docker run -it \
     --privileged \
     --network host \
     ${DOCKER_ARGS[@]} \
