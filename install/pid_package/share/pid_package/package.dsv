@@ -1,0 +1,9 @@
+source;share/pid_package/hook/pythonpath.ps1
+source;share/pid_package/hook/pythonpath.dsv
+source;share/pid_package/hook/pythonpath.sh
+source;share/pid_package/hook/ament_prefix_path.ps1
+source;share/pid_package/hook/ament_prefix_path.dsv
+source;share/pid_package/hook/ament_prefix_path.sh
+source;../../build/pid_package/share/pid_package/hook/pythonpath_develop.ps1
+source;../../build/pid_package/share/pid_package/hook/pythonpath_develop.dsv
+source;../../build/pid_package/share/pid_package/hook/pythonpath_develop.sh

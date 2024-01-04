@@ -1,0 +1,472 @@
+-- The C compiler identification is GNU 11.4.0
+-- The CXX compiler identification is GNU 11.4.0
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Check for working C compiler: /usr/bin/cc - skipped
+-- Detecting C compile features
+-- Detecting C compile features - done
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: /usr/bin/c++ - skipped
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- Found ament_cmake: 1.3.6 (/opt/ros/humble/share/ament_cmake/cmake)
+-- Found Python3: /usr/bin/python3.10 (found version "3.10.12") found components: Interpreter 
+-- Override CMake install command with custom implementation using symlinks instead of copying resources
+-- Found geometry_msgs: 4.2.3 (/opt/ros/humble/share/geometry_msgs/cmake)
+-- Found rosidl_generator_c: 3.1.5 (/opt/ros/humble/share/rosidl_generator_c/cmake)
+-- Found rosidl_adapter: 3.1.5 (/opt/ros/humble/share/rosidl_adapter/cmake)
+-- Found rosidl_generator_cpp: 3.1.5 (/opt/ros/humble/share/rosidl_generator_cpp/cmake)
+-- Using all available rosidl_typesupport_c: rosidl_typesupport_fastrtps_c;rosidl_typesupport_introspection_c
+-- Using all available rosidl_typesupport_cpp: rosidl_typesupport_fastrtps_cpp;rosidl_typesupport_introspection_cpp
+-- Found rosidl_default_generators: 1.2.0 (/opt/ros/humble/share/rosidl_default_generators/cmake)
+[0mGrabbing messages action/MagCal.action[0m
+-- Found ament_cmake_ros: 0.10.0 (/opt/ros/humble/share/ament_cmake_ros/cmake)
+-- Using all available rosidl_typesupport_c: rosidl_typesupport_fastrtps_c;rosidl_typesupport_introspection_c
+-- Using all available rosidl_typesupport_cpp: rosidl_typesupport_fastrtps_cpp;rosidl_typesupport_introspection_cpp
+-- Found PythonInterp: /usr/bin/python3 (found suitable version "3.10.12", minimum required is "3.6") 
+-- Found python_cmake_module: 0.10.0 (/opt/ros/humble/share/python_cmake_module/cmake)
+-- Found PythonLibs: /usr/lib/x86_64-linux-gnu/libpython3.10.so (found suitable version "3.10.12", minimum required is "3.5") 
+-- Using PYTHON_EXECUTABLE: /usr/bin/python3
+-- Using PYTHON_INCLUDE_DIRS: /usr/include/python3.10
+-- Using PYTHON_LIBRARIES: /usr/lib/x86_64-linux-gnu/libpython3.10.so
+-- Found PythonExtra: .so  
+-- Configuring done
+-- Generating done
+-- Build files have been written to: /home/linux/UWU-Blobfish/build/vectornav_msgs
+[  1%] [34m[1mGenerating C code for ROS interfaces[0m
+[  1%] [34m[1mGenerating C++ code for ROS interfaces[0m
+[  1%] Built target ament_cmake_python_symlink_vectornav_msgs
+running egg_info
+creating vectornav_msgs.egg-info
+writing vectornav_msgs.egg-info/PKG-INFO
+writing dependency_links to vectornav_msgs.egg-info/dependency_links.txt
+writing top-level names to vectornav_msgs.egg-info/top_level.txt
+writing manifest file 'vectornav_msgs.egg-info/SOURCES.txt'
+reading manifest file 'vectornav_msgs.egg-info/SOURCES.txt'
+writing manifest file 'vectornav_msgs.egg-info/SOURCES.txt'
+[  1%] Built target ament_cmake_python_build_vectornav_msgs_egg
+[  2%] [32mBuilding C object CMakeFiles/vectornav_msgs__rosidl_generator_c.dir/rosidl_generator_c/vectornav_msgs/msg/detail/attitude_group__functions.c.o[0m
+[  3%] [32mBuilding C object CMakeFiles/vectornav_msgs__rosidl_generator_c.dir/rosidl_generator_c/vectornav_msgs/msg/detail/common_group__functions.c.o[0m
+[  4%] [32mBuilding C object CMakeFiles/vectornav_msgs__rosidl_generator_c.dir/rosidl_generator_c/vectornav_msgs/msg/detail/dop__functions.c.o[0m
+[  5%] [32mBuilding C object CMakeFiles/vectornav_msgs__rosidl_generator_c.dir/rosidl_generator_c/vectornav_msgs/msg/detail/imu_group__functions.c.o[0m
+[  5%] [32mBuilding C object CMakeFiles/vectornav_msgs__rosidl_generator_c.dir/rosidl_generator_c/vectornav_msgs/msg/detail/gps_group__functions.c.o[0m
+[  6%] [32mBuilding C object CMakeFiles/vectornav_msgs__rosidl_generator_c.dir/rosidl_generator_c/vectornav_msgs/msg/detail/ins_status__functions.c.o[0m
+[  7%] [32mBuilding C object CMakeFiles/vectornav_msgs__rosidl_generator_c.dir/rosidl_generator_c/vectornav_msgs/msg/detail/ins_group__functions.c.o[0m
+[  8%] [32mBuilding C object CMakeFiles/vectornav_msgs__rosidl_generator_c.dir/rosidl_generator_c/vectornav_msgs/msg/detail/time_group__functions.c.o[0m
+[  9%] [32mBuilding C object CMakeFiles/vectornav_msgs__rosidl_generator_c.dir/rosidl_generator_c/vectornav_msgs/msg/detail/time_status__functions.c.o[0m
+[  9%] [32mBuilding C object CMakeFiles/vectornav_msgs__rosidl_generator_c.dir/rosidl_generator_c/vectornav_msgs/msg/detail/time_utc__functions.c.o[0m
+[ 10%] [32mBuilding C object CMakeFiles/vectornav_msgs__rosidl_generator_c.dir/rosidl_generator_c/vectornav_msgs/msg/detail/vpe_status__functions.c.o[0m
+[ 11%] [32mBuilding C object CMakeFiles/vectornav_msgs__rosidl_generator_c.dir/rosidl_generator_c/vectornav_msgs/action/detail/mag_cal__functions.c.o[0m
+[ 11%] Built target vectornav_msgs__cpp
+[ 12%] [34m[1mGenerating C++ introspection for ROS interfaces[0m
+[ 12%] [34m[1mGenerating C++ type support for eProsima Fast-RTPS[0m
+[ 13%] [34m[1mGenerating C++ type support dispatch for ROS interfaces[0m
+[ 14%] [32m[1mLinking C shared library libvectornav_msgs__rosidl_generator_c.so[0m
+[ 14%] Built target vectornav_msgs__rosidl_generator_c
+[ 16%] [34m[1mGenerating C type support dispatch for ROS interfaces[0m
+[ 16%] [34m[1mGenerating C type support for eProsima Fast-RTPS[0m
+[ 17%] [34m[1mGenerating C introspection for ROS interfaces[0m
+[ 18%] [32mBuilding CXX object CMakeFiles/vectornav_msgs__rosidl_typesupport_cpp.dir/rosidl_typesupport_cpp/vectornav_msgs/msg/attitude_group__type_support.cpp.o[0m
+[ 19%] [32mBuilding CXX object CMakeFiles/vectornav_msgs__rosidl_typesupport_c.dir/rosidl_typesupport_c/vectornav_msgs/msg/attitude_group__type_support.cpp.o[0m
+[ 19%] [32mBuilding CXX object CMakeFiles/vectornav_msgs__rosidl_typesupport_c.dir/rosidl_typesupport_c/vectornav_msgs/msg/common_group__type_support.cpp.o[0m
+[ 20%] [32mBuilding CXX object CMakeFiles/vectornav_msgs__rosidl_typesupport_c.dir/rosidl_typesupport_c/vectornav_msgs/msg/dop__type_support.cpp.o[0m
+[ 21%] [32mBuilding CXX object CMakeFiles/vectornav_msgs__rosidl_typesupport_c.dir/rosidl_typesupport_c/vectornav_msgs/msg/gps_group__type_support.cpp.o[0m
+[ 22%] [32mBuilding CXX object CMakeFiles/vectornav_msgs__rosidl_typesupport_cpp.dir/rosidl_typesupport_cpp/vectornav_msgs/msg/common_group__type_support.cpp.o[0m
+[ 23%] [32mBuilding CXX object CMakeFiles/vectornav_msgs__rosidl_typesupport_c.dir/rosidl_typesupport_c/vectornav_msgs/msg/imu_group__type_support.cpp.o[0m
+[ 23%] [32mBuilding CXX object CMakeFiles/vectornav_msgs__rosidl_typesupport_introspection_cpp.dir/rosidl_typesupport_introspection_cpp/vectornav_msgs/msg/detail/attitude_group__type_support.cpp.o[0m
+[ 24%] [32mBuilding CXX object CMakeFiles/vectornav_msgs__rosidl_typesupport_c.dir/rosidl_typesupport_c/vectornav_msgs/msg/ins_group__type_support.cpp.o[0m
+[ 25%] [32mBuilding CXX object CMakeFiles/vectornav_msgs__rosidl_typesupport_c.dir/rosidl_typesupport_c/vectornav_msgs/msg/ins_status__type_support.cpp.o[0m
+[ 25%] [32mBuilding CXX object CMakeFiles/vectornav_msgs__rosidl_typesupport_c.dir/rosidl_typesupport_c/vectornav_msgs/msg/time_group__type_support.cpp.o[0m
+[ 26%] [32mBuilding CXX object CMakeFiles/vectornav_msgs__rosidl_typesupport_fastrtps_cpp.dir/rosidl_typesupport_fastrtps_cpp/vectornav_msgs/msg/detail/dds_fastrtps/attitude_group__type_support.cpp.o[0m
+[ 27%] [32mBuilding C object CMakeFiles/vectornav_msgs__rosidl_typesupport_introspection_c.dir/rosidl_typesupport_introspection_c/vectornav_msgs/msg/detail/attitude_group__type_support.c.o[0m
+[ 28%] [32mBuilding CXX object CMakeFiles/vectornav_msgs__rosidl_typesupport_c.dir/rosidl_typesupport_c/vectornav_msgs/msg/time_status__type_support.cpp.o[0m
+[ 29%] [32mBuilding C object CMakeFiles/vectornav_msgs__rosidl_typesupport_introspection_c.dir/rosidl_typesupport_introspection_c/vectornav_msgs/msg/detail/common_group__type_support.c.o[0m
+[ 30%] [32mBuilding CXX object CMakeFiles/vectornav_msgs__rosidl_typesupport_c.dir/rosidl_typesupport_c/vectornav_msgs/msg/time_utc__type_support.cpp.o[0m
+[ 31%] [32mBuilding CXX object CMakeFiles/vectornav_msgs__rosidl_typesupport_fastrtps_c.dir/rosidl_typesupport_fastrtps_c/vectornav_msgs/msg/detail/attitude_group__type_support_c.cpp.o[0m
+[ 32%] [32mBuilding CXX object CMakeFiles/vectornav_msgs__rosidl_typesupport_cpp.dir/rosidl_typesupport_cpp/vectornav_msgs/msg/dop__type_support.cpp.o[0m
+[ 33%] [32mBuilding CXX object CMakeFiles/vectornav_msgs__rosidl_typesupport_c.dir/rosidl_typesupport_c/vectornav_msgs/msg/vpe_status__type_support.cpp.o[0m
+[ 34%] [32mBuilding C object CMakeFiles/vectornav_msgs__rosidl_typesupport_introspection_c.dir/rosidl_typesupport_introspection_c/vectornav_msgs/msg/detail/dop__type_support.c.o[0m
+[ 34%] [32mBuilding C object CMakeFiles/vectornav_msgs__rosidl_typesupport_introspection_c.dir/rosidl_typesupport_introspection_c/vectornav_msgs/msg/detail/gps_group__type_support.c.o[0m
+[ 35%] [32mBuilding CXX object CMakeFiles/vectornav_msgs__rosidl_typesupport_c.dir/rosidl_typesupport_c/vectornav_msgs/action/mag_cal__type_support.cpp.o[0m
+[ 36%] [32mBuilding C object CMakeFiles/vectornav_msgs__rosidl_typesupport_introspection_c.dir/rosidl_typesupport_introspection_c/vectornav_msgs/msg/detail/imu_group__type_support.c.o[0m
+[ 37%] [32m[1mLinking CXX shared library libvectornav_msgs__rosidl_typesupport_c.so[0m
+[ 38%] [32mBuilding CXX object CMakeFiles/vectornav_msgs__rosidl_typesupport_introspection_cpp.dir/rosidl_typesupport_introspection_cpp/vectornav_msgs/msg/detail/common_group__type_support.cpp.o[0m
+[ 39%] [32mBuilding C object CMakeFiles/vectornav_msgs__rosidl_typesupport_introspection_c.dir/rosidl_typesupport_introspection_c/vectornav_msgs/msg/detail/ins_group__type_support.c.o[0m
+[ 40%] [32mBuilding C object CMakeFiles/vectornav_msgs__rosidl_typesupport_introspection_c.dir/rosidl_typesupport_introspection_c/vectornav_msgs/msg/detail/ins_status__type_support.c.o[0m
+[ 41%] [32mBuilding CXX object CMakeFiles/vectornav_msgs__rosidl_typesupport_cpp.dir/rosidl_typesupport_cpp/vectornav_msgs/msg/gps_group__type_support.cpp.o[0m
+[ 41%] Built target vectornav_msgs__rosidl_typesupport_c
+[ 42%] [32mBuilding CXX object CMakeFiles/vectornav_msgs__rosidl_typesupport_fastrtps_cpp.dir/rosidl_typesupport_fastrtps_cpp/vectornav_msgs/msg/detail/dds_fastrtps/common_group__type_support.cpp.o[0m
+[ 43%] [32mBuilding C object CMakeFiles/vectornav_msgs__rosidl_typesupport_introspection_c.dir/rosidl_typesupport_introspection_c/vectornav_msgs/msg/detail/time_group__type_support.c.o[0m
+[ 43%] [32mBuilding CXX object CMakeFiles/vectornav_msgs__rosidl_typesupport_cpp.dir/rosidl_typesupport_cpp/vectornav_msgs/msg/imu_group__type_support.cpp.o[0m
+[ 44%] [32mBuilding C object CMakeFiles/vectornav_msgs__rosidl_typesupport_introspection_c.dir/rosidl_typesupport_introspection_c/vectornav_msgs/msg/detail/time_status__type_support.c.o[0m
+[ 45%] [32mBuilding CXX object CMakeFiles/vectornav_msgs__rosidl_typesupport_fastrtps_c.dir/rosidl_typesupport_fastrtps_c/vectornav_msgs/msg/detail/common_group__type_support_c.cpp.o[0m
+[ 46%] [32mBuilding C object CMakeFiles/vectornav_msgs__rosidl_typesupport_introspection_c.dir/rosidl_typesupport_introspection_c/vectornav_msgs/msg/detail/time_utc__type_support.c.o[0m
+[ 46%] [32mBuilding C object CMakeFiles/vectornav_msgs__rosidl_typesupport_introspection_c.dir/rosidl_typesupport_introspection_c/vectornav_msgs/msg/detail/vpe_status__type_support.c.o[0m
+[ 47%] [32mBuilding CXX object CMakeFiles/vectornav_msgs__rosidl_typesupport_introspection_cpp.dir/rosidl_typesupport_introspection_cpp/vectornav_msgs/msg/detail/dop__type_support.cpp.o[0m
+[ 48%] [32mBuilding CXX object CMakeFiles/vectornav_msgs__rosidl_typesupport_cpp.dir/rosidl_typesupport_cpp/vectornav_msgs/msg/ins_group__type_support.cpp.o[0m
+[ 49%] [32mBuilding CXX object CMakeFiles/vectornav_msgs__rosidl_typesupport_introspection_cpp.dir/rosidl_typesupport_introspection_cpp/vectornav_msgs/msg/detail/gps_group__type_support.cpp.o[0m
+[ 50%] [32mBuilding C object CMakeFiles/vectornav_msgs__rosidl_typesupport_introspection_c.dir/rosidl_typesupport_introspection_c/vectornav_msgs/action/detail/mag_cal__type_support.c.o[0m
+[ 51%] [32mBuilding CXX object CMakeFiles/vectornav_msgs__rosidl_typesupport_fastrtps_cpp.dir/rosidl_typesupport_fastrtps_cpp/vectornav_msgs/msg/detail/dds_fastrtps/dop__type_support.cpp.o[0m
+[ 52%] [32m[1mLinking C shared library libvectornav_msgs__rosidl_typesupport_introspection_c.so[0m
+[ 53%] [32mBuilding CXX object CMakeFiles/vectornav_msgs__rosidl_typesupport_cpp.dir/rosidl_typesupport_cpp/vectornav_msgs/msg/ins_status__type_support.cpp.o[0m
+[ 53%] [32mBuilding CXX object CMakeFiles/vectornav_msgs__rosidl_typesupport_fastrtps_c.dir/rosidl_typesupport_fastrtps_c/vectornav_msgs/msg/detail/dop__type_support_c.cpp.o[0m
+[ 53%] Built target vectornav_msgs__rosidl_typesupport_introspection_c
+[ 54%] [32mBuilding CXX object CMakeFiles/vectornav_msgs__rosidl_typesupport_fastrtps_c.dir/rosidl_typesupport_fastrtps_c/vectornav_msgs/msg/detail/gps_group__type_support_c.cpp.o[0m
+[ 55%] [32mBuilding CXX object CMakeFiles/vectornav_msgs__rosidl_typesupport_introspection_cpp.dir/rosidl_typesupport_introspection_cpp/vectornav_msgs/msg/detail/imu_group__type_support.cpp.o[0m
+[ 56%] [32mBuilding CXX object CMakeFiles/vectornav_msgs__rosidl_typesupport_fastrtps_cpp.dir/rosidl_typesupport_fastrtps_cpp/vectornav_msgs/msg/detail/dds_fastrtps/gps_group__type_support.cpp.o[0m
+[ 57%] [32mBuilding CXX object CMakeFiles/vectornav_msgs__rosidl_typesupport_cpp.dir/rosidl_typesupport_cpp/vectornav_msgs/msg/time_group__type_support.cpp.o[0m
+[ 58%] [32mBuilding CXX object CMakeFiles/vectornav_msgs__rosidl_typesupport_introspection_cpp.dir/rosidl_typesupport_introspection_cpp/vectornav_msgs/msg/detail/ins_group__type_support.cpp.o[0m
+[ 59%] [32mBuilding CXX object CMakeFiles/vectornav_msgs__rosidl_typesupport_fastrtps_c.dir/rosidl_typesupport_fastrtps_c/vectornav_msgs/msg/detail/imu_group__type_support_c.cpp.o[0m
+[ 60%] [32mBuilding CXX object CMakeFiles/vectornav_msgs__rosidl_typesupport_fastrtps_c.dir/rosidl_typesupport_fastrtps_c/vectornav_msgs/msg/detail/ins_group__type_support_c.cpp.o[0m
+[ 61%] [32mBuilding CXX object CMakeFiles/vectornav_msgs__rosidl_typesupport_cpp.dir/rosidl_typesupport_cpp/vectornav_msgs/msg/time_status__type_support.cpp.o[0m
+[ 62%] [32mBuilding CXX object CMakeFiles/vectornav_msgs__rosidl_typesupport_cpp.dir/rosidl_typesupport_cpp/vectornav_msgs/msg/time_utc__type_support.cpp.o[0m
+[ 63%] [32mBuilding CXX object CMakeFiles/vectornav_msgs__rosidl_typesupport_fastrtps_cpp.dir/rosidl_typesupport_fastrtps_cpp/vectornav_msgs/msg/detail/dds_fastrtps/imu_group__type_support.cpp.o[0m
+[ 63%] [32mBuilding CXX object CMakeFiles/vectornav_msgs__rosidl_typesupport_cpp.dir/rosidl_typesupport_cpp/vectornav_msgs/msg/vpe_status__type_support.cpp.o[0m
+[ 64%] [32mBuilding CXX object CMakeFiles/vectornav_msgs__rosidl_typesupport_cpp.dir/rosidl_typesupport_cpp/vectornav_msgs/action/mag_cal__type_support.cpp.o[0m
+[ 65%] [32mBuilding CXX object CMakeFiles/vectornav_msgs__rosidl_typesupport_fastrtps_c.dir/rosidl_typesupport_fastrtps_c/vectornav_msgs/msg/detail/ins_status__type_support_c.cpp.o[0m
+[ 66%] [32mBuilding CXX object CMakeFiles/vectornav_msgs__rosidl_typesupport_fastrtps_cpp.dir/rosidl_typesupport_fastrtps_cpp/vectornav_msgs/msg/detail/dds_fastrtps/ins_group__type_support.cpp.o[0m
+[ 66%] [32mBuilding CXX object CMakeFiles/vectornav_msgs__rosidl_typesupport_fastrtps_c.dir/rosidl_typesupport_fastrtps_c/vectornav_msgs/msg/detail/time_group__type_support_c.cpp.o[0m
+[ 66%] [32mBuilding CXX object CMakeFiles/vectornav_msgs__rosidl_typesupport_introspection_cpp.dir/rosidl_typesupport_introspection_cpp/vectornav_msgs/msg/detail/ins_status__type_support.cpp.o[0m
+[ 66%] [32mBuilding CXX object CMakeFiles/vectornav_msgs__rosidl_typesupport_fastrtps_c.dir/rosidl_typesupport_fastrtps_c/vectornav_msgs/msg/detail/time_status__type_support_c.cpp.o[0m
+[ 67%] [32mBuilding CXX object CMakeFiles/vectornav_msgs__rosidl_typesupport_introspection_cpp.dir/rosidl_typesupport_introspection_cpp/vectornav_msgs/msg/detail/time_group__type_support.cpp.o[0m
+[ 68%] [32mBuilding CXX object CMakeFiles/vectornav_msgs__rosidl_typesupport_fastrtps_cpp.dir/rosidl_typesupport_fastrtps_cpp/vectornav_msgs/msg/detail/dds_fastrtps/ins_status__type_support.cpp.o[0m
+[ 69%] [32m[1mLinking CXX shared library libvectornav_msgs__rosidl_typesupport_cpp.so[0m
+[ 70%] [32mBuilding CXX object CMakeFiles/vectornav_msgs__rosidl_typesupport_fastrtps_c.dir/rosidl_typesupport_fastrtps_c/vectornav_msgs/msg/detail/time_utc__type_support_c.cpp.o[0m
+[ 70%] Built target vectornav_msgs__rosidl_typesupport_cpp
+[ 72%] [32mBuilding CXX object CMakeFiles/vectornav_msgs__rosidl_typesupport_fastrtps_c.dir/rosidl_typesupport_fastrtps_c/vectornav_msgs/msg/detail/vpe_status__type_support_c.cpp.o[0m
+[ 72%] [32mBuilding CXX object CMakeFiles/vectornav_msgs__rosidl_typesupport_introspection_cpp.dir/rosidl_typesupport_introspection_cpp/vectornav_msgs/msg/detail/time_status__type_support.cpp.o[0m
+[ 74%] [32mBuilding CXX object CMakeFiles/vectornav_msgs__rosidl_typesupport_fastrtps_c.dir/rosidl_typesupport_fastrtps_c/vectornav_msgs/action/detail/mag_cal__type_support_c.cpp.o[0m
+[ 74%] [32mBuilding CXX object CMakeFiles/vectornav_msgs__rosidl_typesupport_introspection_cpp.dir/rosidl_typesupport_introspection_cpp/vectornav_msgs/msg/detail/time_utc__type_support.cpp.o[0m
+[ 75%] [32mBuilding CXX object CMakeFiles/vectornav_msgs__rosidl_typesupport_introspection_cpp.dir/rosidl_typesupport_introspection_cpp/vectornav_msgs/msg/detail/vpe_status__type_support.cpp.o[0m
+[ 76%] [32mBuilding CXX object CMakeFiles/vectornav_msgs__rosidl_typesupport_fastrtps_cpp.dir/rosidl_typesupport_fastrtps_cpp/vectornav_msgs/msg/detail/dds_fastrtps/time_group__type_support.cpp.o[0m
+[ 77%] [32mBuilding CXX object CMakeFiles/vectornav_msgs__rosidl_typesupport_introspection_cpp.dir/rosidl_typesupport_introspection_cpp/vectornav_msgs/action/detail/mag_cal__type_support.cpp.o[0m
+[ 78%] [32mBuilding CXX object CMakeFiles/vectornav_msgs__rosidl_typesupport_fastrtps_cpp.dir/rosidl_typesupport_fastrtps_cpp/vectornav_msgs/msg/detail/dds_fastrtps/time_status__type_support.cpp.o[0m
+[ 79%] [32mBuilding CXX object CMakeFiles/vectornav_msgs__rosidl_typesupport_fastrtps_cpp.dir/rosidl_typesupport_fastrtps_cpp/vectornav_msgs/msg/detail/dds_fastrtps/time_utc__type_support.cpp.o[0m
+[ 80%] [32m[1mLinking CXX shared library libvectornav_msgs__rosidl_typesupport_fastrtps_c.so[0m
+[ 81%] [32mBuilding CXX object CMakeFiles/vectornav_msgs__rosidl_typesupport_fastrtps_cpp.dir/rosidl_typesupport_fastrtps_cpp/vectornav_msgs/msg/detail/dds_fastrtps/vpe_status__type_support.cpp.o[0m
+[ 81%] [32mBuilding CXX object CMakeFiles/vectornav_msgs__rosidl_typesupport_fastrtps_cpp.dir/rosidl_typesupport_fastrtps_cpp/vectornav_msgs/action/detail/dds_fastrtps/mag_cal__type_support.cpp.o[0m
+[ 81%] Built target vectornav_msgs__rosidl_typesupport_fastrtps_c
+[ 82%] [32m[1mLinking CXX shared library libvectornav_msgs__rosidl_typesupport_introspection_cpp.so[0m
+[ 82%] Built target vectornav_msgs__rosidl_typesupport_introspection_cpp
+[ 83%] [32m[1mLinking CXX shared library libvectornav_msgs__rosidl_typesupport_fastrtps_cpp.so[0m
+[ 83%] Built target vectornav_msgs__rosidl_typesupport_fastrtps_cpp
+[ 83%] Built target vectornav_msgs
+[ 84%] [34m[1mGenerating Python code for ROS interfaces[0m
+[ 84%] Built target vectornav_msgs__py
+[ 85%] [32mBuilding C object CMakeFiles/vectornav_msgs__rosidl_generator_py.dir/rosidl_generator_py/vectornav_msgs/msg/_attitude_group_s.c.o[0m
+[ 86%] [32mBuilding C object CMakeFiles/vectornav_msgs__rosidl_generator_py.dir/rosidl_generator_py/vectornav_msgs/msg/_gps_group_s.c.o[0m
+[ 87%] [32mBuilding C object CMakeFiles/vectornav_msgs__rosidl_generator_py.dir/rosidl_generator_py/vectornav_msgs/msg/_common_group_s.c.o[0m
+[ 88%] [32mBuilding C object CMakeFiles/vectornav_msgs__rosidl_generator_py.dir/rosidl_generator_py/vectornav_msgs/msg/_imu_group_s.c.o[0m
+[ 88%] [32mBuilding C object CMakeFiles/vectornav_msgs__rosidl_generator_py.dir/rosidl_generator_py/vectornav_msgs/msg/_dop_s.c.o[0m
+[ 89%] [32mBuilding C object CMakeFiles/vectornav_msgs__rosidl_generator_py.dir/rosidl_generator_py/vectornav_msgs/msg/_ins_group_s.c.o[0m
+[ 90%] [32mBuilding C object CMakeFiles/vectornav_msgs__rosidl_generator_py.dir/rosidl_generator_py/vectornav_msgs/msg/_ins_status_s.c.o[0m
+[ 91%] [32mBuilding C object CMakeFiles/vectornav_msgs__rosidl_generator_py.dir/rosidl_generator_py/vectornav_msgs/msg/_time_group_s.c.o[0m
+[ 92%] [32mBuilding C object CMakeFiles/vectornav_msgs__rosidl_generator_py.dir/rosidl_generator_py/vectornav_msgs/msg/_time_status_s.c.o[0m
+[ 92%] [32mBuilding C object CMakeFiles/vectornav_msgs__rosidl_generator_py.dir/rosidl_generator_py/vectornav_msgs/msg/_time_utc_s.c.o[0m
+[ 93%] [32mBuilding C object CMakeFiles/vectornav_msgs__rosidl_generator_py.dir/rosidl_generator_py/vectornav_msgs/msg/_vpe_status_s.c.o[0m
+[ 94%] [32mBuilding C object CMakeFiles/vectornav_msgs__rosidl_generator_py.dir/rosidl_generator_py/vectornav_msgs/action/_mag_cal_s.c.o[0m
+[ 95%] [32m[1mLinking C shared library rosidl_generator_py/vectornav_msgs/libvectornav_msgs__rosidl_generator_py.so[0m
+[ 95%] Built target vectornav_msgs__rosidl_generator_py
+[ 96%] [32mBuilding C object CMakeFiles/vectornav_msgs__rosidl_typesupport_fastrtps_c__pyext.dir/rosidl_generator_py/vectornav_msgs/_vectornav_msgs_s.ep.rosidl_typesupport_fastrtps_c.c.o[0m
+[ 96%] [32mBuilding C object CMakeFiles/vectornav_msgs__rosidl_typesupport_c__pyext.dir/rosidl_generator_py/vectornav_msgs/_vectornav_msgs_s.ep.rosidl_typesupport_c.c.o[0m
+[ 97%] [32mBuilding C object CMakeFiles/vectornav_msgs__rosidl_typesupport_introspection_c__pyext.dir/rosidl_generator_py/vectornav_msgs/_vectornav_msgs_s.ep.rosidl_typesupport_introspection_c.c.o[0m
+[ 98%] [32m[1mLinking C shared library rosidl_generator_py/vectornav_msgs/vectornav_msgs_s__rosidl_typesupport_introspection_c.cpython-310-x86_64-linux-gnu.so[0m
+[ 99%] [32m[1mLinking C shared library rosidl_generator_py/vectornav_msgs/vectornav_msgs_s__rosidl_typesupport_fastrtps_c.cpython-310-x86_64-linux-gnu.so[0m
+[100%] [32m[1mLinking C shared library rosidl_generator_py/vectornav_msgs/vectornav_msgs_s__rosidl_typesupport_c.cpython-310-x86_64-linux-gnu.so[0m
+[100%] Built target vectornav_msgs__rosidl_typesupport_fastrtps_c__pyext
+[100%] Built target vectornav_msgs__rosidl_typesupport_introspection_c__pyext
+[100%] Built target vectornav_msgs__rosidl_typesupport_c__pyext
+-- Install configuration: ""
+-- Execute custom install script
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/share/ament_index/resource_index/rosidl_interfaces/vectornav_msgs
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/include/vectornav_msgs/vectornav_msgs/action/detail/mag_cal__functions.h
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/include/vectornav_msgs/vectornav_msgs/action/detail/mag_cal__struct.h
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/include/vectornav_msgs/vectornav_msgs/action/detail/mag_cal__type_support.h
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/include/vectornav_msgs/vectornav_msgs/action/mag_cal.h
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/include/vectornav_msgs/vectornav_msgs/msg/attitude_group.h
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/include/vectornav_msgs/vectornav_msgs/msg/common_group.h
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/include/vectornav_msgs/vectornav_msgs/msg/detail/attitude_group__functions.h
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/include/vectornav_msgs/vectornav_msgs/msg/detail/attitude_group__struct.h
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/include/vectornav_msgs/vectornav_msgs/msg/detail/attitude_group__type_support.h
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/include/vectornav_msgs/vectornav_msgs/msg/detail/common_group__functions.h
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/include/vectornav_msgs/vectornav_msgs/msg/detail/common_group__struct.h
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/include/vectornav_msgs/vectornav_msgs/msg/detail/common_group__type_support.h
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/include/vectornav_msgs/vectornav_msgs/msg/detail/dop__functions.h
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/include/vectornav_msgs/vectornav_msgs/msg/detail/dop__struct.h
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/include/vectornav_msgs/vectornav_msgs/msg/detail/dop__type_support.h
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/include/vectornav_msgs/vectornav_msgs/msg/detail/gps_group__functions.h
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/include/vectornav_msgs/vectornav_msgs/msg/detail/gps_group__struct.h
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/include/vectornav_msgs/vectornav_msgs/msg/detail/gps_group__type_support.h
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/include/vectornav_msgs/vectornav_msgs/msg/detail/imu_group__functions.h
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/include/vectornav_msgs/vectornav_msgs/msg/detail/imu_group__struct.h
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/include/vectornav_msgs/vectornav_msgs/msg/detail/imu_group__type_support.h
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/include/vectornav_msgs/vectornav_msgs/msg/detail/ins_group__functions.h
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/include/vectornav_msgs/vectornav_msgs/msg/detail/ins_group__struct.h
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/include/vectornav_msgs/vectornav_msgs/msg/detail/ins_group__type_support.h
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/include/vectornav_msgs/vectornav_msgs/msg/detail/ins_status__functions.h
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/include/vectornav_msgs/vectornav_msgs/msg/detail/ins_status__struct.h
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/include/vectornav_msgs/vectornav_msgs/msg/detail/ins_status__type_support.h
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/include/vectornav_msgs/vectornav_msgs/msg/detail/time_group__functions.h
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/include/vectornav_msgs/vectornav_msgs/msg/detail/time_group__struct.h
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/include/vectornav_msgs/vectornav_msgs/msg/detail/time_group__type_support.h
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/include/vectornav_msgs/vectornav_msgs/msg/detail/time_status__functions.h
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/include/vectornav_msgs/vectornav_msgs/msg/detail/time_status__struct.h
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/include/vectornav_msgs/vectornav_msgs/msg/detail/time_status__type_support.h
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/include/vectornav_msgs/vectornav_msgs/msg/detail/time_utc__functions.h
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/include/vectornav_msgs/vectornav_msgs/msg/detail/time_utc__struct.h
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/include/vectornav_msgs/vectornav_msgs/msg/detail/time_utc__type_support.h
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/include/vectornav_msgs/vectornav_msgs/msg/detail/vpe_status__functions.h
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/include/vectornav_msgs/vectornav_msgs/msg/detail/vpe_status__struct.h
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/include/vectornav_msgs/vectornav_msgs/msg/detail/vpe_status__type_support.h
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/include/vectornav_msgs/vectornav_msgs/msg/dop.h
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/include/vectornav_msgs/vectornav_msgs/msg/gps_group.h
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/include/vectornav_msgs/vectornav_msgs/msg/imu_group.h
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/include/vectornav_msgs/vectornav_msgs/msg/ins_group.h
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/include/vectornav_msgs/vectornav_msgs/msg/ins_status.h
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/include/vectornav_msgs/vectornav_msgs/msg/rosidl_generator_c__visibility_control.h
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/include/vectornav_msgs/vectornav_msgs/msg/time_group.h
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/include/vectornav_msgs/vectornav_msgs/msg/time_status.h
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/include/vectornav_msgs/vectornav_msgs/msg/time_utc.h
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/include/vectornav_msgs/vectornav_msgs/msg/vpe_status.h
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/share/vectornav_msgs/environment/library_path.sh
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/share/vectornav_msgs/environment/library_path.dsv
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/include/vectornav_msgs/vectornav_msgs/action/detail/mag_cal__rosidl_typesupport_fastrtps_c.h
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/include/vectornav_msgs/vectornav_msgs/msg/detail/attitude_group__rosidl_typesupport_fastrtps_c.h
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/include/vectornav_msgs/vectornav_msgs/msg/detail/common_group__rosidl_typesupport_fastrtps_c.h
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/include/vectornav_msgs/vectornav_msgs/msg/detail/dop__rosidl_typesupport_fastrtps_c.h
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/include/vectornav_msgs/vectornav_msgs/msg/detail/gps_group__rosidl_typesupport_fastrtps_c.h
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/include/vectornav_msgs/vectornav_msgs/msg/detail/imu_group__rosidl_typesupport_fastrtps_c.h
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/include/vectornav_msgs/vectornav_msgs/msg/detail/ins_group__rosidl_typesupport_fastrtps_c.h
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/include/vectornav_msgs/vectornav_msgs/msg/detail/ins_status__rosidl_typesupport_fastrtps_c.h
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/include/vectornav_msgs/vectornav_msgs/msg/detail/time_group__rosidl_typesupport_fastrtps_c.h
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/include/vectornav_msgs/vectornav_msgs/msg/detail/time_status__rosidl_typesupport_fastrtps_c.h
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/include/vectornav_msgs/vectornav_msgs/msg/detail/time_utc__rosidl_typesupport_fastrtps_c.h
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/include/vectornav_msgs/vectornav_msgs/msg/detail/vpe_status__rosidl_typesupport_fastrtps_c.h
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/include/vectornav_msgs/vectornav_msgs/msg/rosidl_typesupport_fastrtps_c__visibility_control.h
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/include/vectornav_msgs/vectornav_msgs/action/detail/mag_cal__builder.hpp
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/include/vectornav_msgs/vectornav_msgs/action/detail/mag_cal__struct.hpp
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/include/vectornav_msgs/vectornav_msgs/action/detail/mag_cal__traits.hpp
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/include/vectornav_msgs/vectornav_msgs/action/mag_cal.hpp
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/include/vectornav_msgs/vectornav_msgs/msg/attitude_group.hpp
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/include/vectornav_msgs/vectornav_msgs/msg/common_group.hpp
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/include/vectornav_msgs/vectornav_msgs/msg/detail/attitude_group__builder.hpp
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/include/vectornav_msgs/vectornav_msgs/msg/detail/attitude_group__struct.hpp
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/include/vectornav_msgs/vectornav_msgs/msg/detail/attitude_group__traits.hpp
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/include/vectornav_msgs/vectornav_msgs/msg/detail/common_group__builder.hpp
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/include/vectornav_msgs/vectornav_msgs/msg/detail/common_group__struct.hpp
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/include/vectornav_msgs/vectornav_msgs/msg/detail/common_group__traits.hpp
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/include/vectornav_msgs/vectornav_msgs/msg/detail/dop__builder.hpp
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/include/vectornav_msgs/vectornav_msgs/msg/detail/dop__struct.hpp
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/include/vectornav_msgs/vectornav_msgs/msg/detail/dop__traits.hpp
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/include/vectornav_msgs/vectornav_msgs/msg/detail/gps_group__builder.hpp
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/include/vectornav_msgs/vectornav_msgs/msg/detail/gps_group__struct.hpp
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/include/vectornav_msgs/vectornav_msgs/msg/detail/gps_group__traits.hpp
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/include/vectornav_msgs/vectornav_msgs/msg/detail/imu_group__builder.hpp
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/include/vectornav_msgs/vectornav_msgs/msg/detail/imu_group__struct.hpp
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/include/vectornav_msgs/vectornav_msgs/msg/detail/imu_group__traits.hpp
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/include/vectornav_msgs/vectornav_msgs/msg/detail/ins_group__builder.hpp
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/include/vectornav_msgs/vectornav_msgs/msg/detail/ins_group__struct.hpp
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/include/vectornav_msgs/vectornav_msgs/msg/detail/ins_group__traits.hpp
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/include/vectornav_msgs/vectornav_msgs/msg/detail/ins_status__builder.hpp
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/include/vectornav_msgs/vectornav_msgs/msg/detail/ins_status__struct.hpp
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/include/vectornav_msgs/vectornav_msgs/msg/detail/ins_status__traits.hpp
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/include/vectornav_msgs/vectornav_msgs/msg/detail/time_group__builder.hpp
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/include/vectornav_msgs/vectornav_msgs/msg/detail/time_group__struct.hpp
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/include/vectornav_msgs/vectornav_msgs/msg/detail/time_group__traits.hpp
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/include/vectornav_msgs/vectornav_msgs/msg/detail/time_status__builder.hpp
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/include/vectornav_msgs/vectornav_msgs/msg/detail/time_status__struct.hpp
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/include/vectornav_msgs/vectornav_msgs/msg/detail/time_status__traits.hpp
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/include/vectornav_msgs/vectornav_msgs/msg/detail/time_utc__builder.hpp
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/include/vectornav_msgs/vectornav_msgs/msg/detail/time_utc__struct.hpp
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/include/vectornav_msgs/vectornav_msgs/msg/detail/time_utc__traits.hpp
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/include/vectornav_msgs/vectornav_msgs/msg/detail/vpe_status__builder.hpp
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/include/vectornav_msgs/vectornav_msgs/msg/detail/vpe_status__struct.hpp
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/include/vectornav_msgs/vectornav_msgs/msg/detail/vpe_status__traits.hpp
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/include/vectornav_msgs/vectornav_msgs/msg/dop.hpp
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/include/vectornav_msgs/vectornav_msgs/msg/gps_group.hpp
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/include/vectornav_msgs/vectornav_msgs/msg/imu_group.hpp
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/include/vectornav_msgs/vectornav_msgs/msg/ins_group.hpp
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/include/vectornav_msgs/vectornav_msgs/msg/ins_status.hpp
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/include/vectornav_msgs/vectornav_msgs/msg/time_group.hpp
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/include/vectornav_msgs/vectornav_msgs/msg/time_status.hpp
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/include/vectornav_msgs/vectornav_msgs/msg/time_utc.hpp
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/include/vectornav_msgs/vectornav_msgs/msg/vpe_status.hpp
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/include/vectornav_msgs/vectornav_msgs/action/detail/mag_cal__rosidl_typesupport_fastrtps_cpp.hpp
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/include/vectornav_msgs/vectornav_msgs/msg/detail/attitude_group__rosidl_typesupport_fastrtps_cpp.hpp
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/include/vectornav_msgs/vectornav_msgs/msg/detail/common_group__rosidl_typesupport_fastrtps_cpp.hpp
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/include/vectornav_msgs/vectornav_msgs/msg/detail/dop__rosidl_typesupport_fastrtps_cpp.hpp
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/include/vectornav_msgs/vectornav_msgs/msg/detail/gps_group__rosidl_typesupport_fastrtps_cpp.hpp
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/include/vectornav_msgs/vectornav_msgs/msg/detail/imu_group__rosidl_typesupport_fastrtps_cpp.hpp
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/include/vectornav_msgs/vectornav_msgs/msg/detail/ins_group__rosidl_typesupport_fastrtps_cpp.hpp
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/include/vectornav_msgs/vectornav_msgs/msg/detail/ins_status__rosidl_typesupport_fastrtps_cpp.hpp
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/include/vectornav_msgs/vectornav_msgs/msg/detail/time_group__rosidl_typesupport_fastrtps_cpp.hpp
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/include/vectornav_msgs/vectornav_msgs/msg/detail/time_status__rosidl_typesupport_fastrtps_cpp.hpp
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/include/vectornav_msgs/vectornav_msgs/msg/detail/time_utc__rosidl_typesupport_fastrtps_cpp.hpp
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/include/vectornav_msgs/vectornav_msgs/msg/detail/vpe_status__rosidl_typesupport_fastrtps_cpp.hpp
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/include/vectornav_msgs/vectornav_msgs/msg/rosidl_typesupport_fastrtps_cpp__visibility_control.h
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/include/vectornav_msgs/vectornav_msgs/action/detail/mag_cal__rosidl_typesupport_introspection_c.h
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/include/vectornav_msgs/vectornav_msgs/msg/detail/attitude_group__rosidl_typesupport_introspection_c.h
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/include/vectornav_msgs/vectornav_msgs/msg/detail/common_group__rosidl_typesupport_introspection_c.h
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/include/vectornav_msgs/vectornav_msgs/msg/detail/dop__rosidl_typesupport_introspection_c.h
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/include/vectornav_msgs/vectornav_msgs/msg/detail/gps_group__rosidl_typesupport_introspection_c.h
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/include/vectornav_msgs/vectornav_msgs/msg/detail/imu_group__rosidl_typesupport_introspection_c.h
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/include/vectornav_msgs/vectornav_msgs/msg/detail/ins_group__rosidl_typesupport_introspection_c.h
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/include/vectornav_msgs/vectornav_msgs/msg/detail/ins_status__rosidl_typesupport_introspection_c.h
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/include/vectornav_msgs/vectornav_msgs/msg/detail/time_group__rosidl_typesupport_introspection_c.h
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/include/vectornav_msgs/vectornav_msgs/msg/detail/time_status__rosidl_typesupport_introspection_c.h
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/include/vectornav_msgs/vectornav_msgs/msg/detail/time_utc__rosidl_typesupport_introspection_c.h
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/include/vectornav_msgs/vectornav_msgs/msg/detail/vpe_status__rosidl_typesupport_introspection_c.h
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/include/vectornav_msgs/vectornav_msgs/msg/rosidl_typesupport_introspection_c__visibility_control.h
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/include/vectornav_msgs/vectornav_msgs/action/detail/mag_cal__rosidl_typesupport_introspection_cpp.hpp
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/include/vectornav_msgs/vectornav_msgs/msg/detail/attitude_group__rosidl_typesupport_introspection_cpp.hpp
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/include/vectornav_msgs/vectornav_msgs/msg/detail/common_group__rosidl_typesupport_introspection_cpp.hpp
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/include/vectornav_msgs/vectornav_msgs/msg/detail/dop__rosidl_typesupport_introspection_cpp.hpp
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/include/vectornav_msgs/vectornav_msgs/msg/detail/gps_group__rosidl_typesupport_introspection_cpp.hpp
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/include/vectornav_msgs/vectornav_msgs/msg/detail/imu_group__rosidl_typesupport_introspection_cpp.hpp
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/include/vectornav_msgs/vectornav_msgs/msg/detail/ins_group__rosidl_typesupport_introspection_cpp.hpp
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/include/vectornav_msgs/vectornav_msgs/msg/detail/ins_status__rosidl_typesupport_introspection_cpp.hpp
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/include/vectornav_msgs/vectornav_msgs/msg/detail/time_group__rosidl_typesupport_introspection_cpp.hpp
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/include/vectornav_msgs/vectornav_msgs/msg/detail/time_status__rosidl_typesupport_introspection_cpp.hpp
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/include/vectornav_msgs/vectornav_msgs/msg/detail/time_utc__rosidl_typesupport_introspection_cpp.hpp
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/include/vectornav_msgs/vectornav_msgs/msg/detail/vpe_status__rosidl_typesupport_introspection_cpp.hpp
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/share/vectornav_msgs/environment/pythonpath.sh
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/share/vectornav_msgs/environment/pythonpath.dsv
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/local/lib/python3.10/dist-packages/vectornav_msgs-3.0.0-py3.10.egg-info/PKG-INFO
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/local/lib/python3.10/dist-packages/vectornav_msgs-3.0.0-py3.10.egg-info/SOURCES.txt
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/local/lib/python3.10/dist-packages/vectornav_msgs-3.0.0-py3.10.egg-info/dependency_links.txt
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/local/lib/python3.10/dist-packages/vectornav_msgs-3.0.0-py3.10.egg-info/top_level.txt
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/local/lib/python3.10/dist-packages/vectornav_msgs/__init__.py
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/local/lib/python3.10/dist-packages/vectornav_msgs/_vectornav_msgs_s.ep.rosidl_typesupport_c.c
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/local/lib/python3.10/dist-packages/vectornav_msgs/_vectornav_msgs_s.ep.rosidl_typesupport_fastrtps_c.c
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/local/lib/python3.10/dist-packages/vectornav_msgs/_vectornav_msgs_s.ep.rosidl_typesupport_introspection_c.c
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/local/lib/python3.10/dist-packages/vectornav_msgs/action/__init__.py
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/local/lib/python3.10/dist-packages/vectornav_msgs/action/_mag_cal.py
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/local/lib/python3.10/dist-packages/vectornav_msgs/action/_mag_cal_s.c
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/local/lib/python3.10/dist-packages/vectornav_msgs/libvectornav_msgs__rosidl_generator_py.so
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/local/lib/python3.10/dist-packages/vectornav_msgs/msg/__init__.py
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/local/lib/python3.10/dist-packages/vectornav_msgs/msg/_attitude_group.py
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/local/lib/python3.10/dist-packages/vectornav_msgs/msg/_attitude_group_s.c
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/local/lib/python3.10/dist-packages/vectornav_msgs/msg/_common_group.py
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/local/lib/python3.10/dist-packages/vectornav_msgs/msg/_common_group_s.c
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/local/lib/python3.10/dist-packages/vectornav_msgs/msg/_dop.py
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/local/lib/python3.10/dist-packages/vectornav_msgs/msg/_dop_s.c
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/local/lib/python3.10/dist-packages/vectornav_msgs/msg/_gps_group.py
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/local/lib/python3.10/dist-packages/vectornav_msgs/msg/_gps_group_s.c
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/local/lib/python3.10/dist-packages/vectornav_msgs/msg/_imu_group.py
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/local/lib/python3.10/dist-packages/vectornav_msgs/msg/_imu_group_s.c
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/local/lib/python3.10/dist-packages/vectornav_msgs/msg/_ins_group.py
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/local/lib/python3.10/dist-packages/vectornav_msgs/msg/_ins_group_s.c
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/local/lib/python3.10/dist-packages/vectornav_msgs/msg/_ins_status.py
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/local/lib/python3.10/dist-packages/vectornav_msgs/msg/_ins_status_s.c
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/local/lib/python3.10/dist-packages/vectornav_msgs/msg/_time_group.py
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/local/lib/python3.10/dist-packages/vectornav_msgs/msg/_time_group_s.c
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/local/lib/python3.10/dist-packages/vectornav_msgs/msg/_time_status.py
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/local/lib/python3.10/dist-packages/vectornav_msgs/msg/_time_status_s.c
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/local/lib/python3.10/dist-packages/vectornav_msgs/msg/_time_utc.py
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/local/lib/python3.10/dist-packages/vectornav_msgs/msg/_time_utc_s.c
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/local/lib/python3.10/dist-packages/vectornav_msgs/msg/_vpe_status.py
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/local/lib/python3.10/dist-packages/vectornav_msgs/msg/_vpe_status_s.c
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/local/lib/python3.10/dist-packages/vectornav_msgs/vectornav_msgs_s__rosidl_typesupport_c.cpython-310-x86_64-linux-gnu.so
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/local/lib/python3.10/dist-packages/vectornav_msgs/vectornav_msgs_s__rosidl_typesupport_fastrtps_c.cpython-310-x86_64-linux-gnu.so
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/local/lib/python3.10/dist-packages/vectornav_msgs/vectornav_msgs_s__rosidl_typesupport_introspection_c.cpython-310-x86_64-linux-gnu.so
+-- Up-to-date symlink: /home/linux/UWU-Blobfish/install/vectornav_msgs/local/lib/python3.10/dist-packages/vectornav_msgs/vectornav_msgs_s__rosidl_typesupport_fastrtps_c.cpython-310-x86_64-linux-gnu.so
+-- Up-to-date symlink: /home/linux/UWU-Blobfish/install/vectornav_msgs/local/lib/python3.10/dist-packages/vectornav_msgs/vectornav_msgs_s__rosidl_typesupport_introspection_c.cpython-310-x86_64-linux-gnu.so
+-- Up-to-date symlink: /home/linux/UWU-Blobfish/install/vectornav_msgs/local/lib/python3.10/dist-packages/vectornav_msgs/vectornav_msgs_s__rosidl_typesupport_c.cpython-310-x86_64-linux-gnu.so
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/share/vectornav_msgs/msg/AttitudeGroup.idl
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/share/vectornav_msgs/msg/CommonGroup.idl
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/share/vectornav_msgs/msg/DOP.idl
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/share/vectornav_msgs/msg/GpsGroup.idl
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/share/vectornav_msgs/msg/ImuGroup.idl
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/share/vectornav_msgs/msg/InsGroup.idl
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/share/vectornav_msgs/msg/InsStatus.idl
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/share/vectornav_msgs/msg/TimeGroup.idl
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/share/vectornav_msgs/msg/TimeStatus.idl
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/share/vectornav_msgs/msg/TimeUTC.idl
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/share/vectornav_msgs/msg/VpeStatus.idl
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/share/vectornav_msgs/action/MagCal.idl
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/share/vectornav_msgs/msg/AttitudeGroup.msg
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/share/vectornav_msgs/msg/CommonGroup.msg
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/share/vectornav_msgs/msg/DOP.msg
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/share/vectornav_msgs/msg/GpsGroup.msg
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/share/vectornav_msgs/msg/ImuGroup.msg
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/share/vectornav_msgs/msg/InsGroup.msg
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/share/vectornav_msgs/msg/InsStatus.msg
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/share/vectornav_msgs/msg/TimeGroup.msg
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/share/vectornav_msgs/msg/TimeStatus.msg
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/share/vectornav_msgs/msg/TimeUTC.msg
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/share/vectornav_msgs/msg/VpeStatus.msg
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/share/vectornav_msgs/action/MagCal.action
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/share/ament_index/resource_index/package_run_dependencies/vectornav_msgs
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/share/ament_index/resource_index/parent_prefix_path/vectornav_msgs
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/share/vectornav_msgs/environment/ament_prefix_path.sh
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/share/vectornav_msgs/environment/ament_prefix_path.dsv
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/share/vectornav_msgs/environment/path.sh
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/share/vectornav_msgs/environment/path.dsv
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/share/vectornav_msgs/local_setup.bash
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/share/vectornav_msgs/local_setup.sh
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/share/vectornav_msgs/local_setup.zsh
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/share/vectornav_msgs/local_setup.dsv
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/share/vectornav_msgs/package.dsv
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/share/ament_index/resource_index/packages/vectornav_msgs
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/share/vectornav_msgs/cmake/rosidl_cmake-extras.cmake
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/share/vectornav_msgs/cmake/ament_cmake_export_dependencies-extras.cmake
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/share/vectornav_msgs/cmake/ament_cmake_export_include_directories-extras.cmake
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/share/vectornav_msgs/cmake/ament_cmake_export_libraries-extras.cmake
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/share/vectornav_msgs/cmake/ament_cmake_export_targets-extras.cmake
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/share/vectornav_msgs/cmake/rosidl_cmake_export_typesupport_targets-extras.cmake
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/share/vectornav_msgs/cmake/rosidl_cmake_export_typesupport_libraries-extras.cmake
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/share/vectornav_msgs/cmake/vectornav_msgsConfig.cmake
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/share/vectornav_msgs/cmake/vectornav_msgsConfig-version.cmake
+-- Symlinking: /home/linux/UWU-Blobfish/install/vectornav_msgs/share/vectornav_msgs/package.xml
+-- Installing: /home/linux/UWU-Blobfish/install/vectornav_msgs/lib/libvectornav_msgs__rosidl_generator_c.so
+-- Set runtime path of "/home/linux/UWU-Blobfish/install/vectornav_msgs/lib/libvectornav_msgs__rosidl_generator_c.so" to ""
+-- Installing: /home/linux/UWU-Blobfish/install/vectornav_msgs/lib/libvectornav_msgs__rosidl_typesupport_fastrtps_c.so
+-- Set runtime path of "/home/linux/UWU-Blobfish/install/vectornav_msgs/lib/libvectornav_msgs__rosidl_typesupport_fastrtps_c.so" to ""
+-- Installing: /home/linux/UWU-Blobfish/install/vectornav_msgs/lib/libvectornav_msgs__rosidl_typesupport_fastrtps_cpp.so
+-- Set runtime path of "/home/linux/UWU-Blobfish/install/vectornav_msgs/lib/libvectornav_msgs__rosidl_typesupport_fastrtps_cpp.so" to ""
+-- Installing: /home/linux/UWU-Blobfish/install/vectornav_msgs/lib/libvectornav_msgs__rosidl_typesupport_introspection_c.so
+-- Set runtime path of "/home/linux/UWU-Blobfish/install/vectornav_msgs/lib/libvectornav_msgs__rosidl_typesupport_introspection_c.so" to ""
+-- Installing: /home/linux/UWU-Blobfish/install/vectornav_msgs/lib/libvectornav_msgs__rosidl_typesupport_c.so
+-- Set runtime path of "/home/linux/UWU-Blobfish/install/vectornav_msgs/lib/libvectornav_msgs__rosidl_typesupport_c.so" to ""
+-- Installing: /home/linux/UWU-Blobfish/install/vectornav_msgs/lib/libvectornav_msgs__rosidl_typesupport_introspection_cpp.so
+-- Set runtime path of "/home/linux/UWU-Blobfish/install/vectornav_msgs/lib/libvectornav_msgs__rosidl_typesupport_introspection_cpp.so" to ""
+-- Installing: /home/linux/UWU-Blobfish/install/vectornav_msgs/lib/libvectornav_msgs__rosidl_typesupport_cpp.so
+-- Set runtime path of "/home/linux/UWU-Blobfish/install/vectornav_msgs/lib/libvectornav_msgs__rosidl_typesupport_cpp.so" to ""
+Listing '/home/linux/UWU-Blobfish/install/vectornav_msgs/local/lib/python3.10/dist-packages/vectornav_msgs'...
+Compiling '/home/linux/UWU-Blobfish/install/vectornav_msgs/local/lib/python3.10/dist-packages/vectornav_msgs/__init__.py'...
+Listing '/home/linux/UWU-Blobfish/install/vectornav_msgs/local/lib/python3.10/dist-packages/vectornav_msgs/action'...
+Compiling '/home/linux/UWU-Blobfish/install/vectornav_msgs/local/lib/python3.10/dist-packages/vectornav_msgs/action/__init__.py'...
+Compiling '/home/linux/UWU-Blobfish/install/vectornav_msgs/local/lib/python3.10/dist-packages/vectornav_msgs/action/_mag_cal.py'...
+Listing '/home/linux/UWU-Blobfish/install/vectornav_msgs/local/lib/python3.10/dist-packages/vectornav_msgs/msg'...
+Compiling '/home/linux/UWU-Blobfish/install/vectornav_msgs/local/lib/python3.10/dist-packages/vectornav_msgs/msg/__init__.py'...
+Compiling '/home/linux/UWU-Blobfish/install/vectornav_msgs/local/lib/python3.10/dist-packages/vectornav_msgs/msg/_attitude_group.py'...
+Compiling '/home/linux/UWU-Blobfish/install/vectornav_msgs/local/lib/python3.10/dist-packages/vectornav_msgs/msg/_common_group.py'...
+Compiling '/home/linux/UWU-Blobfish/install/vectornav_msgs/local/lib/python3.10/dist-packages/vectornav_msgs/msg/_dop.py'...
+Compiling '/home/linux/UWU-Blobfish/install/vectornav_msgs/local/lib/python3.10/dist-packages/vectornav_msgs/msg/_gps_group.py'...
+Compiling '/home/linux/UWU-Blobfish/install/vectornav_msgs/local/lib/python3.10/dist-packages/vectornav_msgs/msg/_imu_group.py'...
+Compiling '/home/linux/UWU-Blobfish/install/vectornav_msgs/local/lib/python3.10/dist-packages/vectornav_msgs/msg/_ins_group.py'...
+Compiling '/home/linux/UWU-Blobfish/install/vectornav_msgs/local/lib/python3.10/dist-packages/vectornav_msgs/msg/_ins_status.py'...
+Compiling '/home/linux/UWU-Blobfish/install/vectornav_msgs/local/lib/python3.10/dist-packages/vectornav_msgs/msg/_time_group.py'...
+Compiling '/home/linux/UWU-Blobfish/install/vectornav_msgs/local/lib/python3.10/dist-packages/vectornav_msgs/msg/_time_status.py'...
+Compiling '/home/linux/UWU-Blobfish/install/vectornav_msgs/local/lib/python3.10/dist-packages/vectornav_msgs/msg/_time_utc.py'...
+Compiling '/home/linux/UWU-Blobfish/install/vectornav_msgs/local/lib/python3.10/dist-packages/vectornav_msgs/msg/_vpe_status.py'...
+-- Installing: /home/linux/UWU-Blobfish/install/vectornav_msgs/lib/libvectornav_msgs__rosidl_generator_py.so
+-- Set runtime path of "/home/linux/UWU-Blobfish/install/vectornav_msgs/lib/libvectornav_msgs__rosidl_generator_py.so" to ""
+-- Installing: /home/linux/UWU-Blobfish/install/vectornav_msgs/share/vectornav_msgs/cmake/export_vectornav_msgs__rosidl_generator_cExport.cmake
+-- Installing: /home/linux/UWU-Blobfish/install/vectornav_msgs/share/vectornav_msgs/cmake/export_vectornav_msgs__rosidl_generator_cExport-noconfig.cmake
+-- Installing: /home/linux/UWU-Blobfish/install/vectornav_msgs/share/vectornav_msgs/cmake/export_vectornav_msgs__rosidl_typesupport_fastrtps_cExport.cmake
+-- Installing: /home/linux/UWU-Blobfish/install/vectornav_msgs/share/vectornav_msgs/cmake/export_vectornav_msgs__rosidl_typesupport_fastrtps_cExport-noconfig.cmake
+-- Installing: /home/linux/UWU-Blobfish/install/vectornav_msgs/share/vectornav_msgs/cmake/export_vectornav_msgs__rosidl_generator_cppExport.cmake
+-- Installing: /home/linux/UWU-Blobfish/install/vectornav_msgs/share/vectornav_msgs/cmake/export_vectornav_msgs__rosidl_typesupport_fastrtps_cppExport.cmake
+-- Installing: /home/linux/UWU-Blobfish/install/vectornav_msgs/share/vectornav_msgs/cmake/export_vectornav_msgs__rosidl_typesupport_fastrtps_cppExport-noconfig.cmake
+-- Installing: /home/linux/UWU-Blobfish/install/vectornav_msgs/share/vectornav_msgs/cmake/vectornav_msgs__rosidl_typesupport_introspection_cExport.cmake
+-- Installing: /home/linux/UWU-Blobfish/install/vectornav_msgs/share/vectornav_msgs/cmake/vectornav_msgs__rosidl_typesupport_introspection_cExport-noconfig.cmake
+-- Installing: /home/linux/UWU-Blobfish/install/vectornav_msgs/share/vectornav_msgs/cmake/vectornav_msgs__rosidl_typesupport_cExport.cmake
+-- Installing: /home/linux/UWU-Blobfish/install/vectornav_msgs/share/vectornav_msgs/cmake/vectornav_msgs__rosidl_typesupport_cExport-noconfig.cmake
+-- Installing: /home/linux/UWU-Blobfish/install/vectornav_msgs/share/vectornav_msgs/cmake/vectornav_msgs__rosidl_typesupport_introspection_cppExport.cmake
+-- Installing: /home/linux/UWU-Blobfish/install/vectornav_msgs/share/vectornav_msgs/cmake/vectornav_msgs__rosidl_typesupport_introspection_cppExport-noconfig.cmake
+-- Installing: /home/linux/UWU-Blobfish/install/vectornav_msgs/share/vectornav_msgs/cmake/vectornav_msgs__rosidl_typesupport_cppExport.cmake
+-- Installing: /home/linux/UWU-Blobfish/install/vectornav_msgs/share/vectornav_msgs/cmake/vectornav_msgs__rosidl_typesupport_cppExport-noconfig.cmake
+-- Installing: /home/linux/UWU-Blobfish/install/vectornav_msgs/share/vectornav_msgs/cmake/export_vectornav_msgs__rosidl_generator_pyExport.cmake
+-- Installing: /home/linux/UWU-Blobfish/install/vectornav_msgs/share/vectornav_msgs/cmake/export_vectornav_msgs__rosidl_generator_pyExport-noconfig.cmake

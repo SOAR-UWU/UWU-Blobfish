@@ -1,0 +1,14 @@
+package.xml
+setup.cfg
+setup.py
+pid_package/__init__.py
+pid_package/pid_offset_calibration.py
+pid_package/pid_package.py
+pid_package.egg-info/PKG-INFO
+pid_package.egg-info/SOURCES.txt
+pid_package.egg-info/dependency_links.txt
+pid_package.egg-info/entry_points.txt
+pid_package.egg-info/requires.txt
+pid_package.egg-info/top_level.txt
+pid_package.egg-info/zip-safe
+resource/pid_package

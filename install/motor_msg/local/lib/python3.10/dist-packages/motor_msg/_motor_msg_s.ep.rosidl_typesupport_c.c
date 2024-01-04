@@ -1,0 +1,1 @@
+/home/linux/UWU-Blobfish/build/motor_msg/rosidl_generator_py/motor_msg/_motor_msg_s.ep.rosidl_typesupport_c.c

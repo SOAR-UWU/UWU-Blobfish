@@ -1,0 +1,8 @@
+setup.py
+motor_msg/__init__.py
+motor_msg.egg-info/PKG-INFO
+motor_msg.egg-info/SOURCES.txt
+motor_msg.egg-info/dependency_links.txt
+motor_msg.egg-info/top_level.txt
+motor_msg/msg/__init__.py
+motor_msg/msg/_motors.py

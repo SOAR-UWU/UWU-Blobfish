@@ -1,0 +1,21 @@
+[1.733s] Invoking command in '/home/linux/UWU-Blobfish/build/thruster_manager': CMAKE_PREFIX_PATH=/home/linux/UWU-Blobfish/install/motor_msg:/home/linux/UWU-Blobfish/install/vectornav:/home/linux/UWU-Blobfish/install/vectornav_msgs LD_LIBRARY_PATH=/home/linux/UWU-Blobfish/install/motor_msg/lib:/home/linux/UWU-Blobfish/install/vectornav/lib:/home/linux/UWU-Blobfish/install/vectornav_msgs/lib:/opt/ros/humble/opt/rviz_ogre_vendor/lib:/opt/ros/humble/lib/x86_64-linux-gnu:/opt/ros/humble/lib PYTHONPATH=/home/linux/UWU-Blobfish/build/thruster_manager/prefix_override:/home/linux/UWU-Blobfish/install/thruster_manager/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/python3 setup.py develop --editable --build-directory /home/linux/UWU-Blobfish/build/thruster_manager/build --no-deps install_data
+[1.998s] running develop
+[1.998s] /usr/lib/python3/dist-packages/setuptools/command/easy_install.py:158: EasyInstallDeprecationWarning: easy_install command is deprecated. Use build and pip and other standards-based tools.
+[1.998s]   warnings.warn(
+[1.999s] /usr/lib/python3/dist-packages/setuptools/command/install.py:34: SetuptoolsDeprecationWarning: setup.py install is deprecated. Use build and pip and other standards-based tools.
+[2.000s]   warnings.warn(
+[2.312s] running egg_info
+[2.318s] writing thruster_manager.egg-info/PKG-INFO
+[2.322s] writing dependency_links to thruster_manager.egg-info/dependency_links.txt
+[2.325s] writing entry points to thruster_manager.egg-info/entry_points.txt
+[2.327s] writing requirements to thruster_manager.egg-info/requires.txt
+[2.329s] writing top-level names to thruster_manager.egg-info/top_level.txt
+[2.331s] reading manifest file 'thruster_manager.egg-info/SOURCES.txt'
+[2.334s] writing manifest file 'thruster_manager.egg-info/SOURCES.txt'
+[2.340s] running build_ext
+[2.343s] Creating /home/linux/UWU-Blobfish/install/thruster_manager/lib/python3.10/site-packages/thruster-manager.egg-link (link to .)
+[2.345s] Installing thruster_manager script to /home/linux/UWU-Blobfish/install/thruster_manager/lib/thruster_manager
+[2.348s] 
+[2.352s] Installed /home/linux/UWU-Blobfish/build/thruster_manager
+[2.356s] running install_data
+[2.459s] Invoked command in '/home/linux/UWU-Blobfish/build/thruster_manager' returned '0': CMAKE_PREFIX_PATH=/home/linux/UWU-Blobfish/install/motor_msg:/home/linux/UWU-Blobfish/install/vectornav:/home/linux/UWU-Blobfish/install/vectornav_msgs LD_LIBRARY_PATH=/home/linux/UWU-Blobfish/install/motor_msg/lib:/home/linux/UWU-Blobfish/install/vectornav/lib:/home/linux/UWU-Blobfish/install/vectornav_msgs/lib:/opt/ros/humble/opt/rviz_ogre_vendor/lib:/opt/ros/humble/lib/x86_64-linux-gnu:/opt/ros/humble/lib PYTHONPATH=/home/linux/UWU-Blobfish/build/thruster_manager/prefix_override:/home/linux/UWU-Blobfish/install/thruster_manager/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/python3 setup.py develop --editable --build-directory /home/linux/UWU-Blobfish/build/thruster_manager/build --no-deps install_data

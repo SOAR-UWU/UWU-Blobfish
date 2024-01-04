@@ -1,0 +1,21 @@
+[1.731s] Invoking command in '/home/linux/UWU-Blobfish/build/arduino_bridge': CMAKE_PREFIX_PATH=/home/linux/UWU-Blobfish/install/motor_msg:/home/linux/UWU-Blobfish/install/vectornav:/home/linux/UWU-Blobfish/install/vectornav_msgs LD_LIBRARY_PATH=/home/linux/UWU-Blobfish/install/motor_msg/lib:/home/linux/UWU-Blobfish/install/vectornav/lib:/home/linux/UWU-Blobfish/install/vectornav_msgs/lib:/opt/ros/humble/opt/rviz_ogre_vendor/lib:/opt/ros/humble/lib/x86_64-linux-gnu:/opt/ros/humble/lib PYTHONPATH=/home/linux/UWU-Blobfish/build/arduino_bridge/prefix_override:/home/linux/UWU-Blobfish/install/arduino_bridge/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/python3 setup.py develop --editable --build-directory /home/linux/UWU-Blobfish/build/arduino_bridge/build --no-deps install_data
+[2.046s] running develop
+[2.047s] /usr/lib/python3/dist-packages/setuptools/command/easy_install.py:158: EasyInstallDeprecationWarning: easy_install command is deprecated. Use build and pip and other standards-based tools.
+[2.048s]   warnings.warn(
+[2.048s] /usr/lib/python3/dist-packages/setuptools/command/install.py:34: SetuptoolsDeprecationWarning: setup.py install is deprecated. Use build and pip and other standards-based tools.
+[2.049s]   warnings.warn(
+[2.339s] running egg_info
+[2.349s] writing arduino_bridge.egg-info/PKG-INFO
+[2.352s] writing dependency_links to arduino_bridge.egg-info/dependency_links.txt
+[2.356s] writing entry points to arduino_bridge.egg-info/entry_points.txt
+[2.357s] writing requirements to arduino_bridge.egg-info/requires.txt
+[2.358s] writing top-level names to arduino_bridge.egg-info/top_level.txt
+[2.359s] reading manifest file 'arduino_bridge.egg-info/SOURCES.txt'
+[2.360s] writing manifest file 'arduino_bridge.egg-info/SOURCES.txt'
+[2.361s] running build_ext
+[2.364s] Creating /home/linux/UWU-Blobfish/install/arduino_bridge/lib/python3.10/site-packages/arduino-bridge.egg-link (link to .)
+[2.381s] Installing bridge script to /home/linux/UWU-Blobfish/install/arduino_bridge/lib/arduino_bridge
+[2.383s] 
+[2.405s] Installed /home/linux/UWU-Blobfish/build/arduino_bridge
+[2.408s] running install_data
+[2.668s] Invoked command in '/home/linux/UWU-Blobfish/build/arduino_bridge' returned '0': CMAKE_PREFIX_PATH=/home/linux/UWU-Blobfish/install/motor_msg:/home/linux/UWU-Blobfish/install/vectornav:/home/linux/UWU-Blobfish/install/vectornav_msgs LD_LIBRARY_PATH=/home/linux/UWU-Blobfish/install/motor_msg/lib:/home/linux/UWU-Blobfish/install/vectornav/lib:/home/linux/UWU-Blobfish/install/vectornav_msgs/lib:/opt/ros/humble/opt/rviz_ogre_vendor/lib:/opt/ros/humble/lib/x86_64-linux-gnu:/opt/ros/humble/lib PYTHONPATH=/home/linux/UWU-Blobfish/build/arduino_bridge/prefix_override:/home/linux/UWU-Blobfish/install/arduino_bridge/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/python3 setup.py develop --editable --build-directory /home/linux/UWU-Blobfish/build/arduino_bridge/build --no-deps install_data

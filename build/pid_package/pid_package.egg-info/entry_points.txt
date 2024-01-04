@@ -1,0 +1,4 @@
+[console_scripts]
+offset_calibrator = pid_package.pid_offset_calibration:main
+pid_node = pid_package.pid_package:main
+

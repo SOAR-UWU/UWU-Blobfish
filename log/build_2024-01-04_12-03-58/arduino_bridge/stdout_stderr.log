@@ -1,0 +1,26 @@
+running develop
+/usr/lib/python3/dist-packages/setuptools/command/easy_install.py:158: EasyInstallDeprecationWarning: easy_install command is deprecated. Use build and pip and other standards-based tools.
+  warnings.warn(
+/usr/lib/python3/dist-packages/setuptools/command/install.py:34: SetuptoolsDeprecationWarning: setup.py install is deprecated. Use build and pip and other standards-based tools.
+  warnings.warn(
+running egg_info
+creating arduino_bridge.egg-info
+writing arduino_bridge.egg-info/PKG-INFO
+writing dependency_links to arduino_bridge.egg-info/dependency_links.txt
+writing entry points to arduino_bridge.egg-info/entry_points.txt
+writing requirements to arduino_bridge.egg-info/requires.txt
+writing top-level names to arduino_bridge.egg-info/top_level.txt
+writing manifest file 'arduino_bridge.egg-info/SOURCES.txt'
+reading manifest file 'arduino_bridge.egg-info/SOURCES.txt'
+writing manifest file 'arduino_bridge.egg-info/SOURCES.txt'
+running build_ext
+Creating /home/linux/UWU-Blobfish/install/arduino_bridge/lib/python3.10/site-packages/arduino-bridge.egg-link (link to .)
+Installing bridge script to /home/linux/UWU-Blobfish/install/arduino_bridge/lib/arduino_bridge
+
+Installed /home/linux/UWU-Blobfish/build/arduino_bridge
+running install_data
+creating /home/linux/UWU-Blobfish/install/arduino_bridge/share/ament_index
+creating /home/linux/UWU-Blobfish/install/arduino_bridge/share/ament_index/resource_index
+creating /home/linux/UWU-Blobfish/install/arduino_bridge/share/ament_index/resource_index/packages
+copying resource/arduino_bridge -> /home/linux/UWU-Blobfish/install/arduino_bridge/share/ament_index/resource_index/packages
+copying package.xml -> /home/linux/UWU-Blobfish/install/arduino_bridge/share/arduino_bridge

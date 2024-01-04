@@ -1,13 +1,16 @@
 from simple_pid.pid import PID
 import rclpy
 from rclpy.node import Node
-from geometry_msgs.msg import Vector3
+from geometry_msgs.msg import Quaternion, Vector3
+from tf_transformations import euler_from_quaternion
 
 class Offset_Calibration(Node):
     def __init__(self):
         super().__init__("offset_calibrator")
 
-        self.create_subscription(Vector3, 'imu/yawpitchroll', self.callback)
+        qos_profile = rclpy.qos.qos_profile_sensor_data
+        self.create_subscription(Vector3, 'vectornav/pose', self.callback, qos_profile)
+        
         self.imu_data_collection = 0
         self.count = 0
         self.declare_parameter('imu_data_count', 4000)
@@ -19,8 +22,10 @@ class Offset_Calibration(Node):
 
 
     def callback(self, msg):
+        euler_angles = euler_from_quaternion([msg.x, msg.y, msg.z, msg.w])
+
         if self.count < self.imu_data_count:
-            self.imu_data_collection += msg.x
+            self.imu_data_collection += euler_angles[0]
             self.count+=1
             
         elif self.count == self.imu_data_count:
@@ -31,9 +36,9 @@ class Offset_Calibration(Node):
         else:
             pid_values = Vector3()
 
-            pid_values.x = msg.x - self.average_value
-            pid_values.y = msg.y
-            pid_values.z = msg.z
+            pid_values.x = euler_angles[0] - self.average_value
+            pid_values.y = euler_angles[1]
+            pid_values.z = euler_angles[2]
             self.imu_offset_publisher.publish(pid_values)
         
 

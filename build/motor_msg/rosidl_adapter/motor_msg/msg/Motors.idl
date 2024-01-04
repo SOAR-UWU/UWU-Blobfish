@@ -1,0 +1,24 @@
+// generated from rosidl_adapter/resource/msg.idl.em
+// with input from motor_msg/msg/Motors.msg
+// generated code does not contain a copyright notice
+
+
+module motor_msg {
+  module msg {
+    struct Motors {
+      uint16 motor1;
+
+      uint16 motor2;
+
+      uint16 motor3;
+
+      uint16 motor4;
+
+      uint16 motor5;
+
+      uint16 motor6;
+
+      uint16 motor7;
+    };
+  };
+};

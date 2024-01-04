@@ -1,0 +1,129 @@
+[0.369s] Invoking command in '/home/linux/UWU-Blobfish/build/motor_msg': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/linux/UWU-Blobfish/install/thruster_manager:/home/linux/UWU-Blobfish/install/pid_package:/home/linux/UWU-Blobfish/install/arduino_bridge:/opt/ros/humble /usr/bin/cmake --build /home/linux/UWU-Blobfish/build/motor_msg -- -j6 -l6
+[0.454s] [35m[1mConsolidate compiler generated dependencies of target motor_msg__rosidl_generator_c[0m
+[0.477s] [  3%] Built target motor_msg__cpp
+[0.480s] [ 12%] Built target motor_msg__rosidl_generator_c
+[0.495s] [ 12%] Built target ament_cmake_python_symlink_motor_msg
+[0.495s] [35m[1mConsolidate compiler generated dependencies of target motor_msg__rosidl_typesupport_introspection_cpp[0m
+[0.562s] [35m[1mConsolidate compiler generated dependencies of target motor_msg__rosidl_typesupport_fastrtps_cpp[0m
+[0.562s] [35m[1mConsolidate compiler generated dependencies of target motor_msg__rosidl_typesupport_cpp[0m
+[0.562s] [35m[1mConsolidate compiler generated dependencies of target motor_msg__rosidl_typesupport_fastrtps_c[0m
+[0.566s] [35m[1mConsolidate compiler generated dependencies of target motor_msg__rosidl_typesupport_introspection_c[0m
+[0.585s] [35m[1mConsolidate compiler generated dependencies of target motor_msg__rosidl_typesupport_c[0m
+[0.585s] [ 22%] Built target motor_msg__rosidl_typesupport_introspection_cpp
+[0.664s] [ 32%] Built target motor_msg__rosidl_typesupport_introspection_c
+[0.664s] [ 41%] Built target motor_msg__rosidl_typesupport_fastrtps_cpp
+[0.708s] [ 51%] Built target motor_msg__rosidl_typesupport_fastrtps_c
+[0.718s] [ 61%] Built target motor_msg__rosidl_typesupport_cpp
+[0.725s] [ 70%] Built target motor_msg__rosidl_typesupport_c
+[0.867s] [ 70%] Built target motor_msg
+[0.945s] [ 74%] Built target motor_msg__py
+[0.978s] [35m[1mConsolidate compiler generated dependencies of target motor_msg__rosidl_generator_py[0m
+[1.006s] [ 80%] Built target motor_msg__rosidl_generator_py
+[1.026s] [35m[1mConsolidate compiler generated dependencies of target motor_msg__rosidl_typesupport_introspection_c__pyext[0m
+[1.048s] [35m[1mConsolidate compiler generated dependencies of target motor_msg__rosidl_typesupport_c__pyext[0m
+[1.048s] [35m[1mConsolidate compiler generated dependencies of target motor_msg__rosidl_typesupport_fastrtps_c__pyext[0m
+[1.121s] [ 87%] Built target motor_msg__rosidl_typesupport_c__pyext
+[1.123s] [ 93%] Built target motor_msg__rosidl_typesupport_introspection_c__pyext
+[1.123s] [100%] Built target motor_msg__rosidl_typesupport_fastrtps_c__pyext
+[1.161s] running egg_info
+[1.161s] writing motor_msg.egg-info/PKG-INFO
+[1.161s] writing dependency_links to motor_msg.egg-info/dependency_links.txt
+[1.161s] writing top-level names to motor_msg.egg-info/top_level.txt
+[1.161s] reading manifest file 'motor_msg.egg-info/SOURCES.txt'
+[1.161s] writing manifest file 'motor_msg.egg-info/SOURCES.txt'
+[1.241s] [100%] Built target ament_cmake_python_build_motor_msg_egg
+[1.269s] Invoked command in '/home/linux/UWU-Blobfish/build/motor_msg' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/linux/UWU-Blobfish/install/thruster_manager:/home/linux/UWU-Blobfish/install/pid_package:/home/linux/UWU-Blobfish/install/arduino_bridge:/opt/ros/humble /usr/bin/cmake --build /home/linux/UWU-Blobfish/build/motor_msg -- -j6 -l6
+[1.481s] Invoking command in '/home/linux/UWU-Blobfish/build/motor_msg': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/linux/UWU-Blobfish/install/thruster_manager:/home/linux/UWU-Blobfish/install/pid_package:/home/linux/UWU-Blobfish/install/arduino_bridge:/opt/ros/humble /usr/bin/cmake --install /home/linux/UWU-Blobfish/build/motor_msg
+[1.491s] -- Install configuration: ""
+[1.499s] -- Execute custom install script
+[1.500s] -- Up-to-date symlink: /home/linux/UWU-Blobfish/install/motor_msg/share/ament_index/resource_index/rosidl_interfaces/motor_msg
+[1.501s] -- Up-to-date symlink: /home/linux/UWU-Blobfish/install/motor_msg/include/motor_msg/motor_msg/msg/detail/motors__functions.h
+[1.503s] -- Up-to-date symlink: /home/linux/UWU-Blobfish/install/motor_msg/include/motor_msg/motor_msg/msg/detail/motors__struct.h
+[1.504s] -- Up-to-date symlink: /home/linux/UWU-Blobfish/install/motor_msg/include/motor_msg/motor_msg/msg/detail/motors__type_support.h
+[1.505s] -- Up-to-date symlink: /home/linux/UWU-Blobfish/install/motor_msg/include/motor_msg/motor_msg/msg/motors.h
+[1.506s] -- Up-to-date symlink: /home/linux/UWU-Blobfish/install/motor_msg/include/motor_msg/motor_msg/msg/rosidl_generator_c__visibility_control.h
+[1.508s] -- Up-to-date symlink: /home/linux/UWU-Blobfish/install/motor_msg/share/motor_msg/environment/library_path.sh
+[1.509s] -- Up-to-date symlink: /home/linux/UWU-Blobfish/install/motor_msg/share/motor_msg/environment/library_path.dsv
+[1.510s] -- Up-to-date symlink: /home/linux/UWU-Blobfish/install/motor_msg/include/motor_msg/motor_msg/msg/detail/motors__rosidl_typesupport_fastrtps_c.h
+[1.512s] -- Up-to-date symlink: /home/linux/UWU-Blobfish/install/motor_msg/include/motor_msg/motor_msg/msg/rosidl_typesupport_fastrtps_c__visibility_control.h
+[1.514s] -- Up-to-date symlink: /home/linux/UWU-Blobfish/install/motor_msg/include/motor_msg/motor_msg/msg/detail/motors__rosidl_typesupport_introspection_c.h
+[1.516s] -- Up-to-date symlink: /home/linux/UWU-Blobfish/install/motor_msg/include/motor_msg/motor_msg/msg/rosidl_typesupport_introspection_c__visibility_control.h
+[1.517s] -- Up-to-date symlink: /home/linux/UWU-Blobfish/install/motor_msg/include/motor_msg/motor_msg/msg/detail/motors__builder.hpp
+[1.519s] -- Up-to-date symlink: /home/linux/UWU-Blobfish/install/motor_msg/include/motor_msg/motor_msg/msg/detail/motors__struct.hpp
+[1.521s] -- Up-to-date symlink: /home/linux/UWU-Blobfish/install/motor_msg/include/motor_msg/motor_msg/msg/detail/motors__traits.hpp
+[1.523s] -- Up-to-date symlink: /home/linux/UWU-Blobfish/install/motor_msg/include/motor_msg/motor_msg/msg/motors.hpp
+[1.525s] -- Up-to-date symlink: /home/linux/UWU-Blobfish/install/motor_msg/include/motor_msg/motor_msg/msg/detail/motors__rosidl_typesupport_fastrtps_cpp.hpp
+[1.526s] -- Up-to-date symlink: /home/linux/UWU-Blobfish/install/motor_msg/include/motor_msg/motor_msg/msg/rosidl_typesupport_fastrtps_cpp__visibility_control.h
+[1.527s] -- Up-to-date symlink: /home/linux/UWU-Blobfish/install/motor_msg/include/motor_msg/motor_msg/msg/detail/motors__rosidl_typesupport_introspection_cpp.hpp
+[1.528s] -- Up-to-date symlink: /home/linux/UWU-Blobfish/install/motor_msg/share/motor_msg/environment/pythonpath.sh
+[1.528s] -- Up-to-date symlink: /home/linux/UWU-Blobfish/install/motor_msg/share/motor_msg/environment/pythonpath.dsv
+[1.530s] -- Up-to-date symlink: /home/linux/UWU-Blobfish/install/motor_msg/local/lib/python3.10/dist-packages/motor_msg-0.0.0-py3.10.egg-info/PKG-INFO
+[1.531s] -- Up-to-date symlink: /home/linux/UWU-Blobfish/install/motor_msg/local/lib/python3.10/dist-packages/motor_msg-0.0.0-py3.10.egg-info/SOURCES.txt
+[1.532s] -- Up-to-date symlink: /home/linux/UWU-Blobfish/install/motor_msg/local/lib/python3.10/dist-packages/motor_msg-0.0.0-py3.10.egg-info/dependency_links.txt
+[1.533s] -- Up-to-date symlink: /home/linux/UWU-Blobfish/install/motor_msg/local/lib/python3.10/dist-packages/motor_msg-0.0.0-py3.10.egg-info/top_level.txt
+[1.535s] -- Up-to-date symlink: /home/linux/UWU-Blobfish/install/motor_msg/local/lib/python3.10/dist-packages/motor_msg/__init__.py
+[1.536s] -- Up-to-date symlink: /home/linux/UWU-Blobfish/install/motor_msg/local/lib/python3.10/dist-packages/motor_msg/_motor_msg_s.ep.rosidl_typesupport_c.c
+[1.536s] -- Up-to-date symlink: /home/linux/UWU-Blobfish/install/motor_msg/local/lib/python3.10/dist-packages/motor_msg/_motor_msg_s.ep.rosidl_typesupport_fastrtps_c.c
+[1.537s] -- Up-to-date symlink: /home/linux/UWU-Blobfish/install/motor_msg/local/lib/python3.10/dist-packages/motor_msg/_motor_msg_s.ep.rosidl_typesupport_introspection_c.c
+[1.537s] -- Up-to-date symlink: /home/linux/UWU-Blobfish/install/motor_msg/local/lib/python3.10/dist-packages/motor_msg/libmotor_msg__rosidl_generator_py.so
+[1.538s] -- Up-to-date symlink: /home/linux/UWU-Blobfish/install/motor_msg/local/lib/python3.10/dist-packages/motor_msg/motor_msg_s__rosidl_typesupport_c.cpython-310-x86_64-linux-gnu.so
+[1.539s] -- Up-to-date symlink: /home/linux/UWU-Blobfish/install/motor_msg/local/lib/python3.10/dist-packages/motor_msg/motor_msg_s__rosidl_typesupport_fastrtps_c.cpython-310-x86_64-linux-gnu.so
+[1.542s] -- Up-to-date symlink: /home/linux/UWU-Blobfish/install/motor_msg/local/lib/python3.10/dist-packages/motor_msg/motor_msg_s__rosidl_typesupport_introspection_c.cpython-310-x86_64-linux-gnu.so
+[1.542s] -- Up-to-date symlink: /home/linux/UWU-Blobfish/install/motor_msg/local/lib/python3.10/dist-packages/motor_msg/msg/__init__.py
+[1.564s] -- Up-to-date symlink: /home/linux/UWU-Blobfish/install/motor_msg/local/lib/python3.10/dist-packages/motor_msg/msg/_motors.py
+[1.564s] -- Up-to-date symlink: /home/linux/UWU-Blobfish/install/motor_msg/local/lib/python3.10/dist-packages/motor_msg/msg/_motors_s.c
+[1.564s] -- Up-to-date symlink: /home/linux/UWU-Blobfish/install/motor_msg/local/lib/python3.10/dist-packages/motor_msg/motor_msg_s__rosidl_typesupport_fastrtps_c.cpython-310-x86_64-linux-gnu.so
+[1.564s] -- Up-to-date symlink: /home/linux/UWU-Blobfish/install/motor_msg/local/lib/python3.10/dist-packages/motor_msg/motor_msg_s__rosidl_typesupport_introspection_c.cpython-310-x86_64-linux-gnu.so
+[1.564s] -- Up-to-date symlink: /home/linux/UWU-Blobfish/install/motor_msg/local/lib/python3.10/dist-packages/motor_msg/motor_msg_s__rosidl_typesupport_c.cpython-310-x86_64-linux-gnu.so
+[1.564s] -- Up-to-date symlink: /home/linux/UWU-Blobfish/install/motor_msg/share/motor_msg/msg/Motors.idl
+[1.564s] -- Up-to-date symlink: /home/linux/UWU-Blobfish/install/motor_msg/share/motor_msg/msg/Motors.msg
+[1.564s] -- Up-to-date symlink: /home/linux/UWU-Blobfish/install/motor_msg/share/ament_index/resource_index/package_run_dependencies/motor_msg
+[1.564s] -- Up-to-date symlink: /home/linux/UWU-Blobfish/install/motor_msg/share/ament_index/resource_index/parent_prefix_path/motor_msg
+[1.565s] -- Up-to-date symlink: /home/linux/UWU-Blobfish/install/motor_msg/share/motor_msg/environment/ament_prefix_path.sh
+[1.565s] -- Up-to-date symlink: /home/linux/UWU-Blobfish/install/motor_msg/share/motor_msg/environment/ament_prefix_path.dsv
+[1.565s] -- Up-to-date symlink: /home/linux/UWU-Blobfish/install/motor_msg/share/motor_msg/environment/path.sh
+[1.565s] -- Up-to-date symlink: /home/linux/UWU-Blobfish/install/motor_msg/share/motor_msg/environment/path.dsv
+[1.565s] -- Up-to-date symlink: /home/linux/UWU-Blobfish/install/motor_msg/share/motor_msg/local_setup.bash
+[1.565s] -- Up-to-date symlink: /home/linux/UWU-Blobfish/install/motor_msg/share/motor_msg/local_setup.sh
+[1.565s] -- Up-to-date symlink: /home/linux/UWU-Blobfish/install/motor_msg/share/motor_msg/local_setup.zsh
+[1.565s] -- Up-to-date symlink: /home/linux/UWU-Blobfish/install/motor_msg/share/motor_msg/local_setup.dsv
+[1.565s] -- Symlinking: /home/linux/UWU-Blobfish/install/motor_msg/share/motor_msg/package.dsv
+[1.565s] -- Up-to-date symlink: /home/linux/UWU-Blobfish/install/motor_msg/share/ament_index/resource_index/packages/motor_msg
+[1.565s] -- Up-to-date symlink: /home/linux/UWU-Blobfish/install/motor_msg/share/motor_msg/cmake/rosidl_cmake-extras.cmake
+[1.581s] -- Up-to-date symlink: /home/linux/UWU-Blobfish/install/motor_msg/share/motor_msg/cmake/ament_cmake_export_include_directories-extras.cmake
+[1.582s] -- Up-to-date symlink: /home/linux/UWU-Blobfish/install/motor_msg/share/motor_msg/cmake/ament_cmake_export_libraries-extras.cmake
+[1.582s] -- Up-to-date symlink: /home/linux/UWU-Blobfish/install/motor_msg/share/motor_msg/cmake/ament_cmake_export_targets-extras.cmake
+[1.582s] -- Up-to-date symlink: /home/linux/UWU-Blobfish/install/motor_msg/share/motor_msg/cmake/rosidl_cmake_export_typesupport_targets-extras.cmake
+[1.582s] -- Up-to-date symlink: /home/linux/UWU-Blobfish/install/motor_msg/share/motor_msg/cmake/ament_cmake_export_dependencies-extras.cmake
+[1.582s] -- Up-to-date symlink: /home/linux/UWU-Blobfish/install/motor_msg/share/motor_msg/cmake/rosidl_cmake_export_typesupport_libraries-extras.cmake
+[1.582s] -- Up-to-date symlink: /home/linux/UWU-Blobfish/install/motor_msg/share/motor_msg/cmake/motor_msgConfig.cmake
+[1.582s] -- Up-to-date symlink: /home/linux/UWU-Blobfish/install/motor_msg/share/motor_msg/cmake/motor_msgConfig-version.cmake
+[1.582s] -- Up-to-date symlink: /home/linux/UWU-Blobfish/install/motor_msg/share/motor_msg/package.xml
+[1.582s] -- Up-to-date: /home/linux/UWU-Blobfish/install/motor_msg/lib/libmotor_msg__rosidl_generator_c.so
+[1.582s] -- Up-to-date: /home/linux/UWU-Blobfish/install/motor_msg/lib/libmotor_msg__rosidl_typesupport_fastrtps_c.so
+[1.582s] -- Up-to-date: /home/linux/UWU-Blobfish/install/motor_msg/lib/libmotor_msg__rosidl_typesupport_introspection_c.so
+[1.583s] -- Up-to-date: /home/linux/UWU-Blobfish/install/motor_msg/lib/libmotor_msg__rosidl_typesupport_c.so
+[1.583s] -- Up-to-date: /home/linux/UWU-Blobfish/install/motor_msg/lib/libmotor_msg__rosidl_typesupport_fastrtps_cpp.so
+[1.583s] -- Up-to-date: /home/linux/UWU-Blobfish/install/motor_msg/lib/libmotor_msg__rosidl_typesupport_introspection_cpp.so
+[1.583s] -- Up-to-date: /home/linux/UWU-Blobfish/install/motor_msg/lib/libmotor_msg__rosidl_typesupport_cpp.so
+[1.609s] Listing '/home/linux/UWU-Blobfish/install/motor_msg/local/lib/python3.10/dist-packages/motor_msg'...
+[1.609s] Listing '/home/linux/UWU-Blobfish/install/motor_msg/local/lib/python3.10/dist-packages/motor_msg/msg'...
+[1.621s] -- Up-to-date: /home/linux/UWU-Blobfish/install/motor_msg/lib/libmotor_msg__rosidl_generator_py.so
+[1.650s] -- Up-to-date: /home/linux/UWU-Blobfish/install/motor_msg/share/motor_msg/cmake/export_motor_msg__rosidl_generator_cExport.cmake
+[1.650s] -- Up-to-date: /home/linux/UWU-Blobfish/install/motor_msg/share/motor_msg/cmake/export_motor_msg__rosidl_generator_cExport-noconfig.cmake
+[1.650s] -- Up-to-date: /home/linux/UWU-Blobfish/install/motor_msg/share/motor_msg/cmake/export_motor_msg__rosidl_typesupport_fastrtps_cExport.cmake
+[1.650s] -- Up-to-date: /home/linux/UWU-Blobfish/install/motor_msg/share/motor_msg/cmake/export_motor_msg__rosidl_typesupport_fastrtps_cExport-noconfig.cmake
+[1.650s] -- Up-to-date: /home/linux/UWU-Blobfish/install/motor_msg/share/motor_msg/cmake/motor_msg__rosidl_typesupport_introspection_cExport.cmake
+[1.650s] -- Up-to-date: /home/linux/UWU-Blobfish/install/motor_msg/share/motor_msg/cmake/motor_msg__rosidl_typesupport_introspection_cExport-noconfig.cmake
+[1.650s] -- Up-to-date: /home/linux/UWU-Blobfish/install/motor_msg/share/motor_msg/cmake/motor_msg__rosidl_typesupport_cExport.cmake
+[1.650s] -- Up-to-date: /home/linux/UWU-Blobfish/install/motor_msg/share/motor_msg/cmake/motor_msg__rosidl_typesupport_cExport-noconfig.cmake
+[1.650s] -- Up-to-date: /home/linux/UWU-Blobfish/install/motor_msg/share/motor_msg/cmake/export_motor_msg__rosidl_generator_cppExport.cmake
+[1.650s] -- Up-to-date: /home/linux/UWU-Blobfish/install/motor_msg/share/motor_msg/cmake/export_motor_msg__rosidl_typesupport_fastrtps_cppExport.cmake
+[1.650s] -- Up-to-date: /home/linux/UWU-Blobfish/install/motor_msg/share/motor_msg/cmake/export_motor_msg__rosidl_typesupport_fastrtps_cppExport-noconfig.cmake
+[1.650s] -- Up-to-date: /home/linux/UWU-Blobfish/install/motor_msg/share/motor_msg/cmake/motor_msg__rosidl_typesupport_introspection_cppExport.cmake
+[1.651s] -- Up-to-date: /home/linux/UWU-Blobfish/install/motor_msg/share/motor_msg/cmake/motor_msg__rosidl_typesupport_introspection_cppExport-noconfig.cmake
+[1.651s] -- Up-to-date: /home/linux/UWU-Blobfish/install/motor_msg/share/motor_msg/cmake/motor_msg__rosidl_typesupport_cppExport.cmake
+[1.651s] -- Up-to-date: /home/linux/UWU-Blobfish/install/motor_msg/share/motor_msg/cmake/motor_msg__rosidl_typesupport_cppExport-noconfig.cmake
+[1.651s] -- Up-to-date: /home/linux/UWU-Blobfish/install/motor_msg/share/motor_msg/cmake/export_motor_msg__rosidl_generator_pyExport.cmake
+[1.651s] -- Up-to-date: /home/linux/UWU-Blobfish/install/motor_msg/share/motor_msg/cmake/export_motor_msg__rosidl_generator_pyExport-noconfig.cmake
+[1.758s] Invoked command in '/home/linux/UWU-Blobfish/build/motor_msg' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/linux/UWU-Blobfish/install/thruster_manager:/home/linux/UWU-Blobfish/install/pid_package:/home/linux/UWU-Blobfish/install/arduino_bridge:/opt/ros/humble /usr/bin/cmake --install /home/linux/UWU-Blobfish/build/motor_msg

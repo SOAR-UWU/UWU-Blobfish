@@ -1,0 +1,27 @@
+running develop
+/usr/lib/python3/dist-packages/setuptools/command/easy_install.py:158: EasyInstallDeprecationWarning: easy_install command is deprecated. Use build and pip and other standards-based tools.
+  warnings.warn(
+/usr/lib/python3/dist-packages/setuptools/command/install.py:34: SetuptoolsDeprecationWarning: setup.py install is deprecated. Use build and pip and other standards-based tools.
+  warnings.warn(
+running egg_info
+creating pid_package.egg-info
+writing pid_package.egg-info/PKG-INFO
+writing dependency_links to pid_package.egg-info/dependency_links.txt
+writing entry points to pid_package.egg-info/entry_points.txt
+writing requirements to pid_package.egg-info/requires.txt
+writing top-level names to pid_package.egg-info/top_level.txt
+writing manifest file 'pid_package.egg-info/SOURCES.txt'
+reading manifest file 'pid_package.egg-info/SOURCES.txt'
+writing manifest file 'pid_package.egg-info/SOURCES.txt'
+running build_ext
+Creating /home/linux/UWU-Blobfish/install/pid_package/lib/python3.10/site-packages/pid-package.egg-link (link to .)
+Installing offset_calibrator script to /home/linux/UWU-Blobfish/install/pid_package/lib/pid_package
+Installing pid_node script to /home/linux/UWU-Blobfish/install/pid_package/lib/pid_package
+
+Installed /home/linux/UWU-Blobfish/build/pid_package
+running install_data
+creating /home/linux/UWU-Blobfish/install/pid_package/share/ament_index
+creating /home/linux/UWU-Blobfish/install/pid_package/share/ament_index/resource_index
+creating /home/linux/UWU-Blobfish/install/pid_package/share/ament_index/resource_index/packages
+copying resource/pid_package -> /home/linux/UWU-Blobfish/install/pid_package/share/ament_index/resource_index/packages
+copying package.xml -> /home/linux/UWU-Blobfish/install/pid_package/share/pid_package

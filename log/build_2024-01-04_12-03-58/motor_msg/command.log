@@ -1,0 +1,6 @@
+Invoking command in '/home/linux/UWU-Blobfish/build/motor_msg': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake /home/linux/UWU-Blobfish/uwu_main/src/motor_msg -DAMENT_CMAKE_SYMLINK_INSTALL=1 -DCMAKE_INSTALL_PREFIX=/home/linux/UWU-Blobfish/install/motor_msg
+Invoked command in '/home/linux/UWU-Blobfish/build/motor_msg' returned '0': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake /home/linux/UWU-Blobfish/uwu_main/src/motor_msg -DAMENT_CMAKE_SYMLINK_INSTALL=1 -DCMAKE_INSTALL_PREFIX=/home/linux/UWU-Blobfish/install/motor_msg
+Invoking command in '/home/linux/UWU-Blobfish/build/motor_msg': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake --build /home/linux/UWU-Blobfish/build/motor_msg -- -j6 -l6
+Invoked command in '/home/linux/UWU-Blobfish/build/motor_msg' returned '0': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake --build /home/linux/UWU-Blobfish/build/motor_msg -- -j6 -l6
+Invoking command in '/home/linux/UWU-Blobfish/build/motor_msg': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake --install /home/linux/UWU-Blobfish/build/motor_msg
+Invoked command in '/home/linux/UWU-Blobfish/build/motor_msg' returned '0': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake --install /home/linux/UWU-Blobfish/build/motor_msg

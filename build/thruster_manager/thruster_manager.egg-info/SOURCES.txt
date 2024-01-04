@@ -1,0 +1,13 @@
+package.xml
+setup.cfg
+setup.py
+resource/thruster_manager
+thruster_manager/__init__.py
+thruster_manager/thruster_manager.py
+thruster_manager.egg-info/PKG-INFO
+thruster_manager.egg-info/SOURCES.txt
+thruster_manager.egg-info/dependency_links.txt
+thruster_manager.egg-info/entry_points.txt
+thruster_manager.egg-info/requires.txt
+thruster_manager.egg-info/top_level.txt
+thruster_manager.egg-info/zip-safe

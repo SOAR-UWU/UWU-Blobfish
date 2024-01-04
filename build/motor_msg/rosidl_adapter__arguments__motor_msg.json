@@ -1,0 +1,6 @@
+{
+  "package_name": "motor_msg",
+  "non_idl_tuples": [
+    "/home/linux/UWU-Blobfish/uwu_main/src/motor_msg:msg/Motors.msg"
+  ]
+}

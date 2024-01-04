@@ -1,0 +1,9 @@
+source;share/thruster_manager/hook/pythonpath.ps1
+source;share/thruster_manager/hook/pythonpath.dsv
+source;share/thruster_manager/hook/pythonpath.sh
+source;share/thruster_manager/hook/ament_prefix_path.ps1
+source;share/thruster_manager/hook/ament_prefix_path.dsv
+source;share/thruster_manager/hook/ament_prefix_path.sh
+source;../../build/thruster_manager/share/thruster_manager/hook/pythonpath_develop.ps1
+source;../../build/thruster_manager/share/thruster_manager/hook/pythonpath_develop.dsv
+source;../../build/thruster_manager/share/thruster_manager/hook/pythonpath_develop.sh

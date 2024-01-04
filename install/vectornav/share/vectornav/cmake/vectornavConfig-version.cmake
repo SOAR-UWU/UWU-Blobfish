@@ -1,0 +1,1 @@
+/home/linux/UWU-Blobfish/build/vectornav/ament_cmake_core/vectornavConfig-version.cmake

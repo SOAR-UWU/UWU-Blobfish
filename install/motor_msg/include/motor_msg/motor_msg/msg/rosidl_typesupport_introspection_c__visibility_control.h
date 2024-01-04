@@ -1,0 +1,1 @@
+/home/linux/UWU-Blobfish/build/motor_msg/rosidl_typesupport_introspection_c/motor_msg/msg/rosidl_typesupport_introspection_c__visibility_control.h
