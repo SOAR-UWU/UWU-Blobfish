@@ -29,17 +29,9 @@
           </cylinder>
         </geometry>
         <material>
-          <script>
-            <uri>file://materials/scripts/colors.material</uri>
-            <name>SAUVC/Red</name>
-          </script>
-          <shader type='pixel'>
-            <normal_map>__default__</normal_map>
-          </shader>
-          <ambient>1 0 0 0</ambient>
-          <diffuse>1 0 0 1</diffuse>
-          <specular>1 0 0 1</specular>
-          <emissive>0 0 0 1</emissive>
+          <ambient>1.0 0.0 0.0 1.0</ambient>
+          <diffuse>1.0 0.0 0.0 1.0</diffuse>
+          <specular>1.0 0.0 0.0 1.0</specular>
         </material>
         <transparency>0</transparency>
       </visual>

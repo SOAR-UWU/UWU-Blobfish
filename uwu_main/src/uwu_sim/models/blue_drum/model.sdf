@@ -26,10 +26,8 @@
           </cylinder>
         </geometry>
         <material>
-          <script>
-            <uri>file://materials/scripts/colors.material</uri>
-            <name>SAUVC/Blue</name>
-          </script>
+          <ambient>0.0 0.0 1.0 1.0</ambient>
+          <diffuse>0.0 0.0 1.0 1.0</diffuse>
         </material>
       </visual>
 

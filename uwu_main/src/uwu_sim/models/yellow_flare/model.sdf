@@ -26,10 +26,8 @@
           </cylinder>
         </geometry>
         <material>
-          <script>
-            <uri>file://materials/scripts/colors.material</uri>
-            <name>SAUVC/Yellow</name>
-          </script>
+          <ambient>1.0 1.0 0.0 1.0</ambient>
+          <diffuse>1.0 1.0 0.0 1.0</diffuse>
         </material>
       </visual>
 
@@ -42,10 +40,8 @@
           </sphere>
         </geometry>
         <material>
-          <script>
-            <uri>file://materials/scripts/colors.material</uri>
-            <name>SAUVC/White</name>
-          </script>
+          <ambient>1.0 1.0 1.0 1.0</ambient>
+          <diffuse>1.0 1.0 1.0 1.0</diffuse>
         </material>
       </visual>
 
@@ -59,10 +55,8 @@
           </cylinder>
         </geometry>
         <material>
-          <script>
-            <uri>file://materials/scripts/colors.material</uri>
-            <name>SAUVC/Yellow</name>
-          </script>
+          <ambient>1.0 1.0 0.0 1.0</ambient>
+          <diffuse>1.0 1.0 0.0 1.0</diffuse>
         </material>
       </visual>
 

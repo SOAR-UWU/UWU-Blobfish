@@ -13,10 +13,15 @@
           </box>
         </geometry>
         <material>
-          <script>
-            <uri>file://materials/scripts/tiles.material</uri>
-            <name>SAUVC2019/Tiles</name>
-          </script>
+          <ambient>1.0 1.0 1.0 1.0</ambient>
+          <diffuse>1.0 1.0 1.0 1.0</diffuse>
+          <pbr>
+            <metal>
+              <albedo_map>swimming_pool_tile.png</albedo_map>
+              <roughness>0.1</roughness>
+              <metalness>0.0</metalness>
+            </metal>
+          </pbr>
         </material>
       </visual>
 
@@ -38,10 +43,15 @@
           </box>
         </geometry>
         <material>
-          <script>
-            <uri>file://materials/scripts/water.material</uri>
-            <name>SAUVC2019/StaticWater</name>
-          </script>
+          <ambient>1.0 1.0 1.0 0.6</ambient>
+          <diffuse>1.0 1.0 1.0 0.6</diffuse>
+          <pbr>
+            <metal>
+              <albedo_map>static_water.png</albedo_map>
+              <roughness>1.0</roughness>
+              <metalness>0.0</metalness>
+            </metal>
+          </pbr>
         </material>
       </visual>
 
@@ -54,10 +64,15 @@
           </box>
         </geometry>
         <material>
-          <script>
-            <uri>file://materials/scripts/tiles.material</uri>
-            <name>SAUVC2019/Tiles</name>
-          </script>
+          <ambient>1.0 1.0 1.0 1.0</ambient>
+          <diffuse>1.0 1.0 1.0 1.0</diffuse>
+          <pbr>
+            <metal>
+              <albedo_map>swimming_pool_tile.png</albedo_map>
+              <roughness>0.1</roughness>
+              <metalness>0.0</metalness>
+            </metal>
+          </pbr>
         </material>
       </visual>
 
@@ -70,10 +85,15 @@
           </box>
         </geometry>
         <material>
-          <script>
-            <uri>file://materials/scripts/tiles.material</uri>
-            <name>SAUVC2019/Tiles</name>
-          </script>
+          <ambient>1.0 1.0 1.0 1.0</ambient>
+          <diffuse>1.0 1.0 1.0 1.0</diffuse>
+          <pbr>
+            <metal>
+              <albedo_map>swimming_pool_tile.png</albedo_map>
+              <roughness>0.1</roughness>
+              <metalness>0.0</metalness>
+            </metal>
+          </pbr>
         </material>
       </visual>
 
@@ -86,10 +106,15 @@
           </box>
         </geometry>
         <material>
-          <script>
-            <uri>file://materials/scripts/tiles.material</uri>
-            <name>SAUVC2019/Tiles</name>
-          </script>
+          <ambient>1.0 1.0 1.0 1.0</ambient>
+          <diffuse>1.0 1.0 1.0 1.0</diffuse>
+          <pbr>
+            <metal>
+              <albedo_map>swimming_pool_tile.png</albedo_map>
+              <roughness>0.1</roughness>
+              <metalness>0.0</metalness>
+            </metal>
+          </pbr>
         </material>
       </visual>
 
@@ -102,10 +127,15 @@
           </box>
         </geometry>
         <material>
-          <script>
-            <uri>file://materials/scripts/tiles.material</uri>
-            <name>SAUVC2019/Tiles</name>
-          </script>
+          <ambient>1.0 1.0 1.0 1.0</ambient>
+          <diffuse>1.0 1.0 1.0 1.0</diffuse>
+          <pbr>
+            <metal>
+              <albedo_map>swimming_pool_tile.png</albedo_map>
+              <roughness>0.1</roughness>
+              <metalness>0.0</metalness>
+            </metal>
+          </pbr>
         </material>
       </visual>
     </link>
