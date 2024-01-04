@@ -1,0 +1,34 @@
+<?xml version="1.0" ?>
+<sdf version="1.8">
+    <world name="test_sea">
+        <physics name="my_physics_cfg" type="ignored">
+            <max_step_size>0.001</max_step_size>
+            <real_time_factor>1.0</real_time_factor>
+        </physics>
+
+        <!--
+        Note: Gazebo is very modular. Without any plugins, it will insert some
+        default plugins. However, specifying even one plugin will disable that.
+        Hence the default plugins are specified here.
+        See: https://gazebosim.org/docs/fortress/sdf_worlds
+        -->
+        <plugin
+            filename="libignition-gazebo-physics-system.so"
+            name="ignition::gazebo::systems::Physics">
+        </plugin>
+        <plugin
+            filename="libignition-gazebo-user-commands-system.so"
+            name="ignition::gazebo::systems::UserCommands">
+        </plugin>
+        <plugin
+            filename="libignition-gazebo-scene-broadcaster-system.so"
+            name="ignition::gazebo::systems::SceneBroadcaster">
+        </plugin>
+
+        <include>
+            <name>target_area</name>
+            <uri>model://target_acquistion_area</uri>
+            <pose>0 0 0 0 0 0</pose>
+        </include>
+    </world>
+</sdf>
