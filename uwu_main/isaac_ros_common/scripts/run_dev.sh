@@ -136,6 +136,17 @@ fi
 
 # Re-use existing container.
 if [ "$(docker ps -a --quiet --filter status=running --filter name=$CONTAINER_NAME)" ]; then
+
+    # Detect if existing container is outdated.
+    old_image_name=$(docker inspect -f '{{.Config.Image}}' $CONTAINER_NAME)
+    if [[ $old_image_name != $BASE_NAME ]]; then
+        print_error "Existing container image is: $old_image_name"
+        print_error "New container image is: $BASE_NAME"
+        print_error "Please remove the existing container first."
+        print_error "Run: docker rm -f $CONTAINER_NAME"
+        exit 1
+    fi
+
     print_info "Attaching to running container: $CONTAINER_NAME"
     attach_container
 fi
