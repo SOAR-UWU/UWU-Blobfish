@@ -16,8 +16,7 @@ function usage() {
     print_info "Copyright (c) 2021-2022, NVIDIA CORPORATION."
 }
 
-# Read and parse config file if exists
-#
+# Read and parse config file if exists.
 # CONFIG_IMAGE_KEY (string, can be empty)
 
 if [[ -f "${ROOT}/.isaac_ros_common-config" ]]; then
@@ -37,10 +36,10 @@ if [[ -z "$ISAAC_ROS_DEV_DIR" ]]; then
     if [[ ! -d "$ISAAC_ROS_DEV_DIR" ]]; then
         ISAAC_ROS_DEV_DIR=$(realpath "$ROOT/../")
     fi
-    print_warning "isaac_ros_dev not specified, assuming $ISAAC_ROS_DEV_DIR"
+    print_warning "isaac_ros_dev dir not specified, assuming $ISAAC_ROS_DEV_DIR."
 else
     if [[ ! -d "$ISAAC_ROS_DEV_DIR" ]]; then
-        print_error "Specified isaac_ros_dev does not exist: $ISAAC_ROS_DEV_DIR"
+        print_error "Specified isaac_ros_dev dir does not exist: $ISAAC_ROS_DEV_DIR"
         exit 1
     fi
     shift 1
@@ -85,7 +84,7 @@ fi
 # Check if git-lfs is installed.
 git lfs &>/dev/null
 if [[ $? -ne 0 ]] ; then
-    print_error "git-lfs is not insalled. Please make sure git-lfs is installed before you clone the repo."
+    print_error "git-lfs is not installed. Please make sure git-lfs is installed before you clone the repo."
     exit 1
 fi
 
@@ -121,7 +120,7 @@ if [ "$(docker ps -a --quiet --filter status=running --filter name=$CONTAINER_NA
     exit 0
 fi
 
-# Build image
+# Determine image layers.
 IMAGE_KEY=ros2_humble
 if [[ ! -z "${CONFIG_IMAGE_KEY}" ]]; then
     IMAGE_KEY=$CONFIG_IMAGE_KEY
@@ -131,12 +130,13 @@ BASE_IMAGE_KEY=$PLATFORM.user
 if [[ ! -z "${IMAGE_KEY}" ]]; then
     BASE_IMAGE_KEY=$PLATFORM.$IMAGE_KEY
 
-    # If the configured key does not have .user, append it last
+    # If the configured key does not have .user, append it last.
     if [[ $IMAGE_KEY != *".user"* ]]; then
         BASE_IMAGE_KEY=$BASE_IMAGE_KEY.user
     fi
 fi
 
+# Build image.
 print_info "Building $BASE_IMAGE_KEY base as image: $BASE_NAME using key $BASE_IMAGE_KEY"
 $ROOT/build_base_image.sh $BASE_IMAGE_KEY $BASE_NAME '' '' ''
 
@@ -145,7 +145,7 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 
-# Map host's display socket to docker
+# Map host's display socket to docker.
 DOCKER_ARGS+=("-v /tmp/.X11-unix:/tmp/.X11-unix")
 DOCKER_ARGS+=("-v $HOME/.Xauthority:/home/admin/.Xauthority:rw")
 DOCKER_ARGS+=("-e DISPLAY")
@@ -173,7 +173,7 @@ if [[ $PLATFORM == "aarch64" ]]; then
     DOCKER_ARGS+=("-v /opt/nvidia/vpi2:/opt/nvidia/vpi2")
     DOCKER_ARGS+=("-v /usr/share/vpi2:/usr/share/vpi2")
 
-    # If jtop present, give the container access
+    # If jtop present, give the container access.
     if [[ $(getent group jtop) ]]; then
         DOCKER_ARGS+=("-v /run/jtop.sock:/run/jtop.sock:ro")
         JETSON_STATS_GID="$(getent group jtop | cut -d: -f3)"
@@ -181,18 +181,18 @@ if [[ $PLATFORM == "aarch64" ]]; then
     fi
 fi
 
-# Optionally load custom docker arguments from file
+# Optionally load custom docker arguments from file.
 DOCKER_ARGS_FILE="$ROOT/.isaac_ros_dev-dockerargs"
 if [[ -f "$DOCKER_ARGS_FILE" ]]; then
-    print_info "Using additional Docker run arguments from $DOCKER_ARGS_FILE"
+    print_info "Using additional Docker run arguments: $DOCKER_ARGS_FILE"
     readarray -t DOCKER_ARGS_FILE_LINES < $DOCKER_ARGS_FILE
     for arg in "${DOCKER_ARGS_FILE_LINES[@]}"; do
         DOCKER_ARGS+=($(eval "echo $arg | envsubst"))
     done
 fi
 
-# Run container from image
-print_info "Creating $CONTAINER_NAME from $BASE_IMAGE_KEY"
+# Run container from image.
+print_info "Creating $CONTAINER_NAME from $BASE_IMAGE_KEY."
 docker run -it \
     --privileged \
     --network host \
