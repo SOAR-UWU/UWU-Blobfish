@@ -23,4 +23,19 @@ if(BUILD_TESTING)
   ament_lint_auto_find_test_dependencies()
 endif()
 
+# Install worlds/ & models/ folder so Gazebo can find them.
+install(
+  DIRECTORY worlds/
+  DESTINATION share/${PROJECT_NAME}/worlds
+)
+
+install(
+  DIRECTORY models/
+  DESTINATION share/${PROJECT_NAME}/models
+)
+
+# Hook sets env vars to allow Gazebo to find above models/ & worlds/ dirs.
+ament_environment_hooks("${CMAKE_CURRENT_SOURCE_DIR}/hooks/gazebo.dsv.in")
+ament_environment_hooks("${CMAKE_CURRENT_SOURCE_DIR}/hooks/gazebo.sh.in")
+
 ament_package()
