@@ -4,7 +4,8 @@ from sys import executable
 from ament_index_python.packages import get_package_share_directory
 
 from launch import LaunchDescription
-from launch.actions import IncludeLaunchDescription, Node
+from launch.actions import IncludeLaunchDescription
+from launch_ros.actions import Node
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 
 
@@ -28,6 +29,11 @@ def generate_launch_description():
         executable="offset_calibrator"
     )
 
+    thruster_manager_node = Node(
+        package="thruster_manager",
+        executable="thruster_manager"
+    )
+
     motor_bridge = Node(
         package="arduino_bridge",
         executable="bridge"
@@ -36,7 +42,8 @@ def generate_launch_description():
     # Create the launch description and populate
     ld = LaunchDescription()
     ld.add_action(vn_launch)
-    ld.add_action(pid_node)
     ld.add_action(pid_calibration)
+    ld.add_action(pid_node)
+    ld.add_action(thruster_manager_node)
     ld.add_action(motor_bridge)
     return ld
