@@ -39,7 +39,7 @@ class PID_Node(Node):
         qos_profile = rclpy.qos.qos_profile_sensor_data
 
         self.yawpitchroll_pid = self.create_publisher(Vector3, 'yawpitchroll_pid', 10)
-        self.create_subscription(Vector3, 'imu/yawpitchroll', self.calculate_pid, qos_profile)
+        self.create_subscription(Vector3, 'imu/corrected_yawpitchroll', self.calculate_pid, qos_profile)
         self.create_subscription(Vector3, 'setpoints/yawpitchroll', self.set_setpoints, 10)
 
     def calculate_pid(self, msg):
