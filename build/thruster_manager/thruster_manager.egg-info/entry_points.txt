@@ -1,3 +1,0 @@
-[console_scripts]
-thruster_manager = thruster_manager.thruster_manager:main
-
