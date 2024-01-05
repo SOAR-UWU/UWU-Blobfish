@@ -1,9 +1,0 @@
-source;share/arduino_bridge/hook/pythonpath.ps1
-source;share/arduino_bridge/hook/pythonpath.dsv
-source;share/arduino_bridge/hook/pythonpath.sh
-source;share/arduino_bridge/hook/ament_prefix_path.ps1
-source;share/arduino_bridge/hook/ament_prefix_path.dsv
-source;share/arduino_bridge/hook/ament_prefix_path.sh
-source;../../build/arduino_bridge/share/arduino_bridge/hook/pythonpath_develop.ps1
-source;../../build/arduino_bridge/share/arduino_bridge/hook/pythonpath_develop.dsv
-source;../../build/arduino_bridge/share/arduino_bridge/hook/pythonpath_develop.sh

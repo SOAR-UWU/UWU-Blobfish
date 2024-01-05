@@ -1,1 +1,0 @@
-/home/linux/UWU-Blobfish/uwu_main/vectornav/vectornav_msgs/msg/VpeStatus.msg

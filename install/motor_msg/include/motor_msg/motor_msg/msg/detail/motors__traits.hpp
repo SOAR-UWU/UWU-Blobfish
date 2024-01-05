@@ -1,1 +1,0 @@
-/home/linux/UWU-Blobfish/build/motor_msg/rosidl_generator_cpp/motor_msg/msg/detail/motors__traits.hpp

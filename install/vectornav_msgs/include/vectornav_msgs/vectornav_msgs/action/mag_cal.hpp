@@ -1,1 +1,0 @@
-/home/linux/UWU-Blobfish/build/vectornav_msgs/rosidl_generator_cpp/vectornav_msgs/action/mag_cal.hpp

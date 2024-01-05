@@ -7,15 +7,15 @@ from geometry_msgs.msg import Vector3
 class PID_Node(Node):
     def __init__(self):
         super().__init__("pid_node")
-        self.declare_parameter("kp_yaw", 1.0)
-        self.declare_parameter("ki_yaw", 1.0)
-        self.declare_parameter("kd_yaw", 1.0)
-        self.declare_parameter("kp_pitch", 1.0)
-        self.declare_parameter("ki_pitch", 1.0)
-        self.declare_parameter("kd_pitch", 1.0)
-        self.declare_parameter("kp_roll", 1.0)
-        self.declare_parameter("ki_roll", 1.0)
-        self.declare_parameter("kd_roll", 1.0)
+        self.declare_parameter("kp_yaw", 0.005)
+        self.declare_parameter("ki_yaw", 0.0)
+        self.declare_parameter("kd_yaw", 0.0)
+        self.declare_parameter("kp_pitch", 0.005)
+        self.declare_parameter("ki_pitch", 0.0)
+        self.declare_parameter("kd_pitch", 0.0)
+        self.declare_parameter("kp_roll", 0.005)
+        self.declare_parameter("ki_roll", 0.0)
+        self.declare_parameter("kd_roll", 0.0)
         self.declare_parameter("setpoint_yaw", 0.0)
         self.declare_parameter("setpoint_pitch", 0.0)
         self.declare_parameter("setpoint_roll", 0.0)
@@ -39,7 +39,7 @@ class PID_Node(Node):
         qos_profile = rclpy.qos.qos_profile_sensor_data
 
         self.yawpitchroll_pid = self.create_publisher(Vector3, 'yawpitchroll_pid', 10)
-        self.create_subscription(Vector3, 'imu/yawpitchroll', self.calculate_pid, qos_profile)
+        self.create_subscription(Vector3, 'imu/corrected_yawpitchroll', self.calculate_pid, qos_profile)
         self.create_subscription(Vector3, 'setpoints/yawpitchroll', self.set_setpoints, 10)
 
     def calculate_pid(self, msg):
