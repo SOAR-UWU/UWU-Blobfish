@@ -1,54 +1,71 @@
-<?xml version="1.0" ?>
-<sdf version="1.8">
-    <world name="test_sea">
-        <physics name="my_physics_cfg" type="ignored">
-            <max_step_size>0.001</max_step_size>
-            <real_time_factor>1.0</real_time_factor>
-        </physics>
+<?xml version="1.0"?>
+<sdf version="1.9">
+  <world name="test_sea">
+    <physics name="my_physics_cfg" type="ignored">
+      <max_step_size>0.0001</max_step_size>
+      <real_time_factor>1.0</real_time_factor>
+    </physics>
 
-        <!--
-        Note: Gazebo is very modular. Without any plugins, it will insert some
-        default plugins. However, specifying even one plugin will disable that.
-        Hence the default plugins are specified here.
-        See: https://gazebosim.org/docs/fortress/sdf_worlds
-        -->
-        <plugin
-            filename="libignition-gazebo-physics-system.so"
-            name="ignition::gazebo::systems::Physics">
-        </plugin>
-        <plugin
-            filename="libignition-gazebo-user-commands-system.so"
-            name="ignition::gazebo::systems::UserCommands">
-        </plugin>
-        <plugin
-            filename="libignition-gazebo-scene-broadcaster-system.so"
-            name="ignition::gazebo::systems::SceneBroadcaster">
-        </plugin>
+    <!--
+    Note: Gazebo is very modular. Without any plugins, it will insert some
+    default plugins. However, specifying even one plugin will disable that.
+    Hence the default plugins are specified here.
+    See: https://gazebosim.org/docs/fortress/sdf_worlds
+    -->
+    <plugin
+      filename="ignition-gazebo-physics-system"
+      name="ignition::gazebo::systems::Physics">
+    </plugin>
+    <plugin
+      filename="ignition-gazebo-user-commands-system"
+      name="ignition::gazebo::systems::UserCommands">
+    </plugin>
+    <plugin
+      filename="ignition-gazebo-scene-broadcaster-system"
+      name="ignition::gazebo::systems::SceneBroadcaster">
+    </plugin>
+    <plugin
+      filename="ignition-gazebo-buoyancy-system"
+      name="ignition::gazebo::systems::Buoyancy">
+      <graded_buoyancy>
+        <default_density>1000</default_density>
+        <density_change>
+          <above_depth>0</above_depth>
+          <density>1</density>
+        </density_change>
+      </graded_buoyancy>
+    </plugin>
 
-        <light type="directional" name="sun">
-            <cast_shadows>true</cast_shadows>
-            <pose>0 0 10 0 0 0</pose>
-            <diffuse>0.8 0.8 0.8 1</diffuse>
-            <specular>0.2 0.2 0.2 1</specular>
-            <attenuation>
-                <range>1000</range>
-                <constant>0.9</constant>
-                <linear>0.01</linear>
-                <quadratic>0.001</quadratic>
-            </attenuation>
-            <direction>-0.5 0.1 -0.9</direction>
-        </light>
+    <light type="directional" name="sun">
+      <cast_shadows>true</cast_shadows>
+      <pose>0 0 10 0 0 0</pose>
+      <diffuse>0.8 0.8 0.8 1</diffuse>
+      <specular>0.2 0.2 0.2 1</specular>
+      <attenuation>
+        <range>1000</range>
+        <constant>0.9</constant>
+        <linear>0.01</linear>
+        <quadratic>0.001</quadratic>
+      </attenuation>
+      <direction>-0.5 0.1 -0.9</direction>
+    </light>
 
-        <include>
-            <name>target_area</name>
-            <uri>model://target_acquisition_area</uri>
-            <pose>0 0 0 0 0 0</pose>
-        </include>
+    <include>
+      <name>target_area</name>
+      <uri>model://target_acquisition_area</uri>
+      <pose>0 0 0 0 0 0</pose>
+    </include>
 
-        <include>
-            <name>pool</name>
-            <uri>model://swimming_pool</uri>
-            <pose>0 0 0 0 0 0</pose>
-        </include>
-    </world>
+    <include>
+      <name>pool</name>
+      <uri>model://swimming_pool</uri>
+      <pose>0 0 0 0 0 0</pose>
+    </include>
+
+    <include>
+      <name>wood_cube</name>
+      <uri>model://wood_cube</uri>
+      <pose>0 0 5 0 0 0</pose>
+    </include>
+  </world>
 </sdf>
