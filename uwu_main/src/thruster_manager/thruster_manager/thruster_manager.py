@@ -10,18 +10,18 @@ class Thruster_Manager(Node):
     def __init__(self):
         super().__init__("thruster_manager")
         
-        self.order = ["fl", "fr", "ml", "mr", "bl", "bm", "br"]
+        self.order = ["bm", "fr", "br", "mr", "ml", "fl", "bl"]
         self.param_names = [f"control_{name}" for name in self.order]
         self.motor_names = [f"motor_{name}" for name in self.order]
         self.motor_matrix = np.array([
             # yaw pitch roll
-            [-1,   0,    0],    # front left motor
-            [1,    0,    0],    # front right motor
-            [0,    0,   -1],    # middle left motor
-            [0,    0,    1],    # middle right motor
-            [1,    0,    0],    # back left motor
-            [0,   -1,    0],    # back middle motor
             [-1,   0,    0],    # back right motor
+            [0,    1,    0],    # back middle motor
+            [-1,    0,    0],    # front left motor
+            [-1,    0,    0],    # front right motor
+            [0,    0,    1],    # middle left motor
+            [1,   0,    0],    # back left motor
+            [0,    0,    -1],    # middle right motor
         ], dtype=np.float64)
 
         self.scale = 300    # how much to scale the pid value
@@ -30,14 +30,14 @@ class Thruster_Manager(Node):
         self.motor_publisher = self.create_publisher(Motors, '/motor_values', 10)
         self.get_logger().info("Thruster manager started")
         
-        for name in self.motor_order:
+        for name in self.order:
             self.declare_parameter(name, 0)
 
     
     def calculate_thrusters(self, pid_msg):
-        ctrl_params = self.get_parameters(self.motor_order)
+        ctrl_params = self.get_parameters(self.order)
         ctrl_vec = np.array([p.value for p in ctrl_params], dtype=np.float64)
-        self.get_logger().info(f"Requested: {ctrl_vec}")
+        # self.get_logger().info(f"Requested: {ctrl_vec}")
 
         # [-1, 1]
         pid_weights = np.array([
@@ -47,9 +47,9 @@ class Thruster_Manager(Node):
         ])
         pid_vec = (self.motor_matrix @ pid_weights).flatten()
         pid_vec *= self.scale
-        self.get_logger().info(f"PID: {pid_vec}")
+        # self.get_logger().info(f"PID: {pid_vec}")
 
-        out_vec = (pid_vec + ctrl_vec).clip(1200, 1800)
+        out_vec = (pid_vec + ctrl_vec + 1500).clip(1200, 1800)
         self.get_logger().info(f"Final: {out_vec}")
         
         motor_vals = Motors()
