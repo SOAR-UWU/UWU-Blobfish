@@ -26,7 +26,7 @@ class Thruster_Manager(Node):
 
         self.scale = 300    # how much to scale the pid value
         self.create_subscription(Vector3, '/yawpitchroll_pid', self.calculate_thrusters, 10)
-        self.create_subscription(MotorOffset, '/control', self.set_control_thrust, 10)
+        self.create_subscription(MotorOffset, '/motor_dir_control', self.set_control_thrust, 10)
         self.motor_publisher = self.create_publisher(Motors, '/motor_values', 10)
         self.get_logger().info("Thruster manager started")
         
