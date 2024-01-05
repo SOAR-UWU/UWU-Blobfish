@@ -1,1 +1,0 @@
-/home/linux/UWU-Blobfish/build/motor_msg/ament_cmake_core/motor_msgConfig.cmake

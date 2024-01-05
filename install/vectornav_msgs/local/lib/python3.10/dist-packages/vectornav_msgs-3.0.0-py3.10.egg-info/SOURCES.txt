@@ -1,1 +1,0 @@
-/home/linux/UWU-Blobfish/build/vectornav_msgs/ament_cmake_python/vectornav_msgs/vectornav_msgs.egg-info/SOURCES.txt
