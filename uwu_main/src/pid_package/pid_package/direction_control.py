@@ -9,7 +9,6 @@ class Direction_Control(Node):
     def __init__(self):
         super().__init__("motor_dir_control")
 
-        self.motor_dir_control_publisher = self.create_publisher(MotorOffset, '/motor_dir_control', 10)
         self.order = ["bm", "fr", "br", "mr", "ml", "fl", "bl"]
         self.motor_values = []
         for name in self.order:
@@ -19,6 +18,8 @@ class Direction_Control(Node):
 
         self.ws_state = None
         self.ID_value = 50
+
+        self.motor_dir_control_publisher = self.create_publisher(MotorOffset, '/motor_dir_control', 10)
         self.create_subscription(char, '/keypress', self.keypress, 10)
 
         motor_msg = Motors()
