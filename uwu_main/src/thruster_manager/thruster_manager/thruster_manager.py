@@ -10,16 +10,19 @@ class Thruster_Manager(Node):
     def __init__(self):
         super().__init__("thruster_manager")
         
+        self.order = ["fl", "fr", "ml", "mr", "bl", "bm", "br"]
+        self.param_names = [f"control_{name}" for name in self.order]
+        self.motor_names = [f"motor_{name}" for name in self.order]
         self.motor_matrix = np.array([
             # yaw pitch roll
+            [-1,   0,    0],    # front left motor
             [1,    0,    0],    # front right motor
-            [-1,   0,    0],    # back right motor
-            [0,   -1,    0],    # back middle motor
-            [1,    0,    0],    # back left motor
             [0,    0,   -1],    # middle left motor
             [0,    0,    1],    # middle right motor
-            [-1,   0,    0],    # front left motor
-        ])
+            [1,    0,    0],    # back left motor
+            [0,   -1,    0],    # back middle motor
+            [-1,   0,    0],    # back right motor
+        ], dtype=np.float64)
 
         self.scale = 300    # how much to scale the pid value
         self.create_subscription(Vector3, '/yawpitchroll_pid', self.calculate_thrusters, 10)
@@ -27,52 +30,40 @@ class Thruster_Manager(Node):
         self.motor_publisher = self.create_publisher(Motors, '/motor_values', 10)
         self.get_logger().info("Thruster manager started")
         
-        self.declare_parameter("control_fr", 0)
-        self.declare_parameter("control_mr", 0)
-        self.declare_parameter("control_bm", 0)
-        self.declare_parameter("control_bl", 0)
-        self.declare_parameter("control_ml", 0)
-        self.declare_parameter("control_br", 0)
-        self.declare_parameter("control_fl", 0)
+        for name in self.motor_order:
+            self.declare_parameter(name, 0)
 
     
     def calculate_thrusters(self, pid_msg):
-        pid_vector = np.array([
+        ctrl_params = self.get_parameters(self.motor_order)
+        ctrl_vec = np.array([p.value for p in ctrl_params], dtype=np.float64)
+        self.get_logger().info(f"Requested: {ctrl_vec}")
+
+        # [-1, 1]
+        pid_weights = np.array([
             [pid_msg.x],
             [pid_msg.y],
             [pid_msg.z]
         ])
-        pid_vector *= self.scale
-        outputs = self.motor_matrix @ pid_vector
+        pid_vec = (self.motor_matrix @ pid_weights).flatten()
+        pid_vec *= self.scale
+        self.get_logger().info(f"PID: {pid_vec}")
+
+        out_vec = (pid_vec + ctrl_vec).clip(1200, 1800)
+        self.get_logger().info(f"Final: {out_vec}")
         
-        outputs += 1500
         motor_vals = Motors()
-
-        control_vector = self.get_parameters(["control_fr", "control_mr", "control_bm", "control_bl", "control_ml", "control_br", "control_fl"])
-        self.get_logger().info(f"{control_vector}")
-        control_vector = np.array(control_vector)
-        outputs += control_vector.T
-        outputs = outputs.clip(1200, 1800)
-
-        motor_vals.motor_fr = int(outputs[0])
-        motor_vals.motor_mr = int(outputs[1])
-        motor_vals.motor_bm = int(outputs[2])
-        motor_vals.motor_bl = int(outputs[3])
-        motor_vals.motor_ml = int(outputs[4])
-        motor_vals.motor_br = int(outputs[5])
-        motor_vals.motor_fl = int(outputs[6])
+        for i, name in enumerate(self.motor_names):
+            setattr(motor_vals, name, int(out_vec[i]))
         self.motor_publisher.publish(motor_vals)
 
     def set_control_thrust(self, extra_thrust):
-        fr = Parameter("control_fr", Parameter.Type.INTEGER, extra_thrust.motor_fr)
-        mr = Parameter("control_mr", Parameter.Type.INTEGER, extra_thrust.motor_mr)
-        bm = Parameter("control_bm", Parameter.Type.INTEGER, extra_thrust.motor_bm)
-        bl = Parameter("control_bl", Parameter.Type.INTEGER, extra_thrust.motor_bl)
-        ml = Parameter("control_ml", Parameter.Type.INTEGER, extra_thrust.motor_ml)
-        br = Parameter("control_br", Parameter.Type.INTEGER, extra_thrust.motor_br)
-        fl = Parameter("control_fl", Parameter.Type.INTEGER, extra_thrust.motor_fl)
-        self.set_parameters([fr, mr, bm, bl, ml, br, fl])
+        params = []
+        for motor_name, param_name in zip(self.motor_names, self.param_names):
+            param = Parameter(param_name, Parameter.Type.INTEGER, getattr(extra_thrust, motor_name))
+            params.append(param)
 
+        self.set_parameters(params)
         self.get_logger().info("Control parameters updated")
 
 def main(args=None):
