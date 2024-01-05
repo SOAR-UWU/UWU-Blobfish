@@ -1,1 +1,0 @@
-ament_cmake_symlink_install_targets("TARGET_FILES" "/home/linux/UWU-Blobfish/build/vectornav/vectornav" "/home/linux/UWU-Blobfish/build/vectornav/vn_sensor_msgs" "TARGETS" "vectornav" "vn_sensor_msgs" "DESTINATION" "lib/vectornav")

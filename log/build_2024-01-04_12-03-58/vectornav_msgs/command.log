@@ -1,6 +1,0 @@
-Invoking command in '/home/linux/UWU-Blobfish/build/vectornav_msgs': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake /home/linux/UWU-Blobfish/uwu_main/vectornav/vectornav_msgs -DAMENT_CMAKE_SYMLINK_INSTALL=1 -DCMAKE_INSTALL_PREFIX=/home/linux/UWU-Blobfish/install/vectornav_msgs
-Invoked command in '/home/linux/UWU-Blobfish/build/vectornav_msgs' returned '0': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake /home/linux/UWU-Blobfish/uwu_main/vectornav/vectornav_msgs -DAMENT_CMAKE_SYMLINK_INSTALL=1 -DCMAKE_INSTALL_PREFIX=/home/linux/UWU-Blobfish/install/vectornav_msgs
-Invoking command in '/home/linux/UWU-Blobfish/build/vectornav_msgs': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake --build /home/linux/UWU-Blobfish/build/vectornav_msgs -- -j6 -l6
-Invoked command in '/home/linux/UWU-Blobfish/build/vectornav_msgs' returned '0': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake --build /home/linux/UWU-Blobfish/build/vectornav_msgs -- -j6 -l6
-Invoking command in '/home/linux/UWU-Blobfish/build/vectornav_msgs': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake --install /home/linux/UWU-Blobfish/build/vectornav_msgs
-Invoked command in '/home/linux/UWU-Blobfish/build/vectornav_msgs' returned '0': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake --install /home/linux/UWU-Blobfish/build/vectornav_msgs

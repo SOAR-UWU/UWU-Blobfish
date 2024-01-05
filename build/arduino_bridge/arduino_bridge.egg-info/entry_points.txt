@@ -1,3 +1,0 @@
-[console_scripts]
-bridge = arduino_bridge.arduino_listener:main
-

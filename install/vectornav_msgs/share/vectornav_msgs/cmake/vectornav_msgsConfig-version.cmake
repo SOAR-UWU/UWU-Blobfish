@@ -1,1 +1,0 @@
-/home/linux/UWU-Blobfish/build/vectornav_msgs/ament_cmake_core/vectornav_msgsConfig-version.cmake
