@@ -1,0 +1,1 @@
+ros2 topic pub /motor_values motor_msg/Motors "{motor_fr=1600, motor_mr=1500, motor_bm=1500, motor_bl=1500, motor_ml=1500, motor_br=1500, motor_fl=1500}"
