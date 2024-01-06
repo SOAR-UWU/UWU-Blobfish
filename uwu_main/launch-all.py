@@ -29,6 +29,11 @@ def generate_launch_description():
         executable="offset_calibrator"
     )
 
+    pid_motor_dir_control = Node(
+        package="pid_package",
+        executable="motor_dir_control_node"
+    )
+
     thruster_manager_node = Node(
         package="thruster_manager",
         executable="thruster_manager"
@@ -44,6 +49,7 @@ def generate_launch_description():
     ld.add_action(vn_launch)
     ld.add_action(pid_calibration)
     ld.add_action(pid_node)
+    ld.add_action(pid_motor_dir_control)
     ld.add_action(thruster_manager_node)
     ld.add_action(motor_bridge)
     return ld
