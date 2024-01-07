@@ -3,7 +3,7 @@ from rclpy.node import Node
 from rclpy.parameter import Parameter
 from motor_msg.msg import Motors, MotorOffset
 import numpy as np
-from std_msgs import char
+from std_msgs.msg import Char
 
 class Direction_Control(Node):
     def __init__(self):
@@ -22,7 +22,7 @@ class Direction_Control(Node):
         self.inc_dec_value = 50
 
         self.motor_dir_control_publisher = self.create_publisher(MotorOffset, '/motor_dir_control', 10)
-        self.create_subscription(char, '/keypress', self.keypress, 10)
+        self.create_subscription(Char, '/keypress', self.keypress, 10)
 
         self.motor_values = np.array(self.motor_values, dtype=np.float64)
 
