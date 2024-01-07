@@ -21,8 +21,9 @@ setup(
     entry_points={
         'console_scripts': [
             'offset_calibrator = pid_package.pid_offset_calibration:main',
-            'pid_node = pid_package.pid_package:main'
-            'motor_dir_control_node = pid_package.direction_control:main'
+            'pid_node = pid_package.pid_package:main',
+            'motor_dir_control_node = pid_package.direction_control:main',
+            'pid_tuner = pid_package.pid_tuner:main'
         ],
     },
 )
