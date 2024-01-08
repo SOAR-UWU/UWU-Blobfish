@@ -30,7 +30,7 @@ class Thruster_Manager(Node):
         self.motor_publisher = self.create_publisher(Motors, '/motor_values', 10)
         self.get_logger().info("Thruster manager started")
         
-        for name in self.order:
+        for name in self.param_names:
             self.declare_parameter(name, 0)
 
     
