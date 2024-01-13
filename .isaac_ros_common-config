@@ -1,2 +1,2 @@
-CONFIG_IMAGE_KEY="ros2_humble.user.realsense.arduino.gazebo.udev.misc"
+CONFIG_IMAGE_KEY="ros2_humble.fixes.user.realsense.arduino.gazebo.udev.misc"
 CONFIG_DOCKER_SEARCH_DIRS=(../../../docker)
