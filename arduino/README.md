@@ -33,6 +33,24 @@ And upload it:
 arduino-cli upload -p /dev/arduino0 --fqbn arduino:avr:nano:cpu=atmega328old main/main.ino
 ```
 
+## `udev` rules
+
+To make life easier, `udev` rules are used to assign fixed device nodes to the Arduino and IMU. As a result, these device names are hardcoded in the code.
+
+`/etc/udev/rules.d/99-arduino.rules`:
+
+```ru
+# Detect arduino & assign fixed device node.
+ACTION=="add", ATTRS{idVendor}=="1a86", ATTRS{idProduct}=="7523", MODE="0666", GROUP="dialout", SYMLINK+="arduino0"
+```
+
+`/etc/udev/rules.d/99-imu.rules`:
+
+```ru
+# Detect imu & assign fixed device node.
+ACTION=="add", ATTRS{idVendor}=="0403", ATTRS{idProduct}=="6001", MODE="0666", GROUP="dialout", SYMLINK+="imu0"
+```
+
 ## Arduino-Jetson interface
 
 The functions for interfacing with the Jetson are stored in the `arduino_jetson_interface.h` header file. The `await_connection()` function should be called in `setup()`.
