@@ -1,0 +1,136 @@
+\hypertarget{classArdJetInterface}{}\doxysection{Ard\+Jet\+Interface Class Reference}
+\label{classArdJetInterface}\index{ArdJetInterface@{ArdJetInterface}}
+
+
+Implementation of the Arduino side of the Jetson-\/\+Arduino interface.  
+
+
+
+
+{\ttfamily \#include $<$arduino\+\_\+jetson\+\_\+interface.\+h$>$}
+
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classArdJetInterface_a464f35cfcab00155f14ceb717f7e1268}\label{classArdJetInterface_a464f35cfcab00155f14ceb717f7e1268}} 
+{\bfseries Ard\+Jet\+Interface} (Simple\+Serial\+Protocol sp, byte led\+\_\+num)
+\item 
+void \mbox{\hyperlink{classArdJetInterface_a55890900a121a91da648ac23b464268c}{await\+Connection}} (char init\+\_\+char)
+\begin{DoxyCompactList}\small\item\em Wait for a connection handshake with the Jetson. \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{classArdJetInterface_adb281d7cb53a16fd435e497705501b5c}{recv\+\_\+motor\+\_\+values}} (uint16\+\_\+t motor\+\_\+vals\mbox{[}Num\+Motors\mbox{]})
+\begin{DoxyCompactList}\small\item\em Listens for motor values transmission over the Serial connection. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classArdJetInterface_ab6c2fed7a89a17b4556794ff875653bb}\label{classArdJetInterface_ab6c2fed7a89a17b4556794ff875653bb}} 
+void \mbox{\hyperlink{classArdJetInterface_ab6c2fed7a89a17b4556794ff875653bb}{fastblink}} ()
+\begin{DoxyCompactList}\small\item\em Rapidly flash the onboard LED. For debugging. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classArdJetInterface_a0e313c4d6df1ad7c0584233908a938ed}{on\+Error}} (uint8\+\_\+t err\+\_\+num)
+\begin{DoxyCompactList}\small\item\em Error callback function, called if an error in the protocol (timeout while waiting, received unexpected character, etc.) is encountered. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classArdJetInterface_abd9da1951f57bbe996e9829e66bdfafb}\label{classArdJetInterface_abd9da1951f57bbe996e9829e66bdfafb}} 
+void \mbox{\hyperlink{classArdJetInterface_abd9da1951f57bbe996e9829e66bdfafb}{continue\+\_\+blinking}} ()
+\begin{DoxyCompactList}\small\item\em Sustains the current error blinking, if one is occurring. Refer to the \mbox{\hyperlink{classErrorBlinker}{Error\+Blinker}} code documentation for more details. \end{DoxyCompactList}\item 
+uint8\+\_\+t \mbox{\hyperlink{classArdJetInterface_a5b2aadd04d0b9501a99c24749b3158f4}{check\+\_\+error}} ()
+\begin{DoxyCompactList}\small\item\em Check the current error code. \end{DoxyCompactList}\item 
+char \mbox{\hyperlink{classArdJetInterface_a6e6d50efd4967a590186b0151f30c767}{check\+\_\+last\+\_\+char}} ()
+\begin{DoxyCompactList}\small\item\em Check the putback char. This variable is set when an unexpected character is received by the \mbox{\hyperlink{classArdJetInterface_adb281d7cb53a16fd435e497705501b5c}{recv\+\_\+motor\+\_\+values()}} function. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classArdJetInterface_aaa5b98cd2d595a3d65563a407a8208fc}\label{classArdJetInterface_aaa5b98cd2d595a3d65563a407a8208fc}} 
+\mbox{\hyperlink{classErrorBlinker}{Error\+Blinker}} {\bfseries blinker}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Implementation of the Arduino side of the Jetson-\/\+Arduino interface. 
+
+Contains functions to establish a connection with the Jetson, and for exchanging of data. 
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classArdJetInterface_a55890900a121a91da648ac23b464268c}\label{classArdJetInterface_a55890900a121a91da648ac23b464268c}} 
+\index{ArdJetInterface@{ArdJetInterface}!awaitConnection@{awaitConnection}}
+\index{awaitConnection@{awaitConnection}!ArdJetInterface@{ArdJetInterface}}
+\doxysubsubsection{\texorpdfstring{awaitConnection()}{awaitConnection()}}
+{\footnotesize\ttfamily void Ard\+Jet\+Interface\+::await\+Connection (\begin{DoxyParamCaption}\item[{char}]{init\+\_\+char }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Wait for a connection handshake with the Jetson. 
+
+This function constantly transmits a single character while waiting for a reply of the same character.
+
+Upon receiving init\+\_\+char on the Serial connection, connection is established and the function exits.
+
+
+\begin{DoxyParams}{Parameters}
+{\em init\+\_\+char} & Character to listen for / transmit \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classArdJetInterface_a5b2aadd04d0b9501a99c24749b3158f4}\label{classArdJetInterface_a5b2aadd04d0b9501a99c24749b3158f4}} 
+\index{ArdJetInterface@{ArdJetInterface}!check\_error@{check\_error}}
+\index{check\_error@{check\_error}!ArdJetInterface@{ArdJetInterface}}
+\doxysubsubsection{\texorpdfstring{check\_error()}{check\_error()}}
+{\footnotesize\ttfamily uint8\+\_\+t Ard\+Jet\+Interface\+::check\+\_\+error (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Check the current error code. 
+
+\begin{DoxyReturn}{Returns}
+uint8\+\_\+t -\/ current error code 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classArdJetInterface_a6e6d50efd4967a590186b0151f30c767}\label{classArdJetInterface_a6e6d50efd4967a590186b0151f30c767}} 
+\index{ArdJetInterface@{ArdJetInterface}!check\_last\_char@{check\_last\_char}}
+\index{check\_last\_char@{check\_last\_char}!ArdJetInterface@{ArdJetInterface}}
+\doxysubsubsection{\texorpdfstring{check\_last\_char()}{check\_last\_char()}}
+{\footnotesize\ttfamily char Ard\+Jet\+Interface\+::check\+\_\+last\+\_\+char (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Check the putback char. This variable is set when an unexpected character is received by the \mbox{\hyperlink{classArdJetInterface_adb281d7cb53a16fd435e497705501b5c}{recv\+\_\+motor\+\_\+values()}} function. 
+
+\begin{DoxyReturn}{Returns}
+char -\/ putback char 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classArdJetInterface_a0e313c4d6df1ad7c0584233908a938ed}\label{classArdJetInterface_a0e313c4d6df1ad7c0584233908a938ed}} 
+\index{ArdJetInterface@{ArdJetInterface}!onError@{onError}}
+\index{onError@{onError}!ArdJetInterface@{ArdJetInterface}}
+\doxysubsubsection{\texorpdfstring{onError()}{onError()}}
+{\footnotesize\ttfamily void Ard\+Jet\+Interface\+::on\+Error (\begin{DoxyParamCaption}\item[{uint8\+\_\+t}]{err\+\_\+num }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Error callback function, called if an error in the protocol (timeout while waiting, received unexpected character, etc.) is encountered. 
+
+Currently starts a blink sequence corresponding to the error.
+
+
+\begin{DoxyParams}{Parameters}
+{\em err\+\_\+num} & Error code. Check \href{https://gitlab.com/yesbotics/simple-serial-protocol/simple-serial-protocol-arduino}{\texttt{ Simple\+Serial\+Protocol documentation}} for more details. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classArdJetInterface_adb281d7cb53a16fd435e497705501b5c}\label{classArdJetInterface_adb281d7cb53a16fd435e497705501b5c}} 
+\index{ArdJetInterface@{ArdJetInterface}!recv\_motor\_values@{recv\_motor\_values}}
+\index{recv\_motor\_values@{recv\_motor\_values}!ArdJetInterface@{ArdJetInterface}}
+\doxysubsubsection{\texorpdfstring{recv\_motor\_values()}{recv\_motor\_values()}}
+{\footnotesize\ttfamily bool Ard\+Jet\+Interface\+::recv\+\_\+motor\+\_\+values (\begin{DoxyParamCaption}\item[{uint16\+\_\+t}]{motor\+\_\+vals\mbox{[}\+Num\+Motors\mbox{]} }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Listens for motor values transmission over the Serial connection. 
+
+An \textquotesingle{}M\textquotesingle{} character marks the start of a motor value message. If this function reads an initial character which is not \textquotesingle{}M\textquotesingle{}, it places the character received in the {\ttfamily putback} variable, for processing by other functions.
+
+If the whole message is successfully received, this function returns true. Otherwise, this function returns false.
+
+
+\begin{DoxyParams}{Parameters}
+{\em motor\+\_\+vals} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true if the whole motor values message is successfully received, false if not 
+\end{DoxyReturn}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+arduino\+\_\+jetson\+\_\+interface.\+h\end{DoxyCompactItemize}

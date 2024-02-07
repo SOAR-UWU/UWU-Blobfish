@@ -1,0 +1,69 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.1" xml:lang="en-US">
+  <compounddef id="README_8md" kind="file" language="Markdown">
+    <compoundname>README.md</compoundname>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline><highlight class="normal">#<sp/>Arduino<sp/>code</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">This<sp/>folder<sp/>contains<sp/>the<sp/>code<sp/>to<sp/>be<sp/>uploaded<sp/>to<sp/>the<sp/>Arduino.<sp/>**Do<sp/>not<sp/>place<sp/>code<sp/>that<sp/>should<sp/>be<sp/>run<sp/>on<sp/>the<sp/>Jetson<sp/>here!**</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Interfacing<sp/>with<sp/>the<sp/>Arduino</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">The<sp/>`arduino-cli`<sp/>tool<sp/>is<sp/>needed<sp/>to<sp/>control<sp/>upload<sp/>to<sp/>the<sp/>Arduino<sp/>from<sp/>the<sp/>commandline,<sp/>and<sp/>will<sp/>be<sp/>used<sp/>to<sp/>soft<sp/>reset<sp/>the<sp/>Arduino<sp/>when<sp/>required.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Installing<sp/>`arduino-cli`</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">The<sp/>`arduino-cli`<sp/>binary<sp/>file<sp/>is<sp/>contained<sp/>in<sp/>the<sp/>`docker`<sp/>folder<sp/>in<sp/>the<sp/>root<sp/>of<sp/>this<sp/>project,<sp/>and<sp/>should<sp/>be<sp/>installed<sp/>automatically<sp/>when<sp/>you<sp/>start<sp/>the<sp/>Docker<sp/>instance.<sp/>Note<sp/>that<sp/>there<sp/>are<sp/>**two**<sp/>versions<sp/>present<sp/>in<sp/>the<sp/>folder,<sp/>one<sp/>for<sp/>x86<sp/>architecture<sp/>and<sp/>one<sp/>for<sp/>ARM<sp/>architecture.<sp/>The<sp/>ARM<sp/>one<sp/>is<sp/>used<sp/>by<sp/>default<sp/>as<sp/>the<sp/>Jetson<sp/>runs<sp/>on<sp/>ARM<sp/>architecture.<sp/>**If<sp/>your<sp/>system<sp/>uses<sp/>x86**,<sp/>be<sp/>sure<sp/>to<sp/>rename<sp/>the<sp/>`arduino-cli_x86`<sp/>binary<sp/>to<sp/>`arduino-cli`<sp/>so<sp/>that<sp/>the<sp/>right<sp/>version<sp/>is<sp/>installed.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">If<sp/>you<sp/>are<sp/>not<sp/>using<sp/>the<sp/>Docker<sp/>instance,<sp/>you<sp/>may<sp/>alternatively<sp/>refer<sp/>to<sp/>the<sp/>[installation<sp/>steps](https://arduino.github.io/arduino-cli/latest/installation/)<sp/>to<sp/>install<sp/>it.<sp/>Remember<sp/>to<sp/>add<sp/>the<sp/>downloaded<sp/>binary<sp/>to<sp/>your<sp/>[`/bin`<sp/>path](https://refspecs.linuxfoundation.org/FHS_3.0/fhs/ch03s04.html)!</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">After<sp/>installation,<sp/>install<sp/>the<sp/>avr<sp/>core<sp/>and<sp/>code<sp/>dependencies:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```sh</highlight></codeline>
+<codeline><highlight class="normal">arduino-cli<sp/>core<sp/>install<sp/>arduino:avr</highlight></codeline>
+<codeline><highlight class="normal">arduino-cli<sp/>lib<sp/>install<sp/>SimpleSerialProtocol</highlight></codeline>
+<codeline><highlight class="normal">arduino-cli<sp/>lib<sp/>install<sp/>Servo</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Compile<sp/>the<sp/>code.<sp/>The<sp/>header<sp/>files<sp/>in<sp/>this<sp/>directory<sp/>may<sp/>be<sp/>included<sp/>with<sp/>the<sp/>`--library`<sp/>option:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```sh</highlight></codeline>
+<codeline><highlight class="normal">arduino-cli<sp/>compile<sp/>--fqbn<sp/>arduino:avr:nano:cpu=atmega328old<sp/>--library<sp/>.<sp/>main/main.ino</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">And<sp/>upload<sp/>it:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```sh</highlight></codeline>
+<codeline><highlight class="normal">#<sp/>You<sp/>may<sp/>need<sp/>to<sp/>replace<sp/>/dev/ttyUSB0<sp/>with<sp/>the<sp/>right<sp/>serial<sp/>port</highlight></codeline>
+<codeline><highlight class="normal">arduino-cli<sp/>upload<sp/>-p<sp/>/dev/arduino0<sp/>--fqbn<sp/>arduino:avr:nano:cpu=atmega328old<sp/>main/main.ino</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>`udev`<sp/>rules</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">To<sp/>make<sp/>life<sp/>easier,<sp/>`udev`<sp/>rules<sp/>are<sp/>used<sp/>to<sp/>assign<sp/>fixed<sp/>device<sp/>nodes<sp/>to<sp/>the<sp/>Arduino<sp/>and<sp/>IMU.<sp/>As<sp/>a<sp/>result,<sp/>these<sp/>device<sp/>names<sp/>are<sp/>hardcoded<sp/>in<sp/>the<sp/>code.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">`/etc/udev/rules.d/99-arduino.rules`:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```ru</highlight></codeline>
+<codeline><highlight class="normal">#<sp/>Detect<sp/>arduino<sp/>&amp;<sp/>assign<sp/>fixed<sp/>device<sp/>node.</highlight></codeline>
+<codeline><highlight class="normal">ACTION==&quot;add&quot;,<sp/>ATTRS{idVendor}==&quot;1a86&quot;,<sp/>ATTRS{idProduct}==&quot;7523&quot;,<sp/>MODE=&quot;0666&quot;,<sp/>GROUP=&quot;dialout&quot;,<sp/>SYMLINK+=&quot;arduino0&quot;</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">`/etc/udev/rules.d/99-imu.rules`:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```ru</highlight></codeline>
+<codeline><highlight class="normal">#<sp/>Detect<sp/>imu<sp/>&amp;<sp/>assign<sp/>fixed<sp/>device<sp/>node.</highlight></codeline>
+<codeline><highlight class="normal">ACTION==&quot;add&quot;,<sp/>ATTRS{idVendor}==&quot;0403&quot;,<sp/>ATTRS{idProduct}==&quot;6001&quot;,<sp/>MODE=&quot;0666&quot;,<sp/>GROUP=&quot;dialout&quot;,<sp/>SYMLINK+=&quot;imu0&quot;</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Arduino-Jetson<sp/>interface</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">The<sp/>functions<sp/>for<sp/>interfacing<sp/>with<sp/>the<sp/>Jetson<sp/>are<sp/>stored<sp/>in<sp/>the<sp/>`arduino_jetson_interface.h`<sp/>header<sp/>file.<sp/>The<sp/>`await_connection()`<sp/>function<sp/>should<sp/>be<sp/>called<sp/>in<sp/>`setup()`.</highlight></codeline>
+    </programlisting>
+    <location file="README.md"/>
+  </compounddef>
+</doxygen>

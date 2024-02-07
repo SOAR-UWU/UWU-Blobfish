@@ -1,0 +1,274 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.1" xml:lang="en-US">
+  <compounddef id="classArdJetInterface" kind="class" language="C++" prot="public">
+    <compoundname>ArdJetInterface</compoundname>
+    <includes refid="arduino__jetson__interface_8h" local="no">arduino_jetson_interface.h</includes>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="classArdJetInterface_1aaa5b98cd2d595a3d65563a407a8208fc" prot="public" static="no" mutable="no">
+        <type><ref refid="classErrorBlinker" kindref="compound">ErrorBlinker</ref></type>
+        <definition>ErrorBlinker ArdJetInterface::blinker</definition>
+        <argsstring></argsstring>
+        <name>blinker</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="arduino_jetson_interface.h" line="158" column="16" bodyfile="arduino_jetson_interface.h" bodystart="158" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="private-attrib">
+      <memberdef kind="variable" id="classArdJetInterface_1ac8f501ad458e753dd10eec4a4aa134ec" prot="private" static="no" mutable="no">
+        <type>char</type>
+        <definition>char ArdJetInterface::putback</definition>
+        <argsstring></argsstring>
+        <name>putback</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="arduino_jetson_interface.h" line="161" column="8" bodyfile="arduino_jetson_interface.h" bodystart="161" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classArdJetInterface_1a233fe5cf5657f242f01b67f5b171c840" prot="private" static="no" mutable="no">
+        <type>uint8_t</type>
+        <definition>uint8_t ArdJetInterface::err</definition>
+        <argsstring></argsstring>
+        <name>err</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="arduino_jetson_interface.h" line="162" column="11" bodyfile="arduino_jetson_interface.h" bodystart="162" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classArdJetInterface_1aabb8f1da9c7a9bbd758eab8fc128555d" prot="private" static="no" mutable="no">
+        <type>SimpleSerialProtocol</type>
+        <definition>SimpleSerialProtocol ArdJetInterface::ssp</definition>
+        <argsstring></argsstring>
+        <name>ssp</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="arduino_jetson_interface.h" line="163" column="24" bodyfile="arduino_jetson_interface.h" bodystart="163" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="classArdJetInterface_1a464f35cfcab00155f14ceb717f7e1268" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>ArdJetInterface::ArdJetInterface</definition>
+        <argsstring>(SimpleSerialProtocol sp, byte led_num)</argsstring>
+        <name>ArdJetInterface</name>
+        <param>
+          <type>SimpleSerialProtocol</type>
+          <declname>sp</declname>
+        </param>
+        <param>
+          <type>byte</type>
+          <declname>led_num</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="arduino_jetson_interface.h" line="20" column="3" bodyfile="arduino_jetson_interface.h" bodystart="20" bodyend="20"/>
+      </memberdef>
+      <memberdef kind="function" id="classArdJetInterface_1a55890900a121a91da648ac23b464268c" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void ArdJetInterface::awaitConnection</definition>
+        <argsstring>(char init_char)</argsstring>
+        <name>awaitConnection</name>
+        <param>
+          <type>char</type>
+          <declname>init_char</declname>
+        </param>
+        <briefdescription>
+<para>Wait for a connection handshake with the Jetson. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>This function constantly transmits a single character while waiting for a reply of the same character.</para>
+<para>Upon receiving init_char on the Serial connection, connection is established and the function exits.</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>init_char</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Character to listen for / transmit </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="arduino_jetson_interface.h" line="33" column="8" bodyfile="arduino_jetson_interface.h" bodystart="33" bodyend="44"/>
+      </memberdef>
+      <memberdef kind="function" id="classArdJetInterface_1adb281d7cb53a16fd435e497705501b5c" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool ArdJetInterface::recv_motor_values</definition>
+        <argsstring>(uint16_t motor_vals[NumMotors])</argsstring>
+        <name>recv_motor_values</name>
+        <param>
+          <type>uint16_t</type>
+          <declname>motor_vals</declname>
+          <array>[NumMotors]</array>
+        </param>
+        <briefdescription>
+<para>Listens for motor values transmission over the Serial connection. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>An &apos;M&apos; character marks the start of a motor value message. If this function reads an initial character which is not &apos;M&apos;, it places the character received in the <computeroutput>putback</computeroutput> variable, for processing by other functions.</para>
+<para>If the whole message is successfully received, this function returns true. Otherwise, this function returns false.</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>motor_vals</parametername>
+</parameternamelist>
+<parameterdescription>
+<para></para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>true if the whole motor values message is successfully received, false if not </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="arduino_jetson_interface.h" line="59" column="8" bodyfile="arduino_jetson_interface.h" bodystart="59" bodyend="91"/>
+      </memberdef>
+      <memberdef kind="function" id="classArdJetInterface_1ab6c2fed7a89a17b4556794ff875653bb" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void ArdJetInterface::fastblink</definition>
+        <argsstring>()</argsstring>
+        <name>fastblink</name>
+        <briefdescription>
+<para>Rapidly flash the onboard LED. For debugging. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="arduino_jetson_interface.h" line="97" column="8" bodyfile="arduino_jetson_interface.h" bodystart="97" bodyend="104"/>
+      </memberdef>
+      <memberdef kind="function" id="classArdJetInterface_1a0e313c4d6df1ad7c0584233908a938ed" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void ArdJetInterface::onError</definition>
+        <argsstring>(uint8_t err_num)</argsstring>
+        <name>onError</name>
+        <param>
+          <type>uint8_t</type>
+          <declname>err_num</declname>
+        </param>
+        <briefdescription>
+<para>Error callback function, called if an error in the protocol (timeout while waiting, received unexpected character, etc.) is encountered. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>Currently starts a blink sequence corresponding to the error.</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>err_num</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Error code. Check <ulink url="https://gitlab.com/yesbotics/simple-serial-protocol/simple-serial-protocol-arduino">SimpleSerialProtocol documentation</ulink> for more details. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="arduino_jetson_interface.h" line="114" column="8" bodyfile="arduino_jetson_interface.h" bodystart="114" bodyend="127"/>
+      </memberdef>
+      <memberdef kind="function" id="classArdJetInterface_1abd9da1951f57bbe996e9829e66bdfafb" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void ArdJetInterface::continue_blinking</definition>
+        <argsstring>()</argsstring>
+        <name>continue_blinking</name>
+        <briefdescription>
+<para>Sustains the current error blinking, if one is occurring. Refer to the <ref refid="classErrorBlinker" kindref="compound">ErrorBlinker</ref> code documentation for more details. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="arduino_jetson_interface.h" line="134" column="8" bodyfile="arduino_jetson_interface.h" bodystart="134" bodyend="136"/>
+      </memberdef>
+      <memberdef kind="function" id="classArdJetInterface_1a5b2aadd04d0b9501a99c24749b3158f4" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>uint8_t</type>
+        <definition>uint8_t ArdJetInterface::check_error</definition>
+        <argsstring>()</argsstring>
+        <name>check_error</name>
+        <briefdescription>
+<para>Check the current error code. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><simplesect kind="return"><para>uint8_t - current error code </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="arduino_jetson_interface.h" line="143" column="11" bodyfile="arduino_jetson_interface.h" bodystart="143" bodyend="145"/>
+      </memberdef>
+      <memberdef kind="function" id="classArdJetInterface_1a6e6d50efd4967a590186b0151f30c767" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>char</type>
+        <definition>char ArdJetInterface::check_last_char</definition>
+        <argsstring>()</argsstring>
+        <name>check_last_char</name>
+        <briefdescription>
+<para>Check the putback char. This variable is set when an unexpected character is received by the <ref refid="classArdJetInterface_1adb281d7cb53a16fd435e497705501b5c" kindref="member">recv_motor_values()</ref> function. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><simplesect kind="return"><para>char - putback char </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="arduino_jetson_interface.h" line="153" column="8" bodyfile="arduino_jetson_interface.h" bodystart="153" bodyend="155"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+<para>Implementation of the Arduino side of the Jetson-Arduino interface. </para>
+    </briefdescription>
+    <detaileddescription>
+<para>Contains functions to establish a connection with the Jetson, and for exchanging of data. </para>
+    </detaileddescription>
+    <collaborationgraph>
+      <node id="1">
+        <label>ArdJetInterface</label>
+        <link refid="classArdJetInterface"/>
+        <childnode refid="2" relation="usage">
+          <edgelabel>blinker</edgelabel>
+        </childnode>
+      </node>
+      <node id="2">
+        <label>ErrorBlinker</label>
+        <link refid="classErrorBlinker"/>
+      </node>
+    </collaborationgraph>
+    <location file="arduino_jetson_interface.h" line="18" column="1" bodyfile="arduino_jetson_interface.h" bodystart="18" bodyend="164"/>
+    <listofallmembers>
+      <member refid="classArdJetInterface_1a464f35cfcab00155f14ceb717f7e1268" prot="public" virt="non-virtual"><scope>ArdJetInterface</scope><name>ArdJetInterface</name></member>
+      <member refid="classArdJetInterface_1a55890900a121a91da648ac23b464268c" prot="public" virt="non-virtual"><scope>ArdJetInterface</scope><name>awaitConnection</name></member>
+      <member refid="classArdJetInterface_1aaa5b98cd2d595a3d65563a407a8208fc" prot="public" virt="non-virtual"><scope>ArdJetInterface</scope><name>blinker</name></member>
+      <member refid="classArdJetInterface_1a5b2aadd04d0b9501a99c24749b3158f4" prot="public" virt="non-virtual"><scope>ArdJetInterface</scope><name>check_error</name></member>
+      <member refid="classArdJetInterface_1a6e6d50efd4967a590186b0151f30c767" prot="public" virt="non-virtual"><scope>ArdJetInterface</scope><name>check_last_char</name></member>
+      <member refid="classArdJetInterface_1abd9da1951f57bbe996e9829e66bdfafb" prot="public" virt="non-virtual"><scope>ArdJetInterface</scope><name>continue_blinking</name></member>
+      <member refid="classArdJetInterface_1a233fe5cf5657f242f01b67f5b171c840" prot="private" virt="non-virtual"><scope>ArdJetInterface</scope><name>err</name></member>
+      <member refid="classArdJetInterface_1ab6c2fed7a89a17b4556794ff875653bb" prot="public" virt="non-virtual"><scope>ArdJetInterface</scope><name>fastblink</name></member>
+      <member refid="classArdJetInterface_1a0e313c4d6df1ad7c0584233908a938ed" prot="public" virt="non-virtual"><scope>ArdJetInterface</scope><name>onError</name></member>
+      <member refid="classArdJetInterface_1ac8f501ad458e753dd10eec4a4aa134ec" prot="private" virt="non-virtual"><scope>ArdJetInterface</scope><name>putback</name></member>
+      <member refid="classArdJetInterface_1adb281d7cb53a16fd435e497705501b5c" prot="public" virt="non-virtual"><scope>ArdJetInterface</scope><name>recv_motor_values</name></member>
+      <member refid="classArdJetInterface_1aabb8f1da9c7a9bbd758eab8fc128555d" prot="private" virt="non-virtual"><scope>ArdJetInterface</scope><name>ssp</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

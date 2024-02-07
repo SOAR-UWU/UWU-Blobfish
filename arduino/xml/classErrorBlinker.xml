@@ -1,0 +1,365 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.1" xml:lang="en-US">
+  <compounddef id="classErrorBlinker" kind="class" language="C++" prot="public">
+    <compoundname>ErrorBlinker</compoundname>
+    <includes refid="arduino__error__blinker_8h" local="no">arduino_error_blinker.h</includes>
+      <sectiondef kind="public-type">
+      <memberdef kind="enum" id="classErrorBlinker_1a35beea794755819467abf90647c1f53d" prot="public" static="no" strong="yes">
+        <type></type>
+        <name>ErrorType</name>
+        <enumvalue id="classErrorBlinker_1a35beea794755819467abf90647c1f53da6adf97f83acf6453d4a6a4b1070f3754" prot="public">
+          <name>None</name>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="classErrorBlinker_1a35beea794755819467abf90647c1f53dac85a251cc457840f1e032f1b733e9398" prot="public">
+          <name>Timeout</name>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="classErrorBlinker_1a35beea794755819467abf90647c1f53dae321c53b354930ba96f0243e652df458" prot="public">
+          <name>Connecting</name>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="classErrorBlinker_1a35beea794755819467abf90647c1f53da8045a0a6c688b0635e3caccc408a1446" prot="public">
+          <name>Generic</name>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="arduino_error_blinker.h" line="18" column="5" bodyfile="arduino_error_blinker.h" bodystart="18" bodyend="23"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="private-attrib">
+      <memberdef kind="variable" id="classErrorBlinker_1a26182b711bd5db06a69b3743047e64f2" prot="private" static="no" mutable="no">
+        <type>ErrorType</type>
+        <definition>ErrorType ErrorBlinker::current_error</definition>
+        <argsstring></argsstring>
+        <name>current_error</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="arduino_error_blinker.h" line="26" column="15" bodyfile="arduino_error_blinker.h" bodystart="26" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classErrorBlinker_1ab14a019a17f6e116d991d484e088b0dc" prot="private" static="no" mutable="no">
+        <type>const int</type>
+        <definition>const int ErrorBlinker::generic_pattern[4]</definition>
+        <argsstring>[4]</argsstring>
+        <name>generic_pattern</name>
+        <initializer>= {200, 100, 200, 100}</initializer>
+        <briefdescription>
+<para><blockquote><para>Error type of currently blinking error (if any) </para>
+</blockquote></para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="arduino_error_blinker.h" line="27" column="15" bodyfile="arduino_error_blinker.h" bodystart="27" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classErrorBlinker_1a8cc68e903f625b1b5b4af7136a573caf" prot="private" static="no" mutable="no">
+        <type>const int</type>
+        <definition>const int ErrorBlinker::timeout_pattern[6]</definition>
+        <argsstring>[6]</argsstring>
+        <name>timeout_pattern</name>
+        <initializer>= {100, 100, 100, 100, 100, 400}</initializer>
+        <briefdescription>
+<para><blockquote><para>Default blink pattern </para>
+</blockquote></para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="arduino_error_blinker.h" line="28" column="15" bodyfile="arduino_error_blinker.h" bodystart="28" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classErrorBlinker_1a5ef79e8a5572afc44ac5820679f9f668" prot="private" static="no" mutable="no">
+        <type>const int</type>
+        <definition>const int ErrorBlinker::connecting_pattern[4]</definition>
+        <argsstring>[4]</argsstring>
+        <name>connecting_pattern</name>
+        <initializer>= {100, 100, 500, 400}</initializer>
+        <briefdescription>
+<para><blockquote><para>Timed out waiting for input </para>
+</blockquote></para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="arduino_error_blinker.h" line="29" column="15" bodyfile="arduino_error_blinker.h" bodystart="29" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classErrorBlinker_1a96dbcf785f8865fc868e4f4df9de7bf8" prot="private" static="no" mutable="no">
+        <type>unsigned long</type>
+        <definition>unsigned long ErrorBlinker::start_time_mark</definition>
+        <argsstring></argsstring>
+        <name>start_time_mark</name>
+        <briefdescription>
+<para><blockquote><para>Awaiting connection </para>
+</blockquote></para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="arduino_error_blinker.h" line="30" column="19" bodyfile="arduino_error_blinker.h" bodystart="30" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classErrorBlinker_1a3bea0f7a5fe30f28711165aa77a1ba14" prot="private" static="no" mutable="no">
+        <type>int</type>
+        <definition>int ErrorBlinker::current_section_index</definition>
+        <argsstring></argsstring>
+        <name>current_section_index</name>
+        <briefdescription>
+<para><blockquote><para>Time of start of current section </para>
+</blockquote></para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="arduino_error_blinker.h" line="31" column="9" bodyfile="arduino_error_blinker.h" bodystart="31" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classErrorBlinker_1aa5adbac025922e1b65d8157bf4a696c1" prot="private" static="no" mutable="no">
+        <type>const uint8_t</type>
+        <definition>const uint8_t ErrorBlinker::led_num</definition>
+        <argsstring></argsstring>
+        <name>led_num</name>
+        <briefdescription>
+<para><blockquote><para>Index number of current section </para>
+</blockquote></para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="arduino_error_blinker.h" line="32" column="19" bodyfile="arduino_error_blinker.h" bodystart="32" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="classErrorBlinker_1ada3aa9e706ae5044381a91c438b379e6" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>ErrorBlinker::ErrorBlinker</definition>
+        <argsstring>(uint8_t led)</argsstring>
+        <name>ErrorBlinker</name>
+        <param>
+          <type>uint8_t</type>
+          <declname>led</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="arduino_error_blinker.h" line="17" column="5" bodyfile="arduino_error_blinker.h" bodystart="17" bodyend="17"/>
+      </memberdef>
+      <memberdef kind="function" id="classErrorBlinker_1af3495ec84b2a831d0988ddb4d1f8074b" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void ErrorBlinker::blink_generic</definition>
+        <argsstring>()</argsstring>
+        <name>blink_generic</name>
+        <briefdescription>
+<para><blockquote><para>Pin number of LED </para>
+</blockquote></para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="arduino_error_blinker.h" line="35" column="10" bodyfile="arduino_error_blinker.h" bodystart="35" bodyend="35"/>
+      </memberdef>
+      <memberdef kind="function" id="classErrorBlinker_1aa8feb79bc56b7df3096f01e7d8898183" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void ErrorBlinker::blink_timeout</definition>
+        <argsstring>()</argsstring>
+        <name>blink_timeout</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="arduino_error_blinker.h" line="36" column="10" bodyfile="arduino_error_blinker.h" bodystart="36" bodyend="36"/>
+      </memberdef>
+      <memberdef kind="function" id="classErrorBlinker_1a1fb7cc7bad7df5a3274d40b93119ce0d" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void ErrorBlinker::blink_connecting</definition>
+        <argsstring>()</argsstring>
+        <name>blink_connecting</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="arduino_error_blinker.h" line="37" column="10" bodyfile="arduino_error_blinker.h" bodystart="37" bodyend="37"/>
+      </memberdef>
+      <memberdef kind="function" id="classErrorBlinker_1a2eb038130fcc5537ee337d30277c4bc3" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void ErrorBlinker::continue_blinking</definition>
+        <argsstring>()</argsstring>
+        <name>continue_blinking</name>
+        <briefdescription>
+<para>Continue blinking the current error pattern. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="arduino_error_blinker.h" line="42" column="10" bodyfile="arduino_error_blinker.h" bodystart="42" bodyend="42"/>
+      </memberdef>
+      <memberdef kind="function" id="classErrorBlinker_1a8b94663bde4872949bd9eb1c6e453204" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void ErrorBlinker::set</definition>
+        <argsstring>(bool val)</argsstring>
+        <name>set</name>
+        <param>
+          <type>bool</type>
+          <declname>val</declname>
+        </param>
+        <briefdescription>
+<para>Set the error LED on or off. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>val</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>HIGH or LOW </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="arduino_error_blinker.h" line="49" column="10" bodyfile="arduino_error_blinker.h" bodystart="49" bodyend="49"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="private-func">
+      <memberdef kind="function" id="classErrorBlinker_1a235e2e73fbd4c3bacfd38890afe76816" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void ErrorBlinker::blink_error</definition>
+        <argsstring>(const ErrorType err_type)</argsstring>
+        <name>blink_error</name>
+        <param>
+          <type>const ErrorType</type>
+          <declname>err_type</declname>
+        </param>
+        <briefdescription>
+<para>Blink the code of the given error type, if one is not already blinking. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>err_type</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Type of error </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="arduino_error_blinker.h" line="57" column="10" bodyfile="arduino_error_blinker.h" bodystart="79" bodyend="115"/>
+      </memberdef>
+      <memberdef kind="function" id="classErrorBlinker_1a9dd7c40fc46f561ad94fd348b38ea103" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool ErrorBlinker::blink_pattern</definition>
+        <argsstring>(const int wait_values[], const int length)</argsstring>
+        <name>blink_pattern</name>
+        <param>
+          <type>const int</type>
+          <declname>wait_values</declname>
+          <array>[]</array>
+        </param>
+        <param>
+          <type>const int</type>
+          <declname>length</declname>
+        </param>
+        <briefdescription>
+<para>Blink the LED in the given pattern. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>The LED is flashed alternatively ON and OFF until the pattern is complete. For example, the pattern [100, 300, 200, 500] means:</para>
+<para><itemizedlist>
+<listitem><para>ON for 100ms</para>
+</listitem><listitem><para>OFF for 300ms</para>
+</listitem><listitem><para>ON for 200ms</para>
+</listitem><listitem><para>OFF for 500ms</para>
+</listitem></itemizedlist>
+</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>wait_values</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Pattern to blink. Entries with even indices are ON, entries with odd indices are OFF. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>length</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Length of int array </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>true if the pattern has been completed, false if not </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="arduino_error_blinker.h" line="75" column="10" bodyfile="arduino_error_blinker.h" bodystart="117" bodyend="137"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+<para>Implementation of a blinker for displaying errors on the Arduino.</para>
+<para>The given LED (specified on initialisation) is blinked in a pattern specified in an int array (numbers are in ms). If another error occurs while midway through a blink pattern, the new error is ignored.</para>
+<para>The blink functions are NON-BLOCKING. The function continue_blinking has to be continuously called to ensure the LED is updated. </para>
+    </detaileddescription>
+    <location file="arduino_error_blinker.h" line="15" column="1" bodyfile="arduino_error_blinker.h" bodystart="15" bodyend="76"/>
+    <listofallmembers>
+      <member refid="classErrorBlinker_1a1fb7cc7bad7df5a3274d40b93119ce0d" prot="public" virt="non-virtual"><scope>ErrorBlinker</scope><name>blink_connecting</name></member>
+      <member refid="classErrorBlinker_1a235e2e73fbd4c3bacfd38890afe76816" prot="private" virt="non-virtual"><scope>ErrorBlinker</scope><name>blink_error</name></member>
+      <member refid="classErrorBlinker_1af3495ec84b2a831d0988ddb4d1f8074b" prot="public" virt="non-virtual"><scope>ErrorBlinker</scope><name>blink_generic</name></member>
+      <member refid="classErrorBlinker_1a9dd7c40fc46f561ad94fd348b38ea103" prot="private" virt="non-virtual"><scope>ErrorBlinker</scope><name>blink_pattern</name></member>
+      <member refid="classErrorBlinker_1aa8feb79bc56b7df3096f01e7d8898183" prot="public" virt="non-virtual"><scope>ErrorBlinker</scope><name>blink_timeout</name></member>
+      <member refid="classErrorBlinker_1a5ef79e8a5572afc44ac5820679f9f668" prot="private" virt="non-virtual"><scope>ErrorBlinker</scope><name>connecting_pattern</name></member>
+      <member refid="classErrorBlinker_1a2eb038130fcc5537ee337d30277c4bc3" prot="public" virt="non-virtual"><scope>ErrorBlinker</scope><name>continue_blinking</name></member>
+      <member refid="classErrorBlinker_1a26182b711bd5db06a69b3743047e64f2" prot="private" virt="non-virtual"><scope>ErrorBlinker</scope><name>current_error</name></member>
+      <member refid="classErrorBlinker_1a3bea0f7a5fe30f28711165aa77a1ba14" prot="private" virt="non-virtual"><scope>ErrorBlinker</scope><name>current_section_index</name></member>
+      <member refid="classErrorBlinker_1ada3aa9e706ae5044381a91c438b379e6" prot="public" virt="non-virtual"><scope>ErrorBlinker</scope><name>ErrorBlinker</name></member>
+      <member refid="classErrorBlinker_1a35beea794755819467abf90647c1f53d" prot="public" virt="non-virtual"><scope>ErrorBlinker</scope><name>ErrorType</name></member>
+      <member refid="classErrorBlinker_1ab14a019a17f6e116d991d484e088b0dc" prot="private" virt="non-virtual"><scope>ErrorBlinker</scope><name>generic_pattern</name></member>
+      <member refid="classErrorBlinker_1aa5adbac025922e1b65d8157bf4a696c1" prot="private" virt="non-virtual"><scope>ErrorBlinker</scope><name>led_num</name></member>
+      <member refid="classErrorBlinker_1a8b94663bde4872949bd9eb1c6e453204" prot="public" virt="non-virtual"><scope>ErrorBlinker</scope><name>set</name></member>
+      <member refid="classErrorBlinker_1a96dbcf785f8865fc868e4f4df9de7bf8" prot="private" virt="non-virtual"><scope>ErrorBlinker</scope><name>start_time_mark</name></member>
+      <member refid="classErrorBlinker_1a8cc68e903f625b1b5b4af7136a573caf" prot="private" virt="non-virtual"><scope>ErrorBlinker</scope><name>timeout_pattern</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

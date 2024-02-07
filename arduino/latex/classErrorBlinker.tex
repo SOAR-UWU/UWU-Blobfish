@@ -1,0 +1,68 @@
+\hypertarget{classErrorBlinker}{}\doxysection{Error\+Blinker Class Reference}
+\label{classErrorBlinker}\index{ErrorBlinker@{ErrorBlinker}}
+
+
+{\ttfamily \#include $<$arduino\+\_\+error\+\_\+blinker.\+h$>$}
+
+\doxysubsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classErrorBlinker_a35beea794755819467abf90647c1f53d}\label{classErrorBlinker_a35beea794755819467abf90647c1f53d}} 
+enum class {\bfseries Error\+Type} \{ {\bfseries None}
+, {\bfseries Timeout}
+, {\bfseries Connecting}
+, {\bfseries Generic}
+ \}
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classErrorBlinker_ada3aa9e706ae5044381a91c438b379e6}\label{classErrorBlinker_ada3aa9e706ae5044381a91c438b379e6}} 
+{\bfseries Error\+Blinker} (uint8\+\_\+t led)
+\item 
+\mbox{\Hypertarget{classErrorBlinker_af3495ec84b2a831d0988ddb4d1f8074b}\label{classErrorBlinker_af3495ec84b2a831d0988ddb4d1f8074b}} 
+void \mbox{\hyperlink{classErrorBlinker_af3495ec84b2a831d0988ddb4d1f8074b}{blink\+\_\+generic}} ()
+\begin{DoxyCompactList}\small\item\em \begin{quote}
+Pin number of LED \end{quote}
+\end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classErrorBlinker_aa8feb79bc56b7df3096f01e7d8898183}\label{classErrorBlinker_aa8feb79bc56b7df3096f01e7d8898183}} 
+void {\bfseries blink\+\_\+timeout} ()
+\item 
+\mbox{\Hypertarget{classErrorBlinker_a1fb7cc7bad7df5a3274d40b93119ce0d}\label{classErrorBlinker_a1fb7cc7bad7df5a3274d40b93119ce0d}} 
+void {\bfseries blink\+\_\+connecting} ()
+\item 
+\mbox{\Hypertarget{classErrorBlinker_a2eb038130fcc5537ee337d30277c4bc3}\label{classErrorBlinker_a2eb038130fcc5537ee337d30277c4bc3}} 
+void \mbox{\hyperlink{classErrorBlinker_a2eb038130fcc5537ee337d30277c4bc3}{continue\+\_\+blinking}} ()
+\begin{DoxyCompactList}\small\item\em Continue blinking the current error pattern. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classErrorBlinker_a8b94663bde4872949bd9eb1c6e453204}{set}} (bool val)
+\begin{DoxyCompactList}\small\item\em Set the error LED on or off. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Implementation of a blinker for displaying errors on the Arduino.
+
+The given LED (specified on initialisation) is blinked in a pattern specified in an int array (numbers are in ms). If another error occurs while midway through a blink pattern, the new error is ignored.
+
+The blink functions are NON-\/\+BLOCKING. The function continue\+\_\+blinking has to be continuously called to ensure the LED is updated. 
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classErrorBlinker_a8b94663bde4872949bd9eb1c6e453204}\label{classErrorBlinker_a8b94663bde4872949bd9eb1c6e453204}} 
+\index{ErrorBlinker@{ErrorBlinker}!set@{set}}
+\index{set@{set}!ErrorBlinker@{ErrorBlinker}}
+\doxysubsubsection{\texorpdfstring{set()}{set()}}
+{\footnotesize\ttfamily void Error\+Blinker\+::set (\begin{DoxyParamCaption}\item[{bool}]{val }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Set the error LED on or off. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em val} & HIGH or LOW \\
+\hline
+\end{DoxyParams}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+arduino\+\_\+error\+\_\+blinker.\+h\end{DoxyCompactItemize}

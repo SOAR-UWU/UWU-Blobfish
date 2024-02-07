@@ -1,0 +1,64 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygenindex xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="index.xsd" version="1.9.1" xml:lang="en-US">
+  <compound refid="classArdJetInterface" kind="class"><name>ArdJetInterface</name>
+    <member refid="classArdJetInterface_1aaa5b98cd2d595a3d65563a407a8208fc" kind="variable"><name>blinker</name></member>
+    <member refid="classArdJetInterface_1ac8f501ad458e753dd10eec4a4aa134ec" kind="variable"><name>putback</name></member>
+    <member refid="classArdJetInterface_1a233fe5cf5657f242f01b67f5b171c840" kind="variable"><name>err</name></member>
+    <member refid="classArdJetInterface_1aabb8f1da9c7a9bbd758eab8fc128555d" kind="variable"><name>ssp</name></member>
+    <member refid="classArdJetInterface_1a464f35cfcab00155f14ceb717f7e1268" kind="function"><name>ArdJetInterface</name></member>
+    <member refid="classArdJetInterface_1a55890900a121a91da648ac23b464268c" kind="function"><name>awaitConnection</name></member>
+    <member refid="classArdJetInterface_1adb281d7cb53a16fd435e497705501b5c" kind="function"><name>recv_motor_values</name></member>
+    <member refid="classArdJetInterface_1ab6c2fed7a89a17b4556794ff875653bb" kind="function"><name>fastblink</name></member>
+    <member refid="classArdJetInterface_1a0e313c4d6df1ad7c0584233908a938ed" kind="function"><name>onError</name></member>
+    <member refid="classArdJetInterface_1abd9da1951f57bbe996e9829e66bdfafb" kind="function"><name>continue_blinking</name></member>
+    <member refid="classArdJetInterface_1a5b2aadd04d0b9501a99c24749b3158f4" kind="function"><name>check_error</name></member>
+    <member refid="classArdJetInterface_1a6e6d50efd4967a590186b0151f30c767" kind="function"><name>check_last_char</name></member>
+  </compound>
+  <compound refid="classErrorBlinker" kind="class"><name>ErrorBlinker</name>
+    <member refid="classErrorBlinker_1a35beea794755819467abf90647c1f53d" kind="enum"><name>ErrorType</name></member>
+    <member refid="classErrorBlinker_1a35beea794755819467abf90647c1f53da6adf97f83acf6453d4a6a4b1070f3754" kind="enumvalue"><name>None</name></member>
+    <member refid="classErrorBlinker_1a35beea794755819467abf90647c1f53dac85a251cc457840f1e032f1b733e9398" kind="enumvalue"><name>Timeout</name></member>
+    <member refid="classErrorBlinker_1a35beea794755819467abf90647c1f53dae321c53b354930ba96f0243e652df458" kind="enumvalue"><name>Connecting</name></member>
+    <member refid="classErrorBlinker_1a35beea794755819467abf90647c1f53da8045a0a6c688b0635e3caccc408a1446" kind="enumvalue"><name>Generic</name></member>
+    <member refid="classErrorBlinker_1a26182b711bd5db06a69b3743047e64f2" kind="variable"><name>current_error</name></member>
+    <member refid="classErrorBlinker_1ab14a019a17f6e116d991d484e088b0dc" kind="variable"><name>generic_pattern</name></member>
+    <member refid="classErrorBlinker_1a8cc68e903f625b1b5b4af7136a573caf" kind="variable"><name>timeout_pattern</name></member>
+    <member refid="classErrorBlinker_1a5ef79e8a5572afc44ac5820679f9f668" kind="variable"><name>connecting_pattern</name></member>
+    <member refid="classErrorBlinker_1a96dbcf785f8865fc868e4f4df9de7bf8" kind="variable"><name>start_time_mark</name></member>
+    <member refid="classErrorBlinker_1a3bea0f7a5fe30f28711165aa77a1ba14" kind="variable"><name>current_section_index</name></member>
+    <member refid="classErrorBlinker_1aa5adbac025922e1b65d8157bf4a696c1" kind="variable"><name>led_num</name></member>
+    <member refid="classErrorBlinker_1ada3aa9e706ae5044381a91c438b379e6" kind="function"><name>ErrorBlinker</name></member>
+    <member refid="classErrorBlinker_1af3495ec84b2a831d0988ddb4d1f8074b" kind="function"><name>blink_generic</name></member>
+    <member refid="classErrorBlinker_1aa8feb79bc56b7df3096f01e7d8898183" kind="function"><name>blink_timeout</name></member>
+    <member refid="classErrorBlinker_1a1fb7cc7bad7df5a3274d40b93119ce0d" kind="function"><name>blink_connecting</name></member>
+    <member refid="classErrorBlinker_1a2eb038130fcc5537ee337d30277c4bc3" kind="function"><name>continue_blinking</name></member>
+    <member refid="classErrorBlinker_1a8b94663bde4872949bd9eb1c6e453204" kind="function"><name>set</name></member>
+    <member refid="classErrorBlinker_1a235e2e73fbd4c3bacfd38890afe76816" kind="function"><name>blink_error</name></member>
+    <member refid="classErrorBlinker_1a9dd7c40fc46f561ad94fd348b38ea103" kind="function"><name>blink_pattern</name></member>
+  </compound>
+  <compound refid="namespaceconf" kind="namespace"><name>conf</name>
+    <member refid="conf_8py_1a45653c983098153b78e33600e39230eb" kind="variable"><name>project</name></member>
+    <member refid="conf_8py_1a33fa97cf51dcb25970fbf53f10159589" kind="variable"><name>copyright</name></member>
+    <member refid="conf_8py_1a637c239d256432248aa8d9f3ab0b8c52" kind="variable"><name>author</name></member>
+    <member refid="conf_8py_1a325dc746d8bf05c54d26351c35a21d90" kind="variable"><name>release</name></member>
+    <member refid="conf_8py_1ae475e080536acb271a0a0efe56c3ba42" kind="variable"><name>extensions</name></member>
+    <member refid="conf_8py_1ae850ae634911b713e036b43894fdd525" kind="variable"><name>templates_path</name></member>
+    <member refid="conf_8py_1a7ad48fb6f3e9b129c02346ea0d3527c1" kind="variable"><name>exclude_patterns</name></member>
+    <member refid="conf_8py_1a6c3bfcc1a44546c1c75ce20f55bd0fd6" kind="variable"><name>html_theme</name></member>
+    <member refid="conf_8py_1af4fb5d8851ccaade135c2668dd3ced41" kind="variable"><name>html_static_path</name></member>
+    <member refid="conf_8py_1a6eba2d2c7ae923054b1c49e686ec89b9" kind="variable"><name>breathe_default_project</name></member>
+  </compound>
+  <compound refid="arduino__error__blinker_8h" kind="file"><name>arduino_error_blinker.h</name>
+  </compound>
+  <compound refid="arduino__jetson__interface_8h" kind="file"><name>arduino_jetson_interface.h</name>
+    <member refid="arduino__jetson__interface_8h_1a6324543ea3c016d2b066f9ea300c34dc" kind="variable"><name>NumMotors</name></member>
+  </compound>
+  <compound refid="README_8md" kind="file"><name>README.md</name>
+  </compound>
+  <compound refid="conf_8py" kind="file"><name>conf.py</name>
+  </compound>
+  <compound refid="md_README" kind="page"><name>md_README</name>
+  </compound>
+  <compound refid="dir_b2f33c71d4aa5e7af42a1ca61ff5af1b" kind="dir"><name>source</name>
+  </compound>
+</doxygenindex>
