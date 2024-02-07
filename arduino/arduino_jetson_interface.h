@@ -109,7 +109,7 @@ class ArdJetInterface {
    * 
    * Currently starts a blink sequence corresponding to the error.
    * 
-   * @param err_num Error code. Check SimpleSerialProtocol documentation for more details.
+   * @param err_num Error code. Check <a href="https://gitlab.com/yesbotics/simple-serial-protocol/simple-serial-protocol-arduino">SimpleSerialProtocol documentation</a> for more details.
    */
   void onError(uint8_t err_num) {
     switch (err_num)
@@ -128,7 +128,7 @@ class ArdJetInterface {
 
   /**
    * @brief Sustains the current error blinking, if one is occurring. Refer to the
-   * arduino_error_blinker code documentation for more details.
+   * ErrorBlinker code documentation for more details.
    * 
    */
   void continue_blinking() {
