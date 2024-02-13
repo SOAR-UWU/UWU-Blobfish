@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<robot name="beluga" xmlns:xacro="http://www.ros.org/wiki/xacro" >
+  <xacro:arg name="namespace" default="beluga"/>
+  <xacro:arg name="debug" default="1"/>
+  <xacro:arg name="inertial_reference_frame" default="world"/>
+
+  <!-- Include the ROV macro file -->
+  <xacro:include filename="beluga_base.xacro"/>
+  <xacro:include filename="misc.xacro"/>
+
+  <!-- Create the beluga -->
+  <xacro:beluga_base
+    namespace="$(arg namespace)"
+    debug="$(arg debug)"
+    inertial_reference_frame="$(arg inertial_reference_frame)"/>
+
+  <!-- Joint state publisher plugin -->
+  <xacro:default_joint_state_publisher namespace="$(arg namespace)" update_rate="5"/>
+
+</robot>
