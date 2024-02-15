@@ -1,7 +1,7 @@
-int16 motor_fr
-int16 motor_mr
-int16 motor_bm
-int16 motor_bl
-int16 motor_ml
-int16 motor_br
-int16 motor_fl
+int16 motor_1
+int16 motor_2
+int16 motor_3
+int16 motor_4
+int16 motor_5
+int16 motor_6
+int16 motor_7

@@ -1,1 +1,1 @@
-ros2 topic pub /motor_values motor_msg/Motors "{motor_fr=1600, motor_mr=1500, motor_bm=1500, motor_bl=1500, motor_ml=1500, motor_br=1500, motor_fl=1500}"
+ros2 topic pub /motor_values motor_msg/Motors "{motor_1=1600, motor_2=1500, motor_3=1500, motor_4=1500, motor_5=1500, motor_6=1500, motor_7=1500}"
