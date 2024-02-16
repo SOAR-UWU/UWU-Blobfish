@@ -7,13 +7,13 @@ from geometry_msgs.msg import Vector3
 class PID_Node(Node):
     def __init__(self):
         super().__init__("pid_node")
-        self.declare_parameter("kp_yaw", 0.03)
+        self.declare_parameter("kp_yaw", 0.0)
         self.declare_parameter("ki_yaw", 0.0)
         self.declare_parameter("kd_yaw", 0.0)
-        self.declare_parameter("kp_pitch", 0.03)
+        self.declare_parameter("kp_pitch", 0.0)
         self.declare_parameter("ki_pitch", 0.0)
         self.declare_parameter("kd_pitch", 0.0)
-        self.declare_parameter("kp_roll", 0.03)
+        self.declare_parameter("kp_roll", 0.0)
         self.declare_parameter("ki_roll", 0.0)
         self.declare_parameter("kd_roll", 0.0)
         self.declare_parameter("setpoint_yaw", 0.0)

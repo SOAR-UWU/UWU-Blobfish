@@ -2,20 +2,13 @@
 
 import time
 from typing import List
-import os
 
 import serial
 
-# TODO read from config file instead of hardcode
 NUM_MOTORS = 7
 
 EOT_CHAR = b'\n'
 MOTOR_VALUE_START = b'M'
-
-ARDUINO_FILES = "/workspaces/isaac_ros-dev/arduino"
-BOARD_FQBN = "arduino:avr:nano:cpu=atmega328old"
-ARDUINO_PORT = "/dev/ttyUSB1"
-BAUD_RATE = 19200
 
 class JetsonArduinoInterface:
     def __init__(self, ser: serial.Serial, endianness: str = 'l'):

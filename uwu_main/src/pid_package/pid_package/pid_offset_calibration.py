@@ -15,8 +15,8 @@ class Offset_Calibration(Node):
         
         self.imu_data_collection = 0
         self.count = 0
-        self.declare_parameter('imu_data_count', 100)
-        self.imu_data_count = self.get_parameter('imu_data_count').value
+        self.declare_parameter('imu_num_cal_samples')
+        self.imu_num_cal_samples = self.get_parameter('imu_num_cal_samples').value
         self.average_value = 0.0
 
         self.imu_offset_publisher = self.create_publisher(Vector3, 'imu/corrected_yawpitchroll', 10)
@@ -28,13 +28,13 @@ class Offset_Calibration(Node):
         euler_angles = euler_from_quaternion([quat.w, quat.x, quat.y, quat.z])
         euler_angles = list(math.degrees(r) for r in euler_angles)
 
-        if self.count < self.imu_data_count:
+        if self.count < self.imu_num_cal_samples:
             self.imu_data_collection += euler_angles[0]
             self.count+=1
             
-        elif self.count == self.imu_data_count:
-            self.average_value = self.imu_data_collection / self.imu_data_count
-            # ave_val = Parameter("imu_average_value", Parameter.Type.DOUBLE, self.imu_data_collection / self.imu_data_count)
+        elif self.count == self.imu_num_cal_samples:
+            self.average_value = self.imu_data_collection / self.imu_num_cal_samples
+            # ave_val = Parameter("imu_average_value", Parameter.Type.DOUBLE, self.imu_data_collection / self.imu_num_cal_samples)
             # self.set_parameters([ave_val])
             self.get_logger().info(f"The average calibrated IMU offset value is: {self.average_value}")
             self.count+=1

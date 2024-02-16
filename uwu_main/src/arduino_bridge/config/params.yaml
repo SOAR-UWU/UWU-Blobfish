@@ -1,0 +1,6 @@
+arduino_bridge:
+  ros__parameters:
+    arduino_files: "/workspaces/isaac_ros-dev/arduino"
+    board_fqbn: "arduino:avr:nano:cpu=atmega328old"
+    arduino_port: "/dev/ttyUSB1"
+    baud_rate: 19200

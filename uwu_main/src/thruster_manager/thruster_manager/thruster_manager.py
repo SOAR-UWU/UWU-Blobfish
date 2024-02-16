@@ -10,18 +10,35 @@ class Thruster_Manager(Node):
     def __init__(self):
         super().__init__("thruster_manager")
         
-        self.order = ["bm", "fr", "br", "mr", "ml", "fl", "bl"]
-        self.param_names = [f"control_{name}" for name in self.order]
-        self.motor_names = [f"motor_{name}" for name in self.order]
+        # Control values denotes the extra thrust that is added to the motors
+        self.control_values = [f"control_{num}" for num in range(1, 8)]
+        self.motor_names = [f"motor_{num}" for num in range(1, 8)]
+        
+        # The following section reads the motor positions and directions from the
+        # parameter server and orders the motors in the correct order in the matrix.
+        # The ROS param <motor_name>_order should be a number from 1 to 7, denoting
+        # the number of that motor based on the motor_msg.
+        motor_vector_collection = {
+            "br": [1, 0, 0],
+            "bm": [0, 1, 0],
+            "fl": [1, 0, 0],
+            "fr": [1, 0, 0],
+            "ml": [0, 0, 1],
+            "bl": [1, 0, 0],
+            "mr": [0, 0, 1]
+        }
+        motor_orders = []
+        for i, (motor_name, motor_vector) in enumerate(motor_vector_collection.items()):
+            self.declare_parameter(f"{motor_name}_order", i)
+            self.declare_parameter(f"{motor_name}_direction", i)
+            motor_pos = self.get_parameter(f"{motor_name}_order")
+            motor_dir = self.get_parameter(f"{motor_name}_direction")
+            motor_orders.append((motor_pos.value, motor_vector * motor_dir.value))
+
+        motor_orders.sort(key=lambda x: x[0])
+
         self.motor_matrix = np.array([
-            # yaw pitch roll
-            [-1,   0,    0],    # back right motor
-            [0,    1,    0],    # back middle motor
-            [-1,    0,    0],    # front left motor
-            [-1,    0,    0],    # front right motor
-            [0,    0,    1],    # middle left motor
-            [1,   0,    0],    # back left motor
-            [0,    0,    -1],    # middle right motor
+            motor[1] for motor in motor_orders
         ], dtype=np.float64)
 
         self.scale = 300    # how much to scale the pid value
@@ -30,12 +47,12 @@ class Thruster_Manager(Node):
         self.motor_publisher = self.create_publisher(Motors, '/motor_values', 10)
         self.get_logger().info("Thruster manager started")
         
-        for name in self.param_names:
+        for name in self.control_values:
             self.declare_parameter(name, 0)
 
     
     def calculate_thrusters(self, pid_msg):
-        ctrl_params = self.get_parameters(self.order)
+        ctrl_params = self.get_parameters(self.control_values)
         ctrl_vec = np.array([p.value for p in ctrl_params], dtype=np.float64)
         # self.get_logger().info(f"Requested: {ctrl_vec}")
 
@@ -59,7 +76,7 @@ class Thruster_Manager(Node):
 
     def set_control_thrust(self, extra_thrust):
         params = []
-        for motor_name, param_name in zip(self.motor_names, self.param_names):
+        for motor_name, param_name in zip(self.motor_names, self.control_values):
             param = Parameter(param_name, Parameter.Type.INTEGER, getattr(extra_thrust, motor_name))
             params.append(param)
 
