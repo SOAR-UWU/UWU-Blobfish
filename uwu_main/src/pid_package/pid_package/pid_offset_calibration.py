@@ -15,7 +15,7 @@ class Offset_Calibration(Node):
         
         self.imu_data_collection = 0
         self.count = 0
-        self.declare_parameter('imu_num_cal_samples')
+        self.declare_parameter('imu_num_cal_samples', 100)
         self.imu_num_cal_samples = self.get_parameter('imu_num_cal_samples').value
         self.average_value = 0.0
 
