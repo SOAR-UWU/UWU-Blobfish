@@ -13,6 +13,7 @@ class Thruster_Manager(Node):
         # Control values denotes the extra thrust that is added to the motors
         self.control_values = [f"control_{num}" for num in range(1, 8)]
         self.motor_names = [f"motor_{num}" for num in range(1, 8)]
+        self.motors = ["br", "bm", "fl", "fr", "ml", "bl", "mr"]
         
         # The following section reads the motor positions and directions from the
         # parameter server and orders the motors in the correct order in the matrix.
@@ -53,7 +54,8 @@ class Thruster_Manager(Node):
     
     def calculate_thrusters(self, pid_msg):
         ctrl_params = self.get_parameters(self.control_values)
-        ctrl_vec = np.array([p.value for p in ctrl_params], dtype=np.float64)
+        ctrl_direction = self.get_parameters([f"{motor}_direction" for motor in self.motors])
+        ctrl_vec = np.array([p.value * d.value for p, d in zip(ctrl_params, ctrl_direction)], dtype=np.float64)
         # self.get_logger().info(f"Requested: {ctrl_vec}")
 
         # [-1, 1]
