@@ -17,13 +17,13 @@ class SoloMotorNode(Node):
 
     def publish_motor_params(self):
         msg = Motors()
-        self.motor_1 = 1500
-        self.motor_2 = 1500
-        self.motor_3 = 1500
-        self.motor_4 = 1500
-        self.motor_5 = 1500
-        self.motor_6 = 1500
-        self.motor_7 = 1500
+        msg.motor_1 = 1500
+        msg.motor_2 = 1500
+        msg.motor_3 = 1500
+        msg.motor_4 = 1500
+        msg.motor_5 = 1500
+        msg.motor_6 = 1500
+        msg.motor_7 = 1500
         active_motor_name = "motor_" + str(self.current_motor)
         msg.__setattr__(active_motor_name, self.get_parameter("motor_value").value)
         self.motor_pub.publish(msg)
