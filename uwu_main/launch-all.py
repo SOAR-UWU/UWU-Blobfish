@@ -36,8 +36,9 @@ def generate_launch_description():
     )
 
     pid_motor_dir_control = Node(
-        package="teleop",
-        executable="motor_dir_control_node"
+        package="pid_package",
+        executable="motor_dir_control_node",
+        parameters=[pid_configs]
     )
 
     thruster_manager_node = Node(

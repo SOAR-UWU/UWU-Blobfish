@@ -22,6 +22,7 @@ setup(
         'console_scripts': [
             'offset_calibrator = pid_package.pid_offset_calibration:main',
             'pid_node = pid_package.pid_package:main',
+            'motor_dir_control = pid_package.direction_control:main',
         ],
     },
 )
