@@ -19,13 +19,13 @@ offset_calibrator:
 
 motor_dir_control_node:
   ros__parameters:
-    br_order: 1
-    bm_order: 2
+    br_order: 6
+    bm_order: 1
     fl_order: 3
-    fr_order: 4
+    fr_order: 2
     ml_order: 5
-    bl_order: 6
-    mr_order: 7
+    bl_order: 7
+    mr_order: 4
     br_direction: 1
     bm_direction: 1
     fl_direction: 1
