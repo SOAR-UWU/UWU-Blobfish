@@ -38,9 +38,10 @@ class Thruster_Manager(Node):
 
         motor_orders.sort(key=lambda x: x[0])
 
-        self.motor_matrix = np.array([
-            motor[1] for motor in motor_orders
-        ], dtype=np.float64)
+        arr = [motor[1] for motor in motor_orders]
+        print(arr)
+
+        self.motor_matrix = np.array(arr, dtype=np.float64)
 
         self.scale = 300    # how much to scale the pid value
         self.create_subscription(Vector3, '/yawpitchroll_pid', self.calculate_thrusters, 10)
