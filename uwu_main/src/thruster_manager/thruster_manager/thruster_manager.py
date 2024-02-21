@@ -31,7 +31,7 @@ class Thruster_Manager(Node):
         motor_orders = []
         for i, (motor_name, motor_vector) in enumerate(motor_vector_collection.items()):
             self.declare_parameter(f"{motor_name}_order", i)
-            self.declare_parameter(f"{motor_name}_direction", i)
+            self.declare_parameter(f"{motor_name}_direction", 1)
             motor_pos = self.get_parameter(f"{motor_name}_order")
             motor_dir = self.get_parameter(f"{motor_name}_direction")
             motor_orders.append((motor_pos.value, motor_vector * motor_dir.value))
