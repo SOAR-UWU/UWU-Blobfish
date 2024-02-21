@@ -1,3 +1,7 @@
 [submodule "thirdparty/isaac_ros_common"]
 	path = thirdparty/isaac_ros_common
 	url = https://github.com/SOAR-UWU/isaac_ros_common.git
+[submodule "thirdparty/vectornav"]
+	path = thirdparty/vectornav
+	url = https://github.com/dawonn/vectornav.git
+	branch = ros2
