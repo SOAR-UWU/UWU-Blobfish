@@ -27,12 +27,25 @@ class PID_Tuner(Node):
         if keypress in "rR":
             self.current_axis = "roll"
             self.get_logger().info("Tuning roll")
-        if keypress in "hH":
+        if keypress in "tT":
             self.current_axis = "pitch"
             self.get_logger().info("Tuning pitch")
         if keypress in "yY":
             self.current_axis = "yaw"
             self.get_logger().info("Tuning yaw")
+
+        if keypress in "hH":
+            self.get_logger().info("Help:")
+            self.get_logger().info("P - Tune P")
+            self.get_logger().info("I - Tune I")
+            self.get_logger().info("D - Tune D")
+            self.get_logger().info("R - Tune roll")
+            self.get_logger().info("T - Tune pitch")
+            self.get_logger().info("Y - Tune yaw")
+            self.get_logger().info(", - Decrease")
+            self.get_logger().info(". - Increase")
+            self.get_logger().info("Current axis: " + str(self.current_axis))
+            self.get_logger().info("Current coefficient: " + str(self.current_variable))
         
         if self.current_axis != None and self.current_variable != None:
             if keypress in ",.":

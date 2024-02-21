@@ -9,54 +9,59 @@ class Direction_Control(Node):
     def __init__(self):
         super().__init__("motor_dir_control_node")
 
-        self.order = ["bm", "fr", "br", "mr", "ml", "fl", "bl"]
+        self.motor_names = ["br", "bm", "fl", "fr", "ml", "bl", "mr"]
         self.motor_values = []
-        for name in self.order:
+        for name in range(1, 8):
             self.declare_parameter(f"motor_{name}", 0)
             self.motor_values.append(self.get_parameter(f"motor_{name}").value)
+
+        self.motor_order = dict()
+        self.motor_directions = dict()
+        for name in self.motor_names:
+            self.declare_parameter(f"{name}_direction", 1)
+            self.declare_parameter(f"{name}_order", 0)
+            self.motor_order[name] = self.get_parameter(f"{name}_order").value
+            self.motor_directions[name] = self.get_parameter(f"{name}_direction").value
         
         self.ws_control_state = None
         self.inc_dec_value = 20
 
         self.motor_dir_control_publisher = self.create_publisher(MotorOffset, '/motor_dir_control', 10)
         self.create_subscription(Char, '/keypress', self.keypress, 10)
-        self.forward_dirs = np.array([0, -1, 1, 0, 0, -1, 1])
-        self.downward_dirs = np.array([0, 0, 0, 1, 1, 0, 0])
 
 
     def check_mov_state(self, AD_key_state):
 
         if self.ws_control_state == "move_forward_state": 
-            speed_change = self.forward_dirs * self.inc_dec_value
             if AD_key_state == "a":
-                self.motor_values[1]-=speed_change[1]
-                self.motor_values[2]-=speed_change[2]
-                self.motor_values[5]-=speed_change[5]
-                self.motor_values[6]-=speed_change[6]
+                self.motor_values[self.motor_order["fr"]]-=self.inc_dec_value*self.motor_directions["fr"]
+                self.motor_values[self.motor_order["fl"]]-=self.inc_dec_value*self.motor_directions["fl"]
+                self.motor_values[self.motor_order["br"]]-=self.inc_dec_value*self.motor_directions["br"]
+                self.motor_values[self.motor_order["bl"]]-=self.inc_dec_value*self.motor_directions["bl"]
                 self.get_logger().info(f"Decreased forward movement speed:\n{self.motor_values}")
 
             elif AD_key_state == "d":
-                self.motor_values[1]+=speed_change[1]
-                self.motor_values[2]+=speed_change[2]
-                self.motor_values[5]+=speed_change[5]
-                self.motor_values[6]+=speed_change[6]
+                self.motor_values[self.motor_order["fr"]]+=self.inc_dec_value*self.motor_directions["fr"]
+                self.motor_values[self.motor_order["fl"]]+=self.inc_dec_value*self.motor_directions["fl"]
+                self.motor_values[self.motor_order["br"]]+=self.inc_dec_value*self.motor_directions["br"]
+                self.motor_values[self.motor_order["bl"]]+=self.inc_dec_value*self.motor_directions["bl"]
                 self.get_logger().info(f"Increased forward movement speed:\n{self.motor_values}")
 
         elif self.ws_control_state == "move_downward_state":
             speed_change = self.downward_dirs * self.inc_dec_value
             if AD_key_state == "a":
-                self.motor_values[3]-=speed_change[3]
-                self.motor_values[4]-=speed_change[4]
+                self.motor_values[self.motor_order["ml"]]-=self.inc_dec_value*self.motor_directions["ml"]
+                self.motor_values[self.motor_order["mr"]]-=self.inc_dec_value*self.motor_directions["mr"]
                 self.get_logger().info(f"Decreased downward movement speed:\n{self.motor_values}")
             
             elif AD_key_state == "d":
-                self.motor_values[3]+=speed_change[3]
-                self.motor_values[4]+=speed_change[4]
+                self.motor_values[self.motor_order["ml"]]+=self.inc_dec_value*self.motor_directions["ml"]
+                self.motor_values[self.motor_order["mr"]]+=self.inc_dec_value*self.motor_directions["mr"]
                 self.get_logger().info(f"Increased downward movement speed:\n{self.motor_values}")
 
         self.motor_values = np.array(self.motor_values, dtype=np.float64)
         motor_msg = MotorOffset()
-        for i, name in enumerate(self.order):
+        for i, name in enumerate(range(1, 8)):
             setattr(motor_msg, f"motor_{name}", int(self.motor_values[i]))
         self.motor_dir_control_publisher.publish(motor_msg) 
 
@@ -85,6 +90,14 @@ class Direction_Control(Node):
                 self.check_mov_state(key_data)
             else:
                 self.get_logger().info("Current movement state: None")
+
+        elif key_data == 'h':
+            self.get_logger().info("Help:")
+            self.get_logger().info("w - Tune forward values")
+            self.get_logger().info("s - Tune downward values")
+            self.get_logger().info("a - Decrease motor output")
+            self.get_logger().info("d - Increase motor output")
+            self.get_logger().info("Current movement state: " + str(self.ws_control_state))
 
         else:
             self.ws_control_state = None

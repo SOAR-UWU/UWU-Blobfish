@@ -21,6 +21,7 @@ setup(
     entry_points={
         'console_scripts': [
             "key_publisher = teleop.publish_key:main",
+            'pid_tuner = pid_package.pid_tuner:main'
         ],
     },
 )

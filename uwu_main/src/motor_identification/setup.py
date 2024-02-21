@@ -1,6 +1,6 @@
 from setuptools import find_packages, setup
 
-package_name = 'pid_package'
+package_name = 'motor_identification'
 
 setup(
     name=package_name,
@@ -14,15 +14,13 @@ setup(
     install_requires=['setuptools'],
     zip_safe=True,
     maintainer='javin',
-    maintainer_email='javin@todo.todo',
+    maintainer_email='javinenghp@gmail.com',
     description='TODO: Package description',
     license='TODO: License declaration',
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            'offset_calibrator = pid_package.pid_offset_calibration:main',
-            'pid_node = pid_package.pid_package:main',
-            'motor_dir_control = pid_package.direction_control:main',
+            "run_motor_solo = motor_identification.run_motor_solo:main",
         ],
     },
 )
