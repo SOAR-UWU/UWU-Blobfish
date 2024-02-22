@@ -1,3 +1,8 @@
-#!/bin/sh
+#!/bin/env bash
 dir=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd -P)
-$dir/uwu_main/isaac_ros_common/scripts/run_dev.sh $dir
+
+if [[ -f "${dir}/.isaac_ros_common-config" ]]; then
+    . "${dir}/.isaac_ros_common-config"
+fi
+
+$dir/thirdparty/isaac_ros_common/scripts/run_dev.sh $dir

@@ -1,2 +1,5 @@
-CONFIG_IMAGE_KEY="ros2_humble.fixes.user.realsense.arduino.gazebo.udev.misc"
-CONFIG_DOCKER_SEARCH_DIRS=(../../../docker)
+# NOTE: Normally, isaac_ros_common's run_dev.sh sources .isaac_ros_common-config
+# only within the same directory as itself. Fortunately, we can just set environment
+# variables. Hence, "export" is needed for our own mimicry of .isaac_ros_common-config.
+export CONFIG_IMAGE_KEY="ros2_humble.fixes.user.realsense.arduino.gazebo.udev.misc"
+export CONFIG_DOCKER_SEARCH_DIRS=(../../../docker)
