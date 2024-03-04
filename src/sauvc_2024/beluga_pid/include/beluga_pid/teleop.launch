@@ -1,0 +1,14 @@
+<launch>
+  <arg name="ns" default="teleop"/>
+  <arg name="pid_ns" default="bubbles_pid"/>
+
+  <node name="joy_node" pkg="joy" type="joy_node"/>
+  <node name="teleop" pkg="bubbles_pid" type="teleop_joystick.py" ns="$(arg ns)">
+    <remap from="/$(arg ns)/yaw" to="/$(arg pid_ns)/yaw/setpoint" />
+    <remap from="/$(arg ns)/pitch" to="/$(arg pid_ns)/pitch/setpoint" />
+    <remap from="/$(arg ns)/roll" to="/$(arg pid_ns)/roll/setpoint" />
+    <remap from="/$(arg ns)/depth" to="/$(arg pid_ns)/depth/setpoint" />
+    <remap from="/$(arg ns)/speed" to="/$(arg pid_ns)/speed/setpoint" />
+  </node>
+
+</launch>
