@@ -5,4 +5,4 @@ if [[ -f "${dir}/.isaac_ros_common-config" ]]; then
     . "${dir}/.isaac_ros_common-config"
 fi
 
-$dir/thirdparty/isaac_ros_common/scripts/run_dev.sh $dir
+. $dir/thirdparty/isaac_ros_common/scripts/run_dev.sh $dir
