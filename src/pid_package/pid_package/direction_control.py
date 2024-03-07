@@ -33,14 +33,14 @@ class Direction_Control(Node):
     def check_mov_state(self, AD_key_state):
 
         if self.ws_control_state == "move_forward_state": 
-            if AD_key_state == "a":
+            if AD_key_state == "q":
                 self.motor_values[self.motor_order["fr"]]-=self.inc_dec_value*self.motor_directions["fr"]
                 self.motor_values[self.motor_order["fl"]]-=self.inc_dec_value*self.motor_directions["fl"]
                 self.motor_values[self.motor_order["br"]]-=self.inc_dec_value*self.motor_directions["br"]
                 self.motor_values[self.motor_order["bl"]]-=self.inc_dec_value*self.motor_directions["bl"]
                 self.get_logger().info(f"Decreased forward movement speed:\n{self.motor_values}")
 
-            elif AD_key_state == "d":
+            elif AD_key_state == "e":
                 self.motor_values[self.motor_order["fr"]]+=self.inc_dec_value*self.motor_directions["fr"]
                 self.motor_values[self.motor_order["fl"]]+=self.inc_dec_value*self.motor_directions["fl"]
                 self.motor_values[self.motor_order["br"]]+=self.inc_dec_value*self.motor_directions["br"]
@@ -49,12 +49,12 @@ class Direction_Control(Node):
 
         elif self.ws_control_state == "move_downward_state":
             speed_change = self.downward_dirs * self.inc_dec_value
-            if AD_key_state == "a":
+            if AD_key_state == "q":
                 self.motor_values[self.motor_order["ml"]]-=self.inc_dec_value*self.motor_directions["ml"]
                 self.motor_values[self.motor_order["mr"]]-=self.inc_dec_value*self.motor_directions["mr"]
                 self.get_logger().info(f"Decreased downward movement speed:\n{self.motor_values}")
             
-            elif AD_key_state == "d":
+            elif AD_key_state == "e":
                 self.motor_values[self.motor_order["ml"]]+=self.inc_dec_value*self.motor_directions["ml"]
                 self.motor_values[self.motor_order["mr"]]+=self.inc_dec_value*self.motor_directions["mr"]
                 self.get_logger().info(f"Increased downward movement speed:\n{self.motor_values}")
@@ -79,13 +79,13 @@ class Direction_Control(Node):
             self.get_logger().info(f"Entered downward movement state:\n{self.motor_values}")
             self.check_mov_state(key_data)
 
-        elif key_data == 'a': # Decrease motor output
+        elif key_data == 'q': # Decrease motor output
             if self.ws_control_state in ("move_forward_state", "move_downward_state"):
                 self.check_mov_state(key_data)
             else:
                 self.get_logger().info("Current movement state: None")
 
-        elif key_data == 'd': # Increase motor output
+        elif key_data == 'e': # Increase motor output
             if self.ws_control_state in ("move_forward_state", "move_downward_state"):
                 self.check_mov_state(key_data)
             else:
@@ -95,13 +95,9 @@ class Direction_Control(Node):
             self.get_logger().info("Help:")
             self.get_logger().info("w - Tune forward values")
             self.get_logger().info("s - Tune downward values")
-            self.get_logger().info("a - Decrease motor output")
-            self.get_logger().info("d - Increase motor output")
+            self.get_logger().info("q - Decrease motor output")
+            self.get_logger().info("e - Increase motor output")
             self.get_logger().info("Current movement state: " + str(self.ws_control_state))
-
-        else:
-            self.ws_control_state = None
-            self.get_logger().info("Invalid keypress")
         
 
 def main():
