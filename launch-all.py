@@ -44,7 +44,7 @@ def generate_launch_description():
 
     pid_motor_dir_control = Node(
         package="pid_package",
-        executable="motor_dir_control_node",
+        executable="motor_dir_control",
         parameters=[pid_configs]
     )
 
