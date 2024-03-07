@@ -70,7 +70,6 @@ class Thruster_Manager(Node):
         # self.get_logger().info(f"PID: {pid_vec}")
 
         out_vec = (pid_vec + ctrl_vec + 1500).clip(1200, 1800)
-        self.get_logger().info(f"Final: {out_vec}")
         
         motor_vals = Motors()
         for i, name in enumerate(self.motor_names):
@@ -84,7 +83,6 @@ class Thruster_Manager(Node):
             params.append(param)
 
         self.set_parameters(params)
-        self.get_logger().info("Control parameters updated")
 
 def main(args=None):
     rclpy.init(args=args)
