@@ -2,11 +2,18 @@ from simple_pid import PID
 import rclpy
 from rclpy.node import Node
 from geometry_msgs.msg import Vector3
+from std_msgs.msg import Char
 
 
 class PID_Node(Node):
     def __init__(self):
         super().__init__("pid_node")
+        self.keypress_sub = self.create_subscription(
+            Char, "/keypress", self.proc_keypress, 10)
+        self.current_variable = None
+        self.current_axis = None
+        self.unit = 0.003
+
         self.declare_parameter("kp_yaw", 0.0)
         self.declare_parameter("ki_yaw", 0.0)
         self.declare_parameter("kd_yaw", 0.0)
@@ -109,6 +116,65 @@ class PID_Node(Node):
         
         new_params = [yaw_setpoint, pitch_setpoint, roll_setpoint]
         self.set_paramters(new_params)
+
+    def proc_keypress(self, msg):
+        keypress = chr(msg.data)
+        if keypress in "pP":
+            self.current_variable = "p"
+            self.get_logger().info("Tuning P")
+        if keypress in "iI":
+            self.current_variable = "i"
+            self.get_logger().info("Tuning I")
+        if keypress in "dD":
+            self.current_variable = "d"
+            self.get_logger().info("Tuning D")
+        if keypress in "rR":
+            self.current_axis = "roll"
+            self.get_logger().info("Tuning roll")
+        if keypress in "tT":
+            self.current_axis = "pitch"
+            self.get_logger().info("Tuning pitch")
+        if keypress in "yY":
+            self.current_axis = "yaw"
+            self.get_logger().info("Tuning yaw")
+
+        if keypress in "hH":
+            self.get_logger().info("Help:")
+            self.get_logger().info("P - Tune P")
+            self.get_logger().info("I - Tune I")
+            self.get_logger().info("D - Tune D")
+            self.get_logger().info("R - Tune roll")
+            self.get_logger().info("T - Tune pitch")
+            self.get_logger().info("Y - Tune yaw")
+            self.get_logger().info(", - Decrease")
+            self.get_logger().info(". - Increase")
+            self.get_logger().info("Current axis: " + str(self.current_axis))
+            self.get_logger().info("Current coefficient: " + str(self.current_variable))
+        
+        if self.current_axis != None and self.current_variable != None:
+            if keypress in ",.":
+                param_name = f"k{self.current_variable}_{self.current_axis}"
+                param_val = self.get_parameter(param_name).value
+
+                if keypress == ",":
+                    param_val -= self.unit
+                    new_param = rclpy.parameter.Parameter(
+                        param_name,
+                        rclpy.Parameter.Type.DOUBLE,
+                        param_val
+                    )
+                    self.get_logger().info(f"Decreasing {param_name} to {param_val}")
+                if keypress == ".":
+                    param_val += self.unit
+                    new_param = rclpy.parameter.Parameter(
+                        param_name,
+                        rclpy.Parameter.Type.DOUBLE,
+                        param_val
+                    )
+                    self.get_logger().info(f"Increasing {param_name} to {param_val}")
+
+                self.set_parameters([new_param])
+
 
 def main(args=None):
     rclpy.init(args=args)
