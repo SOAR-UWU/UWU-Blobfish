@@ -30,6 +30,7 @@ class Thruster_Manager(Node):
         }
         motor_orders = []
         for i, (motor_name, motor_vector) in enumerate(motor_vector_collection.items()):
+            motor_vector = np.array(motor_vector)
             self.declare_parameter(f"{motor_name}_order", i)
             self.declare_parameter(f"{motor_name}_direction", 1)
             motor_pos = self.get_parameter(f"{motor_name}_order")
@@ -39,7 +40,6 @@ class Thruster_Manager(Node):
         motor_orders.sort(key=lambda x: x[0])
 
         arr = [motor[1] for motor in motor_orders]
-        print(arr)
 
         self.motor_matrix = np.array(arr, dtype=np.float64)
 
