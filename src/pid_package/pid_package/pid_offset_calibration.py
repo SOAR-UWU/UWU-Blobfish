@@ -2,8 +2,8 @@ from simple_pid.pid import PID
 import rclpy
 from rclpy.node import Node
 from geometry_msgs.msg import PoseWithCovarianceStamped, Vector3
-from tf_transformations import euler_from_quaternion
 from rclpy import Parameter
+import numpy as np
 import math
 
 class Offset_Calibration(Node):
@@ -25,7 +25,7 @@ class Offset_Calibration(Node):
 
     def callback(self, msg):
         quat = msg.pose.pose.orientation
-        euler_angles = euler_from_quaternion([quat.w, quat.x, quat.y, quat.z])
+        euler_angles = self.euler_from_quaternion(quat)
         euler_angles = list(math.degrees(r) for r in euler_angles)
 
         if self.count < self.imu_num_cal_samples:
@@ -46,6 +46,24 @@ class Offset_Calibration(Node):
             pid_values.y = euler_angles[1]
             pid_values.z = euler_angles[2]
             self.imu_offset_publisher.publish(pid_values)
+        
+    def euler_from_quaternion(self, quaternion):
+        x = quaternion.x
+        y = quaternion.y
+        z = quaternion.z
+        w = quaternion.w
+
+        sinr = 2 * (w * y - z * x)  
+        roll = np.arcsin(sinr)
+
+        sinp_cosr = 2 * (w * x + y * z)
+        cosp_cosr = 1 - 2 * (x * x + y * y)
+        pitch= np.arctan2(sinp_cosr, cosp_cosr)
+
+        siny_cosp = 2 * (w * z + x * y)
+        cosy_cosp = 1 - 2 * (y * y + z * z)
+        yaw = np.arctan2(siny_cosp, cosy_cosp)
+        return roll, pitch, yaw
 
 
 def main():
