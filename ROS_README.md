@@ -22,6 +22,8 @@ colcon build --packages-up-to <pkgname1> <pkgname2> ...
 
 ## Arduino Bridge
 
+NOTE: `launch-all.py` does this already.
+
 The Arduino bridge is a node in the `arduino_bridge` package. To start the Arduino bridge node, run:
 
 ```sh

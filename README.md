@@ -22,7 +22,7 @@ This will open a shell inside the Docker container with a pre-defined environmen
 docker rm -f isaac_ros_dev-container
 ```
 
-**Note**: Resetting the environment is necessary if any `Dockerfile` is modified, or if `CONFIG_IMAGE_KEY` inside `.isaac_ros_common-config` is changed, in order for the changes to take effect.
+**Note**: Resetting the environment is necessary if any `Dockerfile` is modified, or if `CONFIG_IMAGE_KEY` inside `.isaac_ros_common-config` is changed, to rebuild the container so that changes take effect.
 
 **Note**: For an alternative workflow using VSCode Dev Containers (which support Python Intellisense), you can use "> Dev Containers: Attach to Running Container...", see: <https://code.visualstudio.com/docs/devcontainers/attach-container>.
 
@@ -32,53 +32,30 @@ Refer to the documentation on Google Drive.
 
 ## Developer Guide
 
-New ROS2 packages should be added to `uwu_main/src/`. Third-party packages should be added via `git subtree` to `uwu_main/`. Arduino code should be added to `arduino/`.
+- New ROS2 packages should be added to `src/`.
+- Third-party packages should be added via `git submodule` to `thirdparty/`.
+  - Fork third-party packages to our org if you need to make modifications.
+- Arduino code should be added to `arduino/`.
+- Create a file named `COLCON_IGNORE` (i.e., `touch COLCON_IGNORE`) in folders containing ROS2 packages you don't want colcon to build.
 
 ### Folder Structure
 
 See respective `README.md` files in each folder for more information.
 
 - `arduino/`: Arduino code.
-- `data/`: Arbitrary data files for the sub like config files, model weights, etc.
 - `docker/`: Additional image layers for the ISAAC ROS Docker Environment.
-- `uwu_main/`: ROS2 code, including first-party and third-party packages.
-  - `src/`: First-party ROS2 packages.
-  - Other folders are third-party packages added via `git subtree`.
+- `src/`: First-party ROS2 packages.
+- `thirdparty/`: Third-party ROS2 packages added as git submodules.
 
-### Git Subtrees Used
+### Camera Stuff
 
-Below commands are for updating subtrees. Note for subtrees to remain updatable, **commits must not modify both the subtree and the parent repo simultaneously**! Use two separate commits instead.
-
-```sh
-# NVIDIA-ISAAC-ROS/isaac_ros_common
-git subtree pull --prefix uwu_main/isaac_ros_common https://github.com/NVIDIA-ISAAC-ROS/isaac_ros_common.git main --squash
-
-# ???/vectornav
-# TODO: @javin where did you get it from?
-```
-
-See <https://craftquest.io/guides/git/git-workflow-tools/git-subtrees> for how to use subtrees. See <https://stackoverflow.com/questions/32407634/when-to-use-git-subtree> for when to use subtrees.
-
-### Pre-commit Installation
-
-Pre-commit automatically runs Git hooks to check your code when you commit to this repo.
-
-First, install the pre-commit tool:
+Cause the realsense viewer doesn't work on my (J-H) container for some reason, plus we now have that totally crap oversaturation issue with the D455 (see last page of <https://www.intelrealsense.com/download/13629/>), we are using a regular usb cam. So here's the ros2 usb cam node:
 
 ```sh
-pip install pre-commit
+sudo apt install ros-humble-usb-cam
+ros2 run usb_cam usb_cam_node_exe --ros-args -p video_device:=/dev/video4
 ```
 
-Next, install the pre-commit hooks on your system:
+See literally the source code for the parameters: <https://github.com/ros-drivers/usb_cam/blob/70ed391a979287bad056c9e75bad8c2001a98f2b/src/ros2/usb_cam_node.cpp#L65-L85>
 
-```sh
-pre-commit install
-```
-
-Pre-commit should run automatically when attempting to commit. If it doesn't, run the following after staging your changes:
-
-```sh
-pre-commit run
-```
-
-I haven't tested these hooks, so let me know if there's any problems. -Javin
+Surprisingly, most of the node's parameters can be changed live via `rqt`, so that's a good way to figure out what does what and calibrate.
