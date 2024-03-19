@@ -2,6 +2,7 @@
 
 import time
 from typing import List
+import struct
 
 import serial
 
@@ -65,6 +66,26 @@ the number of motors ({NUM_MOTORS})")
 
         # Write EOT
         self.ser.write(EOT_CHAR)
+
+    def read_depth_value(self) -> float:
+        """Read a depth value from the serial port. If there is no data to read, or if the 
+        data read is invalid, return None.
+
+        Returns:
+            float: depth value
+        """
+        data = self.ser.read(4)
+        if data == b'':
+            return None
+        
+        if self.await_eot(0.01):
+            return None
+
+        if self.endianness == 'l':
+            ret = struct.unpack('<f', self.ser.read(4))
+        else:
+            ret = struct.unpack('>f', self.ser.read(4))
+        return ret
 
     def write_uint16(self, n: int):
         """Write an integer to the serial port as an unsigned 16-bit integer.

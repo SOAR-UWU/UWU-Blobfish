@@ -1,5 +1,6 @@
 import rclpy
 from rclpy.node import Node
+from std_msgs.msgs import Float32
 import os
 
 from motor_msg.msg import Motors
@@ -18,6 +19,7 @@ class ArduinoBridge(Node):
             self.listener_callback,
             10
         )
+        self.depth_publisher = self.create_publisher(Float32, "depth", 10)
         ARDUINO_FILES = self.get_parameter("arduino_files").value
         ARDUINO_PORT = self.get_parameter("arduino_port").value
         BAUD_RATE = self.get_parameter("baud_rate").value
@@ -59,13 +61,23 @@ class ArduinoBridge(Node):
             msg.motor_5,
             msg.motor_6,
             msg.motor_7])
+        
+    def check_depth_value(self):
+        depth = self.jai.read_depth_value()
+        if depth is None:
+            return None
+        msg = Float32()
+        msg.data = depth
+        self.depth_publisher.publish(msg)
 
 
 def main(args=None):
     rclpy.init(args=args)
 
     bridge = ArduinoBridge()
-    rclpy.spin(bridge)
+    while rclpy.ok():
+        rclpy.spin_once(bridge, timeout_sec=0)
+        bridge.check_depth_value()
 
     bridge.destroy_node()
     rclpy.shutdown()
