@@ -8,3 +8,4 @@
 sudo apt install ros-humble-tf-transformations
 pip install transforms3d
 sudo apt install ros-humble-usb-cam
+pip install imutils

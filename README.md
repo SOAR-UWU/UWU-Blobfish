@@ -54,6 +54,9 @@ Cause the realsense viewer doesn't work on my (J-H) container for some reason, p
 ```sh
 sudo apt install ros-humble-usb-cam
 ros2 run usb_cam usb_cam_node_exe --ros-args -p video_device:=/dev/video4
+
+# Video recording node
+ros2 run debug_cv record_vid --ros-args -p img_topic:=/image_raw
 ```
 
 See literally the source code for the parameters: <https://github.com/ros-drivers/usb_cam/blob/70ed391a979287bad056c9e75bad8c2001a98f2b/src/ros2/usb_cam_node.cpp#L65-L85>

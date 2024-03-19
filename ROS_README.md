@@ -7,7 +7,7 @@ The code here is meant for deployment on the **Jetson**. To build and run:
 
 ```sh
 # Install all dependencies.
-rosdep install -i --from-path uwu_main/
+rosdep install -i --from-path .
 # Build all packages.
 colcon build
 # Source ROS2 environment.
