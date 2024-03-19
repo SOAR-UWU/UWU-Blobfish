@@ -2,7 +2,7 @@ from simple_pid.pid import PID
 import rclpy
 from rclpy.node import Node
 from geometry_msgs.msg import Vector3
-from motor_msg.msg import Motors, MotorOffset
+from uwu_msgs.msg import Motors, MotorOffset
 import numpy as np
 from rclpy.parameter import Parameter
 
