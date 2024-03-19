@@ -60,12 +60,34 @@ def generate_launch_description():
         parameters=[arduino_configs]
     )
 
+    # TODO: Move all the config files above & below into a single folder for ease of access?
+    cam_node = Node(
+        package="usb_cam",
+        executable="usb_cam_node_exe",
+        # TODO: Hardcoded here for now
+        parameters=list(dict(
+            video_device="/dev/video0",
+            framerate="60",
+            image_width="640",
+            image_height="480",
+            brightness="-1",
+            gain="-1",
+            auto_white_balance="true",
+            white_balance="4000",
+            auto_exposure="true",
+            exposure="-1",
+            auto_focus="true",
+            focus="-1", # NOTE: the usb cam we use doesn't have software-controlled focus
+        ).items())
+    )
+
     # Create the launch description and populate
     # if hardware is not available, do not attempt to launch the IMU and Arduino nodes
     ld = LaunchDescription()
     if hardware_available:
         ld.add_action(vn_launch)
         ld.add_action(motor_bridge)
+        ld.add_action(cam_node)
     ld.add_action(pid_calibration)
     ld.add_action(pid_node)
     ld.add_action(pid_motor_dir_control)
