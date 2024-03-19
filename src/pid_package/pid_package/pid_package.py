@@ -91,9 +91,9 @@ class PID_Node(Node):
             error_roll -= 360
 
         pid_vals = Vector3()
-        pid_vals.x = self.pid_yaw(current_yaw)
-        pid_vals.y = self.pid_pitch(current_pitch)
-        pid_vals.z = self.pid_roll(current_roll)
+        pid_vals.x = self.pid_yaw(error_yaw)
+        pid_vals.y = self.pid_pitch(error_pitch)
+        pid_vals.z = self.pid_roll(error_roll)
 
         self.yawpitchroll_pid.publish(pid_vals)
 
