@@ -88,9 +88,9 @@ class Offset_Calibration(Node):
             pid_values.yaw = raw_yaw - self.average_yaw_value
             pid_values.pitch = raw_pitch - self.average_pitch_value
             pid_values.roll = raw_roll - self.average_roll_value
-            pid_values.velocity_x = self.vel_x
-            pid_values.velocity_y = self.vel_y
-            pid_values.velocity_z = self.vel_z
+            pid_values.velocity_x = accel_vec[0]
+            pid_values.velocity_y = accel_vec[1]
+            pid_values.velocity_z = accel_vec[2]
             pid_values.depth = self.depth
             self.imu_offset_publisher.publish(pid_values)
         
