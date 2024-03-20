@@ -11,6 +11,7 @@
   <depend>rclpy</depend>
   <depend>python3-simple-pid-pip</depend>
   <depend>std_msgs</depend>
+  <depend>uwu_msgs</depend>
   <depend>geometry_msgs</depend>
 
   <test_depend>ament_copyright</test_depend>
