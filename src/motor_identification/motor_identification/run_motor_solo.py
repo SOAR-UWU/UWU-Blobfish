@@ -39,7 +39,7 @@ class SoloMotorNode(Node):
                 1500
             )
             self.set_parameters([new_param])
-            self.get_logger().info("Current motor " + self.current_motor + " value: " + str(self.get_parameter("motor_value").value))
+            self.get_logger().info("Current motor " + str(self.current_motor) + " value: " + str(self.get_parameter("motor_value").value))
         if keypress in ",.":
             param_val = self.get_parameter("motor_value").value
             if keypress == ",":
@@ -59,7 +59,7 @@ class SoloMotorNode(Node):
             self.get_logger().info("1-7 - Run motor 1-7")
             self.get_logger().info(", - Decrease")
             self.get_logger().info(". - Increase")
-            self.get_logger().info("Current motor value " + str(self.current_motor) + ": " + str(self.get_parameter("motor_" + str(self.current_motor)).value))
+            self.get_logger().info("Current motor value " + str(self.current_motor) + ": " + str(self.get_parameter("motor_value").value))
             self.get_logger().info("Current motor: " + str(self.current_motor))
 
 def main():
