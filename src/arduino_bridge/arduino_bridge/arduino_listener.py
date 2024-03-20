@@ -18,6 +18,10 @@ class ArduinoBridge(Node):
             self.listener_callback,
             10
         )
+        self.declare_parameter('arduino_files', "/workspaces/isaac_ros-dev/arduino")
+        self.declare_parameter('arduino_port', "/dev/ttyUSB1")
+        self.declare_parameter("baud_rate", 19200)
+        self.declare_parameter("board_fqbn", "arduino:avr:nano:cpu=atmega328old")
         ARDUINO_FILES = self.get_parameter("arduino_files").value
         ARDUINO_PORT = self.get_parameter("arduino_port").value
         BAUD_RATE = self.get_parameter("baud_rate").value
