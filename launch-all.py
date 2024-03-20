@@ -60,6 +60,11 @@ def generate_launch_description():
         parameters=[arduino_configs]
     )
 
+    teleop_node = Node(
+        package="teleop",
+        executable="key_publisher"
+    )
+
     # TODO: Move all the config files above & below into a single folder for ease of access?
     cam_node = Node(
         package="usb_cam",
