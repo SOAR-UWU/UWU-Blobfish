@@ -5,28 +5,6 @@
 
 MS5837 sensor;
 
-
-void loop() {
-
-
-  Serial.print("Pressure: "); 
-  Serial.print(sensor.pressure()); 
-  Serial.println(" mbar");
-  
-  Serial.print("Temperature: "); 
-  Serial.print(sensor.temperature()); 
-  Serial.println(" deg C");
-  
-  Serial.print("Depth: "); 
-  Serial.print(sensor.depth()); 
-  Serial.println(" m");
-  
-  Serial.print("Altitude: "); 
-  Serial.print(sensor.altitude()); 
-  Serial.println(" m above mean sea level");
-
-  delay(1000);
-}
 // Just to make it easier to see which pins, doesn't take up too much space
 const byte motor_1 = 2;
 const byte motor_2 = 3;
@@ -86,7 +64,7 @@ void loop() {
     
     // Pressure sensor read below
     sensor.read();
-    aji.send_pressure(sensor.pressure());
+    aji.send_depth(sensor.pressure());
 
 }
 
