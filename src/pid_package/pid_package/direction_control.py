@@ -48,7 +48,6 @@ class Direction_Control(Node):
                 self.get_logger().info(f"Increased forward movement speed:\n{self.motor_values}")
 
         elif self.ws_control_state == "move_downward_state":
-            speed_change = self.downward_dirs * self.inc_dec_value
             if AD_key_state == "q":
                 self.motor_values[self.motor_order["ml"]]-=self.inc_dec_value*self.motor_directions["ml"]
                 self.motor_values[self.motor_order["mr"]]-=self.inc_dec_value*self.motor_directions["mr"]
