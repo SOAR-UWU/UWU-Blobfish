@@ -1,12 +1,12 @@
 pid_node:
   ros__parameters:
-    kp_yaw: 0.03
+    kp_yaw: 0.018
     ki_yaw: 0.0
     kd_yaw: 0.0
-    kp_pitch: 0.03
+    kp_pitch: 0.039
     ki_pitch: 0.0
     kd_pitch: 0.0
-    kp_roll: 0.03
+    kp_roll: 0.018
     ki_roll: 0.0
     kd_roll: 0.0
     setpoint_yaw: 0.0
@@ -22,14 +22,14 @@ motor_dir_control_node:
     br_order: 5
     bm_order: 0
     fl_order: 2
-    fr_order: 1
+    fr_order: 6
     ml_order: 4
-    bl_order: 6
+    bl_order: 1
     mr_order: 3
-    br_direction: 1
+    br_direction: -1
     bm_direction: 1
-    fl_direction: 1
+    fl_direction: -1
     fr_direction: 1
     ml_direction: 1
     bl_direction: 1
-    mr_direction: 1
+    mr_direction: -1
