@@ -1,3 +1,7 @@
-std_msgs/Vector3 yawpichroll
-Float32 depth
-std_msgs/Vector3 velocity
+float32 yaw
+float32 pitch
+float32 roll
+float32 depth
+float32 velocity_x
+float32 velocity_y
+float32 velocity_z
