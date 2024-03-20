@@ -15,7 +15,6 @@ class Offset_Calibration(Node):
         qos_profile = rclpy.qos.qos_profile_sensor_data
         self.create_subscription(CommonGroup, '/vectornav/raw/common', self.callback, qos_profile)
         
-        self.imu_data_collection = 0
         self.count = 0
         self.declare_parameter('imu_num_cal_samples', 100)
         self.imu_num_cal_samples = self.get_parameter('imu_num_cal_samples').value
@@ -28,6 +27,12 @@ class Offset_Calibration(Node):
         self.vel_y = 0
         self.vel_z = 0
         self.depth = 0
+        self.yaw_calib = 0
+        self.pitch_calib = 0
+        self.roll_calib = 0
+        self.acc_x_calib = 0
+        self.acc_y_calib = 0
+        self.acc_z_calib = 0
 
     def callback(self, msg):
         yawpitchroll = msg.yawpitchroll
@@ -67,25 +72,25 @@ class Offset_Calibration(Node):
             quat = [quat_msg.w, quat_msg.x, quat_msg.y, quat_msg.z]
             raw_accel_vec = [raw_accel_x, raw_accel_y, raw_accel_z]
             gravity_vec = [0, 0, -self.gravity]
-            gravity_vec = self.quat_rotate(self.quat_inverse(quat), gravity_vec)
+            gravity_vec = self.quat_rotate(quat, gravity_vec)
             accel_vec = [raw - grav for raw, grav in zip(raw_accel_vec, gravity_vec)]
             
-            self.vel_x += accel[0]
-            self.vel_y += accel[1]
-            self.vel_z += accel[2]
+            self.vel_x += accel_vec[0]
+            self.vel_y += accel_vec[1]
+            self.vel_z += accel_vec[2]
 
-            world_vel = self.quat_rotate(quat, [self.vel_x, self.vel_y, self.vel_z])
+            world_vel = self.quat_rotate(self.quat_inverse(quat), [self.vel_x, self.vel_y, self.vel_z])
 
             self.depth += world_vel[2]
 
             pid_values = RotDepthVelocity()
 
-            pid_values.yawpitchroll.x = raw_yaw - self.average_yaw_value
-            pid_values.yawpitchroll.y = raw_pitch - self.average_pitch_value
-            pid_values.yawpitchroll.z = raw_roll - self.average_roll_value
-            pid_values.velocity.x = self.vel_x
-            pid_values.velocity.y = self.vel_y
-            pid_values.velocity.z = self.vel_z
+            pid_values.yaw = raw_yaw - self.average_yaw_value
+            pid_values.pitch = raw_pitch - self.average_pitch_value
+            pid_values.roll = raw_roll - self.average_roll_value
+            pid_values.velocity_x = self.vel_x
+            pid_values.velocity_y = self.vel_y
+            pid_values.velocity_z = self.vel_z
             pid_values.depth = self.depth
             self.imu_offset_publisher.publish(pid_values)
         
