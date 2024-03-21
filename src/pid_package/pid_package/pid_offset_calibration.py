@@ -85,12 +85,12 @@ class Offset_Calibration(Node):
 
             pid_values = RotDepthVelocity()
 
-            pid_values.yaw = raw_yaw - self.average_yaw_value
-            pid_values.pitch = raw_pitch - self.average_pitch_value
-            pid_values.roll = raw_roll - self.average_roll_value
-            pid_values.velocity_x = accel_vec[0]
-            pid_values.velocity_y = accel_vec[1]
-            pid_values.velocity_z = accel_vec[2]
+            pid_values.yawpitchroll.x = raw_yaw - self.average_yaw_value
+            pid_values.yawpitchroll.y = raw_pitch - self.average_pitch_value
+            pid_values.yawpitchroll.z = raw_roll - self.average_roll_value
+            pid_values.velocity.x = accel_vec[0]
+            pid_values.velocity.y = accel_vec[1]
+            pid_values.velocity.z = accel_vec[2]
             pid_values.depth = self.depth
             self.imu_offset_publisher.publish(pid_values)
         

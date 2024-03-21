@@ -1,7 +1,3 @@
-float32 yaw
-float32 pitch
-float32 roll
+geometry_msgs/Vector3 yawpitchroll
 float32 depth
-float32 velocity_x
-float32 velocity_y
-float32 velocity_z
+geometry_msgs/Vector3 velocity
