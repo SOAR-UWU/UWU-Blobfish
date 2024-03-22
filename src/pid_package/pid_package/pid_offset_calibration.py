@@ -72,12 +72,16 @@ class Offset_Calibration(Node):
             quat = [quat_msg.w, quat_msg.x, quat_msg.y, quat_msg.z]
             raw_accel_vec = [raw_accel_x, raw_accel_y, raw_accel_z]
             gravity_vec = [0, 0, -self.gravity]
-            gravity_vec = self.quat_rotate(quat, gravity_vec)
+            gravity_vec = self.quat_rotate(self.quat_inverse(quat), gravity_vec)
             accel_vec = [raw - grav for raw, grav in zip(raw_accel_vec, gravity_vec)]
-            
+
             self.vel_x += accel_vec[0]
             self.vel_y += accel_vec[1]
             self.vel_z += accel_vec[2]
+
+            self.vel_x = 0.0 if abs(self.vel_x) < 0.1 else self.vel_x * 0.99
+            self.vel_y = 0.0 if abs(self.vel_y) < 0.1 else self.vel_y * 0.99
+            self.vel_z = 0.0 if abs(self.vel_z) < 0.1 else self.vel_z * 0.99
 
             world_vel = self.quat_rotate(self.quat_inverse(quat), [self.vel_x, self.vel_y, self.vel_z])
 
@@ -88,9 +92,9 @@ class Offset_Calibration(Node):
             pid_values.yawpitchroll.x = raw_yaw - self.average_yaw_value
             pid_values.yawpitchroll.y = raw_pitch - self.average_pitch_value
             pid_values.yawpitchroll.z = raw_roll - self.average_roll_value
-            pid_values.velocity.x = accel_vec[0]
-            pid_values.velocity.y = accel_vec[1]
-            pid_values.velocity.z = accel_vec[2]
+            pid_values.velocity.x = self.vel_x
+            pid_values.velocity.y = self.vel_y
+            pid_values.velocity.z = self.vel_z
             pid_values.depth = self.depth
             self.imu_offset_publisher.publish(pid_values)
         
