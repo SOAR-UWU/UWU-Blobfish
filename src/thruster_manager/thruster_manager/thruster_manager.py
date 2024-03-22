@@ -2,7 +2,7 @@ from simple_pid.pid import PID
 import rclpy
 from rclpy.node import Node
 from geometry_msgs.msg import Vector3
-from uwu_msgs.msg import Motors, MotorOffset
+from uwu_msgs.msg import Motors, MotorOffset, RotDepthVelocity
 import numpy as np
 from rclpy.parameter import Parameter
 
@@ -20,13 +20,14 @@ class Thruster_Manager(Node):
         # The ROS param <motor_name>_order should be a number from 1 to 7, denoting
         # the number of that motor based on the motor_msg.
         motor_vector_collection = {
-            "br": [1, 0, 0],
-            "bm": [0, 1, 0],
-            "fl": [1, 0, 0],
-            "fr": [1, 0, 0],
-            "ml": [0, 0, 1],
-            "bl": [1, 0, 0],
-            "mr": [0, 0, 1]
+            # h p r x y z 
+            "br": [1, 0, 0, 1, -1, 0],
+            "bm": [0, 1, 0, 0, 0, 0],
+            "fl": [1, 0, 0, -1, 1, 0],
+            "fr": [1, 0, 0, 1, 1, 0],
+            "ml": [0, 0, 1, 0, 0, -1],
+            "bl": [1, 0, 0, -1, -1, 0],
+            "mr": [0, 0, 1, 0, 0, 1]
         }
         motor_orders = []
         for i, (motor_name, motor_vector) in enumerate(motor_vector_collection.items()):
@@ -44,7 +45,7 @@ class Thruster_Manager(Node):
         self.motor_matrix = np.array(arr, dtype=np.float64)
 
         self.scale = 300    # how much to scale the pid value
-        self.create_subscription(Vector3, '/yawpitchroll_pid', self.calculate_thrusters, 10)
+        self.create_subscription(RotDepthVelocity, '/pid_output', self.calculate_thrusters, 10)
         self.create_subscription(MotorOffset, '/motor_dir_control', self.set_control_thrust, 10)
         self.motor_publisher = self.create_publisher(Motors, '/motor_values', 10)
         self.get_logger().info("Thruster manager started")
@@ -61,9 +62,12 @@ class Thruster_Manager(Node):
 
         # [-1, 1]
         pid_weights = np.array([
-            [pid_msg.x],
-            [pid_msg.y],
-            [pid_msg.z]
+            [pid_msg.yawpitchroll.x],
+            [pid_msg.yawpitchroll.y],
+            [pid_msg.yawpitchroll.z],
+            [pid_msg.velocity.x],
+            [pid_msg.velocity.y],
+            [pid_msg.depth]
         ])
         pid_vec = (self.motor_matrix @ pid_weights).flatten()
         pid_vec *= self.scale
