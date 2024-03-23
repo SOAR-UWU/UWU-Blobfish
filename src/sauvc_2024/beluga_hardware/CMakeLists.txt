@@ -19,6 +19,8 @@ install(TARGETS
 ament_python_install_package(${PROJECT_NAME})
 
 install(PROGRAMS
+  scripts/motor_offsets.py
+  scripts/publish_key.py
   scripts/thruster_manager.py
   DESTINATION lib/${PROJECT_NAME}
 )
