@@ -12,8 +12,8 @@ class Setpoints_Node(Node):
         self.yawpitchroll_pub = self.create_publisher(Vector3, 'blobfish/yawpitchroll_setpoints', 10)
         self.speed_pub = self.create_publisher(Float64, 'blobfish/speed_setpoint', 10)
         self.create_subscription(Char, 'keypress', self.read_keys, 10)
-        self.declare_parameter("small_unit", Parameter.Type.INTEGER)
-        self.declare_parameter("big_unit", Parameter.Type.INTEGER)
+        self.declare_parameter("small_unit", Parameter.Type.DOUBLE)
+        self.declare_parameter("big_unit", Parameter.Type.DOUBLE)
         self.small_unit = self.get_parameter("small_unit").value
         self.big_unit = self.get_parameter("big_unit").value
         self.setpoint_control_enabled = False
@@ -72,16 +72,20 @@ class Setpoints_Node(Node):
         elif keypress == 'L':
             self.roll_setpoint -= self.big_unit
         
-        if keypress in 'wW':
+        if keypress in 'wWsS':
             speed = Float64()
             speed.data = self.speed_setpoint
+            self.get_logger().info(f"Speed setpoint: {self.speed_setpoint}")
             self.speed_pub.publish(speed)
         
-        elif keypress in 'sSdDaAiIkKjJlL':
+        elif keypress in 'dDaAiIkKjJlL':
             yawpitchroll = Vector3()
             yawpitchroll.x = self.yaw_setpoint
             yawpitchroll.y = self.pitch_setpoint
             yawpitchroll.z = self.roll_setpoint
+            self.get_logger().info(f"Yaw setpoint: {self.yaw_setpoint}")
+            self.get_logger().info(f"Pitch setpoint: {self.pitch_setpoint}")
+            self.get_logger().info(f"Roll setpoint: {self.roll_setpoint}")
             self.yawpitchroll_pub.publish(yawpitchroll)
         
         # Publish help message
