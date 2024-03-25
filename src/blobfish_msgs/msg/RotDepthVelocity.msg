@@ -1,0 +1,3 @@
+geometry_msgs/Vector3 yawpitchroll
+float32 depth
+geometry_msgs/Vector3 velocity

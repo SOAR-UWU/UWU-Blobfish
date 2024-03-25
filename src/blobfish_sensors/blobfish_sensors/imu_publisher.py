@@ -7,9 +7,9 @@ from geometry_msgs.msg import Twist
 from sensor_msgs.msg import Imu
 from sensor_msgs.msg import FluidPressure
 
-class State_Publisher_Node(Node):
+class IMU_Publisher_Node(Node):
   def __init__(self):
-    super().__init__("state_publisher")
+    super().__init__("IMU_publisher")
     self.state = Twist()
     self.state.linear.x = 0.0
     self.state.linear.y = 0.0
@@ -17,9 +17,8 @@ class State_Publisher_Node(Node):
     self.state.angular.x = 0.0
     self.state.angular.y = 0.0
     self.state.angular.z = 0.0
-    self.state_pub = self.create_publisher(Twist, 'beluga/state', 10)
+    self.state_pub = self.create_publisher(Twist, 'blobfish/imu_measurements', 10)
     self.create_subscription(Imu, 'vectornav/imu', self.imu_callback, 10)
-    self.create_subscription(FluidPressure, 'input/pressure', self.pressure_callback, 10)
 
     self.count = 0
     self.declare_parameter('imu_num_cal_samples', 100)
@@ -36,7 +35,6 @@ class State_Publisher_Node(Node):
     self.state.angular.y = pitch
     self.state.angular.z = yaw
 
-  ######################################################################################
     raw_yaw = yaw
     raw_pitch = pitch
     raw_roll = roll
@@ -87,26 +85,15 @@ class State_Publisher_Node(Node):
 
       # self.depth += world_vel[2]
 
-      self.state.angular.x = raw_yaw - self.average_yaw_value
-      self.state.angular.y = raw_pitch - self.average_pitch_value
-      self.state.angular.z = raw_roll - self.average_roll_value
+      self.state.angular.x = (raw_yaw - self.average_yaw_value) * 180 / math.pi
+      self.state.angular.y = (raw_pitch - self.average_pitch_value) * 180 / math.pi
+      self.state.angular.z = (raw_roll - self.average_roll_value) * 180 / math.pi
       # self.state.velocity.x = self.vel_x
       # self.state.velocity.y = self.vel_y
       # self.state.velocity.z = self.vel_z
       # self.state.depth = self.depth
       self.state_pub.publish(self.state)
-  ######################################################################################
 
-    self.publish_state(self.state)
-
-  def pressure_callback(self, msg):
-    pressure = msg.fluid_pressure
-    depth = (pressure / 101.1325 - 1) * 10
-    self.state.linear.z = depth
-    self.publish_state(self.state)
-  
-  def publish_state(self, msg):
-     self.state_pub.publish(msg)
     
   def euler_from_quaternion(self, quaternion):
     
@@ -130,7 +117,7 @@ class State_Publisher_Node(Node):
 def main(args=None):
     rclpy.init(args=args)
 
-    state_publisher = State_Publisher_Node()
+    state_publisher = IMU_Publisher_Node()
     rclpy.spin(state_publisher)
 
     state_publisher.destroy_node()

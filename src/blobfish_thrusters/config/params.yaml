@@ -1,0 +1,17 @@
+thruster_manager:
+  ros__parameters:
+    br_order: 5
+    bm_order: 0
+    fl_order: 2
+    fr_order: 6
+    ml_order: 4
+    bl_order: 1
+    mr_order: 3
+    br_direction: 1
+    bm_direction: 1
+    fl_direction: 1
+    fr_direction: -1
+    ml_direction: -1
+    bl_direction: -1
+    mr_direction: 1
+    

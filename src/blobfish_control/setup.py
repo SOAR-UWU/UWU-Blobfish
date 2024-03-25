@@ -1,8 +1,9 @@
-from setuptools import find_packages, setup
 import os
+import sys
 from glob import glob
+from setuptools import find_packages, setup
 
-package_name = 'arduino_bridge'
+package_name = 'blobfish_control'
 
 setup(
     name=package_name,
@@ -18,13 +19,14 @@ setup(
     install_requires=['setuptools'],
     zip_safe=True,
     maintainer='javin',
-    maintainer_email='javinenghp@gmail.com',
+    maintainer_email='javin@todo.todo',
     description='TODO: Package description',
     license='TODO: License declaration',
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            'bridge = arduino_bridge.arduino_listener:main'
+            "key_publisher = blobfish_control.publish_key:main",
+            "manual_setpoint = blobfish_control.manual_setpoints:main",
         ],
     },
 )

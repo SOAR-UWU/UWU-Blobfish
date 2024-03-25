@@ -5,7 +5,7 @@ from typing import Sequence
 
 import rclpy
 from math import sin, pi
-from geometry_msgs.msg import Twist
+from geometry_msgs.msg import Twist, Vector3
 from beluga_msgs.msg import Motors, MotorOffset
 from uuv_gazebo_ros_plugins_msgs.msg import FloatStamped
 from rclpy.node import Node
@@ -14,7 +14,7 @@ from rclpy.clock import Clock
 class ThrusterManagerNode(Node):
 	def __init__(self):
 		self.node_name = 'thruster_manager'
-		super().__init__(self.node_name) 
+		super().__init__(self.node_name)
 		
 		# Do math
 		theta = 45/180*pi
@@ -29,7 +29,8 @@ class ThrusterManagerNode(Node):
 		[           0.0,         0.0,         0.0,         0.0,        -1.0,         0.0   ],          # middle  back    motor
 		])
 
-		self.scale = 10
+		self.speed_x = 0.3
+		self.scale = 300
 		self.num_thrusters = len(self.transform_mat)
 		self.motors = Motors()
 		self.motors.motor_fl = 0
@@ -40,8 +41,17 @@ class ThrusterManagerNode(Node):
 		self.motors.motor_mr = 0
 		self.motors.motor_bm = 0
 
+		self.motor_fl_offset = 0
+		self.motor_fr_offset = 0
+		self.motor_bl_offset = 0
+		self.motor_br_offset = 0
+		self.motor_ml_offset = 0
+		self.motor_mr_offset = 0
+		self.motor_bm_offset = 0
+
 		self.motor_publisher = self.create_publisher(Motors, '/motor_values', 10)
 		self.twist_subscriber_ = self.create_subscription(Twist, 'beluga/control_effort', self.input_callback, 10)
+		self.motor_offset_subscriber = self.create_subscription(MotorOffset, '/motor_offsets', self.update_offsets, 10)
 		#self.twist_subscriber_ = self.create_subscription(Twist, 'cmd_vel', self.input_callback, 10) ## for teleop node
 		print("[Thruster Manager]: ThrusterManagerNode started")
 
@@ -55,18 +65,47 @@ class ThrusterManagerNode(Node):
 			[  msg.angular.z   ]          # h
 		])
 		output = self.scale * self.transform_mat @ control_vector
-		self.motors.motor_fl = output[0]
-		self.motors.motor_fr = output[1]
-		self.motors.motor_bl = output[2]
-		self.motors.motor_br = output[3]
-		self.motors.motor_ml = output[4]
-		self.motors.motor_mr = output[5]
-		self.motors.motor_bm = output[6]
+		self.motors.motor_fl = output[0] + self.motor_fl_offset
+		self.motors.motor_fr = output[1] + self.motor_fr_offset
+		self.motors.motor_bl = output[2] + self.motor_bl_offset
+		self.motors.motor_br = output[3] + self.motor_br_offset
+		self.motors.motor_ml = output[4] + self.motor_ml_offset
+		self.motors.motor_mr = output[5] + self.motor_mr_offset
+		self.motors.motor_bm = output[6] + self.motor_bm_offset
 		self.motor_publisher.publish(self.motors)
+
+	# def input_callback(self, msg: Vector3):
+	# 	control_vector = np.array([
+	# 		[   self.speed_x  ],  # x
+	# 		[   0   ],            # y
+	# 		[   0   ],            # z
+	# 		[   msg.x   ],         # r
+	# 		[   msg.y   ],         # p
+	# 		[   msg.z   ]          # h
+	# 	])
+	# 	output = (self.scale * self.transform_mat @ control_vector + 1500).clip(1200, 1800)
+	# 	self.motors.motor_fl = int(output[0])
+	# 	self.motors.motor_fr = int(output[1])
+	# 	self.motors.motor_bl = int(output[2])
+	# 	self.motors.motor_br = int(output[3])
+	# 	self.motors.motor_ml = int(output[4])
+	# 	self.motors.motor_mr = int(output[5])
+	# 	self.motors.motor_bm = int(output[6])
+	# 	self.motor_publisher.publish(self.motors)
 
 	def update_thrusters(self, output: Sequence[float]):
 		for i in range(self.num_thrusters):
 			self.thrusters[i].publish(output[i])
+
+	def update_offsets(self, msg: MotorOffset):
+		self.motor_fl_offset = msg.motor_fl
+		self.motor_fr_offset = msg.motor_fr
+		self.motor_bl_offset = msg.motor_bl
+		self.motor_br_offset = msg.motor_br
+		self.motor_ml_offset = msg.motor_ml
+		self.motor_mr_offset = msg.motor_mr
+		self.motor_bm_offset = msg.motor_bm
+
 
 def main(args=None):
 	rclpy.init(args=args)

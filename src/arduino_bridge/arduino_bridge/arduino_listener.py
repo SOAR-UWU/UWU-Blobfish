@@ -3,7 +3,7 @@ from rclpy.node import Node
 from std_msgs.msgs import Float32
 import os
 
-from motor_msg.msg import Motors
+from blobfish_msgs.msg import Motors
 
 from .arduino_interface import JetsonArduinoInterface
 import serial
@@ -15,11 +15,15 @@ class ArduinoBridge(Node):
         super().__init__("arduino_bridge")
         self.subscription = self.create_subscription(
             Motors,
-            "motor_values",
+            "blobfish/motor_values",
             self.listener_callback,
             10
         )
         self.depth_publisher = self.create_publisher(Float32, "depth", 10)
+        self.declare_parameter('arduino_files', "/workspaces/isaac_ros-dev/arduino")
+        self.declare_parameter('arduino_port', "/dev/ttyUSB1")
+        self.declare_parameter("baud_rate", 19200)
+        self.declare_parameter("board_fqbn", "arduino:avr:nano:cpu=atmega328old")
         ARDUINO_FILES = self.get_parameter("arduino_files").value
         ARDUINO_PORT = self.get_parameter("arduino_port").value
         BAUD_RATE = self.get_parameter("baud_rate").value
