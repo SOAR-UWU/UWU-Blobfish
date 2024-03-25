@@ -2,7 +2,7 @@ import rclpy
 from rclpy.node import Node
 import os
 
-from uwu_msgs.msg import Motors
+from blobfish_msgs.msg import Motors
 
 from .arduino_interface import JetsonArduinoInterface
 import serial

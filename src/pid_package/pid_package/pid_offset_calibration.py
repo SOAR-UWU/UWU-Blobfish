@@ -4,7 +4,7 @@ from rclpy.node import Node
 from geometry_msgs.msg import Twist
 from vectornav_msgs.msg import CommonGroup
 from rclpy import Parameter
-from uwu_msgs.msg import RotDepthVelocity
+from blobfish_msgs.msg import RotDepthVelocity
 import numpy as np
 import math
 

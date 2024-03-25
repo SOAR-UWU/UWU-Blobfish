@@ -2,7 +2,7 @@ from simple_pid import PID
 import rclpy
 from rclpy.node import Node
 from geometry_msgs.msg import Vector3
-from uwu_msgs.msg import RotDepthVelocity
+from blobfish_msgs.msg import RotDepthVelocity
 from std_msgs.msg import Char
 
 

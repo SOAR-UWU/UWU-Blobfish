@@ -1,7 +1,7 @@
 import rclpy
 from rclpy.node import Node
 from rclpy.parameter import Parameter
-from uwu_msgs.msg import Motors, MotorOffset
+from blobfish_msgs.msg import Motors, MotorOffset
 import numpy as np
 from std_msgs.msg import Char
 
