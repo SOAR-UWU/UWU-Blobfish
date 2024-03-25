@@ -31,4 +31,4 @@ The Arduino bridge is a node in the `arduino_bridge` package. To start the Ardui
 ros2 run arduino_bridge bridge
 ```
 
-The node listens to motor values on the topic `motor_values`. The message format is found in `motor_msg/msg/Motors.msg`.
+The node listens to motor values on the topic `motor_values`. The message format is found in `blobfish_msgs/msg/Motors.msg`.

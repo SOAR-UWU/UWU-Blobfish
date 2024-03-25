@@ -2,7 +2,7 @@ import rclpy
 from rclpy.node import Node
 from std_msgs.msg import Char
 from rclpy.parameter import Parameter
-from motor_msg.msg import Motors
+from blobfish_msgs.msg import Motors
 
 class SoloMotorNode(Node):
     def __init__(self):

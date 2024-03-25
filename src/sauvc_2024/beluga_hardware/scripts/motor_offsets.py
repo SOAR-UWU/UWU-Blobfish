@@ -1,11 +1,13 @@
+#!/usr/bin/env python3
+
 import rclpy
 from rclpy.node import Node
 from rclpy.parameter import Parameter
-from blobfish_msgs.msg import Motors, MotorOffset
+from beluga_msgs.msg import Motors, MotorOffset
 import numpy as np
 from std_msgs.msg import Char
 
-class Direction_Control(Node):
+class Motor_Offsets(Node):
     def __init__(self):
         super().__init__("motor_dir_control_node")
 
@@ -26,7 +28,7 @@ class Direction_Control(Node):
         self.ws_control_state = None
         self.inc_dec_value = 20
 
-        self.motor_dir_control_publisher = self.create_publisher(MotorOffset, '/motor_dir_control', 10)
+        self.motor_dir_control_publisher = self.create_publisher(MotorOffset, '/motor_offsets', 10)
         self.create_subscription(Char, '/keypress', self.keypress, 10)
 
 
@@ -48,6 +50,7 @@ class Direction_Control(Node):
                 self.get_logger().info(f"Increased forward movement speed:\n{self.motor_values}")
 
         elif self.ws_control_state == "move_downward_state":
+            speed_change = self.downward_dirs * self.inc_dec_value
             if AD_key_state == "q":
                 self.motor_values[self.motor_order["ml"]]-=self.inc_dec_value*self.motor_directions["ml"]
                 self.motor_values[self.motor_order["mr"]]-=self.inc_dec_value*self.motor_directions["mr"]
@@ -101,7 +104,7 @@ class Direction_Control(Node):
 
 def main():
     rclpy.init()
-    node = Direction_Control()
+    node = Motor_Offsets()
     rclpy.spin(node)
     node.destroy_node()
     rclpy.shutdown()

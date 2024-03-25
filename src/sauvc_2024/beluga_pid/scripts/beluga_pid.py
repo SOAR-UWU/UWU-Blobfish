@@ -2,6 +2,7 @@
 from simple_pid import PID
 import rclpy
 from rclpy.node import Node
+from std_msgs.msg import Float64
 from geometry_msgs.msg import Twist, Vector3
 
 
@@ -40,6 +41,8 @@ class PID_Node(Node):
         self.declare_parameter("setpoint_y", 0.0)
         self.declare_parameter("setpoint_z", 0.0)
 
+        self.declare_parameter("speed", 0.2)
+
         kp_r = self.get_parameter("kp_r").value
         ki_r = self.get_parameter("ki_r").value
         kd_r = self.get_parameter("kd_r").value
@@ -76,8 +79,12 @@ class PID_Node(Node):
         self.output_pid = self.create_publisher(Twist, 'beluga/control_effort', 10)
         self.create_subscription(Twist, 'beluga/state', self.calculate_pid, qos_profile)
         self.create_subscription(Vector3, 'beluga/setpoint', self.set_setpoints, 10)
+        self.create_subscription(Float64, 'beluga/speed_setpoint', self.set_speed, 10)
         #get imu data from vectornav/pose topic
         #get x y z from some topic?
+
+    def set_speed(self, msg):
+        self.speed = msg.data
 
     def calculate_pid(self, msg):
         kp_r = self.get_parameter("kp_r").value
@@ -115,8 +122,8 @@ class PID_Node(Node):
         current_p = msg.angular.y
         current_h = msg.angular.z
         #TEMP (A), need to read from actual sensor
-        current_x = msg.linear.x
-        current_y = msg.linear.y
+        # current_x = msg.linear.x
+        # current_y = msg.linear.y
         current_z = msg.linear.z
 
         setpoint_r = self.get_parameter("setpoint_r").value
@@ -150,8 +157,8 @@ class PID_Node(Node):
         pid_vals.angular.x = self.pid_r(current_r)
         pid_vals.angular.y = self.pid_p(current_p)
         pid_vals.angular.z = self.pid_h(current_h)
-        pid_vals.linear.x = self.pid_x(current_x)
-        pid_vals.linear.y = self.pid_y(current_y)
+        pid_vals.linear.x = self.pid_x(self.speed)
+        pid_vals.linear.y = self.pid_y(0)
         pid_vals.linear.z = self.pid_z(current_z)
 
         self.output_pid.publish(pid_vals)

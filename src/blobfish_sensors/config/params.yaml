@@ -1,0 +1,3 @@
+imu_publisher:
+  ros__parameters:
+    imu_num_cal_samples: 100
