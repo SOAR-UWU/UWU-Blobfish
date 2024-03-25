@@ -1,3 +1,4 @@
-/setpoints_node:
-  small_unit: 1
-  big_unit: 10
+setpoints_node:
+  ros__parameters:
+    small_unit: 0.005
+    big_unit: 0.1

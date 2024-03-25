@@ -3,6 +3,7 @@ import rclpy
 from rclpy.node import Node
 from std_msgs.msg import Float64, Char
 from geometry_msgs.msg import Vector3
+from rclpy.parameter import Parameter
 
 
 class Setpoints_Node(Node):
@@ -10,9 +11,9 @@ class Setpoints_Node(Node):
         super().__init__("setpoints_node")
         self.yawpitchroll_pub = self.create_publisher(Vector3, 'blobfish/yawpitchroll_setpoints', 10)
         self.speed_pub = self.create_publisher(Float64, 'blobfish/speed_setpoint', 10)
-        self.create_subscription(Char, 'teleop', self.read_keys, 10)
-        self.declare_parameter("small_unit")
-        self.declare_parameter("big_unit")
+        self.create_subscription(Char, 'keypress', self.read_keys, 10)
+        self.declare_parameter("small_unit", Parameter.Type.INTEGER)
+        self.declare_parameter("big_unit", Parameter.Type.INTEGER)
         self.small_unit = self.get_parameter("small_unit").value
         self.big_unit = self.get_parameter("big_unit").value
         self.setpoint_control_enabled = False
