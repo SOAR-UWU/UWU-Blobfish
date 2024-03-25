@@ -14,7 +14,7 @@ class ArduinoBridge(Node):
         super().__init__("arduino_bridge")
         self.subscription = self.create_subscription(
             Motors,
-            "motor_values",
+            "blobfish/motor_values",
             self.listener_callback,
             10
         )

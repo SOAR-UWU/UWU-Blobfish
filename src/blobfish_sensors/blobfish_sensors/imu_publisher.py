@@ -85,9 +85,9 @@ class IMU_Publisher_Node(Node):
 
       # self.depth += world_vel[2]
 
-      self.state.angular.x = raw_yaw - self.average_yaw_value
-      self.state.angular.y = raw_pitch - self.average_pitch_value
-      self.state.angular.z = raw_roll - self.average_roll_value
+      self.state.angular.x = (raw_yaw - self.average_yaw_value) * 180 / math.pi
+      self.state.angular.y = (raw_pitch - self.average_pitch_value) * 180 / math.pi
+      self.state.angular.z = (raw_roll - self.average_roll_value) * 180 / math.pi
       # self.state.velocity.x = self.vel_x
       # self.state.velocity.y = self.vel_y
       # self.state.velocity.z = self.vel_z

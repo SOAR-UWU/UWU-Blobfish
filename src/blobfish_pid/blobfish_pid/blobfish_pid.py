@@ -36,9 +36,9 @@ class PID_Node(Node):
         self.declare_parameter("ki_z", 0.0)
         self.declare_parameter("kd_z", 0.0)
         
-        self.setpoint_r = 0.0
-        self.setpoint_p = 0.0
-        self.setpoint_h = 0.0
+        self.setpoint_roll = 0.0
+        self.setpoint_pitch = 0.0
+        self.setpoint_yaw = 0.0
         # self.setpoint_x = 0.0
         # self.setpoint_y = 0.0
         self.setpoint_z = 0.0
@@ -117,9 +117,9 @@ class PID_Node(Node):
         # self.pid_y.tunings = (kp_y, ki_y, kd_y)
         self.pid_z.tunings = (kp_z, ki_z, kd_z)
 
-        current_r = msg.angular.x
+        current_h = msg.angular.x
         current_p = msg.angular.y
-        current_h = msg.angular.z
+        current_r = msg.angular.z
         # current_x = msg.linear.x
         # current_y = msg.linear.y
         current_z = msg.linear.z
@@ -149,7 +149,7 @@ class PID_Node(Node):
         pid_vals.angular.y = self.pid_p(error_p)
         pid_vals.angular.z = self.pid_h(error_r)
         pid_vals.linear.x = self.speed
-        pid_vals.linear.y = 0   # not correcting for y axis (sideways movement)
+        pid_vals.linear.y = 0.0   # not correcting for y axis (sideways movement)
         pid_vals.linear.z = self.pid_z(error_z)
 
         self.output_pid.publish(pid_vals)

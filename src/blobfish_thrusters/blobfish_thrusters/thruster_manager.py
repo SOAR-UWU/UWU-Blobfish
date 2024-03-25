@@ -27,21 +27,21 @@ class Thruster_Manager(Node):
         # Check the config file for the actual values of these parameters
         
         # Order, meaning the mapping from motor position to motor number on Arduino.
-        self.declare_parameter("br_order")
-        self.declare_parameter("bm_order")
-        self.declare_parameter("fl_order")
-        self.declare_parameter("fr_order")
-        self.declare_parameter("ml_order")
-        self.declare_parameter("bl_order")
-        self.declare_parameter("mr_order")
+        self.declare_parameter("br_order", Parameter.Type.INTEGER)
+        self.declare_parameter("bm_order", Parameter.Type.INTEGER)
+        self.declare_parameter("fl_order", Parameter.Type.INTEGER)
+        self.declare_parameter("fr_order", Parameter.Type.INTEGER)
+        self.declare_parameter("ml_order", Parameter.Type.INTEGER)
+        self.declare_parameter("bl_order", Parameter.Type.INTEGER)
+        self.declare_parameter("mr_order", Parameter.Type.INTEGER)
 
-        self.declare_parameter("br_direction")
-        self.declare_parameter("bm_direction")
-        self.declare_parameter("fl_direction")
-        self.declare_parameter("fr_direction")
-        self.declare_parameter("ml_direction")
-        self.declare_parameter("bl_direction")
-        self.declare_parameter("mr_direction")
+        self.declare_parameter("br_direction", Parameter.Type.INTEGER)
+        self.declare_parameter("bm_direction", Parameter.Type.INTEGER)
+        self.declare_parameter("fl_direction", Parameter.Type.INTEGER)
+        self.declare_parameter("fr_direction", Parameter.Type.INTEGER)
+        self.declare_parameter("ml_direction", Parameter.Type.INTEGER)
+        self.declare_parameter("bl_direction", Parameter.Type.INTEGER)
+        self.declare_parameter("mr_direction", Parameter.Type.INTEGER)
 
         # Get the values of the declared parameters
         self.motor_names = [f"motor_{num}" for num in range(1, 8)]
@@ -78,8 +78,8 @@ class Thruster_Manager(Node):
             [pid_msg.linear.z]      # depth
         ])
         pid_vec = (self.motor_matrix @ pid_weights).flatten()
-        scaling_vector = self.scale * ctrl_direction
-        scaled_pid_vec = (pid_vec @ scaling_vector).flatten()
+        scaling_vector = self.scale * np.array([param.value for param in ctrl_direction])
+        scaled_pid_vec = np.multiply(scaling_vector, pid_vec)
 
         out_vec = (scaled_pid_vec + 1500).clip(1200, 1800)
         
