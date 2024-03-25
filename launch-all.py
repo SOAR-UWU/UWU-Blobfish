@@ -1,14 +1,12 @@
 import os
 import sys
-from sys import executable
 
 from ament_index_python.packages import get_package_share_directory
 
 from launch import LaunchDescription
-from launch.actions import IncludeLaunchDescription, DeclareLaunchArgument
+from launch.actions import IncludeLaunchDescription
 from launch_ros.actions import Node
 from launch.launch_description_sources import PythonLaunchDescriptionSource
-from launch.substitutions import LaunchConfiguration
 
 hardware_available = True
 
@@ -18,51 +16,35 @@ for arg in sys.argv:
 
 def generate_launch_description():
 
-    # Include vectornav launch file
     vn_pkg = get_package_share_directory('vectornav')
+    pid_pkg = get_package_share_directory('blobfish_pid')
+    thruster_pkg = get_package_share_directory('blobfish_thrusters')
+    arduino_pkg = get_package_share_directory('arduino_bridge')
+    sensors_pkg = get_package_share_directory('blobfish_sensors')
+
     vn_launch_dir = os.path.join(vn_pkg, 'launch')
     vn_launch = IncludeLaunchDescription(
       PythonLaunchDescriptionSource(os.path.join(vn_launch_dir, 'vectornav.launch.py'))
     )
 
-    pid_configs = os.path.join(get_package_share_directory('pid_package'), 'config', "params.yaml")
-    arduino_configs = os.path.join(get_package_share_directory('arduino_bridge'), 'config', "params.yaml")
-    thruster_manager_configs = os.path.join(get_package_share_directory('thruster_manager'), 'config', "params.yaml")
-
-    # pid node
-    pid_node = Node(
-        package="pid_package",
-        executable="pid_node",
-        parameters=[pid_configs]
+    pid_launch_dir = os.path.join(pid_pkg, 'launch')
+    pid_launch = IncludeLaunchDescription(
+      PythonLaunchDescriptionSource(os.path.join(pid_launch_dir, 'pid_launch.py'))
     )
 
-    pid_calibration = Node(
-        package="pid_package",
-        executable="offset_calibrator",
-        parameters=[pid_configs]
+    thruster_launch_dir = os.path.join(thruster_pkg, 'launch')
+    thruster_launch = IncludeLaunchDescription(
+      PythonLaunchDescriptionSource(os.path.join(thruster_launch_dir, 'thruster_manager_launch.py'))
     )
 
-    pid_motor_dir_control = Node(
-        package="pid_package",
-        executable="motor_dir_control",
-        parameters=[pid_configs]
+    arduino_launch_dir = os.path.join(arduino_pkg, 'launch')
+    arduino_launch = IncludeLaunchDescription(
+      PythonLaunchDescriptionSource(os.path.join(arduino_launch_dir, 'arduino_launch.py'))
     )
 
-    thruster_manager_node = Node(
-        package="thruster_manager",
-        executable="thruster_manager",
-        parameters=[thruster_manager_configs]
-    )
-
-    motor_bridge = Node(
-        package="arduino_bridge",
-        executable="bridge",
-        parameters=[arduino_configs]
-    )
-
-    teleop_node = Node(
-        package="teleop",
-        executable="key_publisher"
+    sensors_launch_dir = os.path.join(sensors_pkg, 'launch')
+    sensors_launch = IncludeLaunchDescription(
+      PythonLaunchDescriptionSource(os.path.join(sensors_launch_dir, 'imu_publisher_launch.py'))
     )
 
     # TODO: Move all the config files above & below into a single folder for ease of access?
@@ -91,10 +73,9 @@ def generate_launch_description():
     ld = LaunchDescription()
     if hardware_available:
         ld.add_action(vn_launch)
-        ld.add_action(motor_bridge)
+        ld.add_action(arduino_launch)
+        ld.add_action(sensors_launch)
         ld.add_action(cam_node)
-    ld.add_action(pid_calibration)
-    ld.add_action(pid_node)
-    ld.add_action(pid_motor_dir_control)
-    ld.add_action(thruster_manager_node)
+    ld.add_action(pid_launch)
+    ld.add_action(thruster_launch)
     return ld
