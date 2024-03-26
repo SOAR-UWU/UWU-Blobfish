@@ -52,20 +52,22 @@ def generate_launch_description():
         package="usb_cam",
         executable="usb_cam_node_exe",
         # TODO: Hardcoded here for now
-        parameters=list(dict(
-            video_device="/dev/video0",
-            framerate="60",
-            image_width="640",
-            image_height="480",
-            brightness="-1",
-            gain="-1",
-            auto_white_balance="true",
-            white_balance="4000",
-            auto_exposure="true",
-            exposure="-1",
-            auto_focus="true",
-            focus="-1", # NOTE: the usb cam we use doesn't have software-controlled focus
-        ).items())
+        parameters=[
+            dict(
+                video_device="/dev/video0",
+                framerate=60.0,
+                image_width=640,
+                image_height=480,
+                brightness=-1,
+                gain=-1,
+                auto_white_balance=True,
+                white_balance=4000,
+                auto_exposure=True,
+                exposure=-1,
+                auto_focus=True,
+                focus=-1,  # NOTE: the usb cam we use doesn't have software-controlled focus
+            )
+        ],
     )
 
     # Create the launch description and populate
