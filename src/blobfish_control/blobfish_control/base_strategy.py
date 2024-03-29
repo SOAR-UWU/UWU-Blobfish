@@ -14,6 +14,7 @@ class Input:
         self.current_yaw = 0
         self.current_depth = 0
         self.current_pitch = 0
+        self.effective_roll = 0
         self.initial_yaw = 0
         self.initial_depth =  0
         self.initial_pitch = 0
@@ -84,13 +85,13 @@ class BaseStrategyNode(Node):
         self.input = Input()
         self.output = Output(self._on_output_update)
 
-        self._setpoint_pub = self.create_publisher(Twist, 'beluga/setpoint', 10)
-        self._speed_setpoint_pub = self.create_publisher(Float64, 'beluga/speed_setpoint', 10)
+        self._setpoint_pub = self.create_publisher(Twist, 'blobfish/state_setpoints', 10)
+        self._speed_setpoint_pub = self.create_publisher(Float64, 'blobfish/speed_setpoint', 10) 
 
         self._yaw_first_update = True
         self._depth_first_update = True
         self._pitch_first_update = True
-        self.state_subscriber_ = self.create_subscription(Twist, 'beluga/state', self._on_state_update, 10)
+        self.state_subscriber_ = self.create_subscription(Twist, 'blobfish/imu_measurements', self._on_state_update, 10)
         self.cv_gate_subscriber_ = self.create_subscription(BoundingBox2D, '/bubbles_cv/gate/pos', self._on_gate_pos_update, 10)
         self.cv_flare_subscriber_ = self.create_subscription(BoundingBox2D, '/bubbles_cv/flare/pos', self._on_flare_pos_update, 10)
         
@@ -117,12 +118,14 @@ class BaseStrategyNode(Node):
             self.effective_yaw = self.input.current_yaw - 0.0003 * self.input.gate_pos.center.x
             self.effective_depth = self.input.current_depth + 0.000125 * self.input.gate_pos.center.y
             self.effective_pitch = self.input.current_pitch + 0.0001 * self.input.gate_pos.center.y
+            self.effective_roll = 0
             self._time_last_publish = time.time()
 
             self._output.angular.z = self.effective_yaw
             self._output.linear.z = self.effective_depth
-            self._output.angular.x = self.effective_pitch
-
+            self._output.angular.y = self.effective_pitch
+            self._output.angular.x = self.effective_roll
+            
             #self._roll_pub.publish(Float64(0))
             self._setpoint_pub.publish(self._output)
             self._speed_setpoint_pub.publish(Float64(0.5))

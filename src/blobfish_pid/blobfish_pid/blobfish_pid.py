@@ -39,6 +39,7 @@ class PID_Node(Node):
         self.setpoint_roll = 0.0
         self.setpoint_pitch = 0.0
         self.setpoint_yaw = 0.0
+        self.setpoint_depth = 0.0
         # self.setpoint_x = 0.0
         # self.setpoint_y = 0.0
         self.setpoint_z = 0.0
@@ -80,7 +81,7 @@ class PID_Node(Node):
 
         self.output_pid = self.create_publisher(Twist, 'blobfish/control_effort', 10)
         self.create_subscription(Twist, 'blobfish/imu_measurements', self.calculate_control_effort, qos_profile)
-        self.create_subscription(Vector3, 'blobfish/yawpitchroll_setpoints', self.set_setpoints, 10)
+        self.create_subscription(Twist, 'blobfish/state_setpoints', self.set_setpoints, 10)
         self.create_subscription(Float64, 'blobfish/speed_setpoint', self.set_speed, 10)
         #get imu data from vectornav/pose topic
         #get x y z from some topic?
@@ -155,9 +156,10 @@ class PID_Node(Node):
         self.output_pid.publish(pid_vals)
 
     def set_setpoints(self, setpoints):
-        self.setpoint_roll = setpoints.z
-        self.setpoint_pitch = setpoints.y
-        self.setpoint_yaw = setpoints.x
+        self.setpoint_depth = setpoints.linear.z
+        self.setpoint_roll = setpoints.angular.x
+        self.setpoint_pitch = setpoints.angular.y
+        self.setpoint_yaw = setpoints.angular.z
 
     def set_speed(self, msg):
         self.speed = msg.data
