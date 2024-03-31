@@ -63,6 +63,7 @@ class Thruster_Manager(Node):
         keypress = chr(msg.data)
         if keypress == " ":
             self.stopped = not self.stopped
+            self.get_logger().info(f"Motors running: {not self.stopped}")
         elif keypress == "h":
             self.get_logger().info("Press SPACE to turn off/on the motors")
     
