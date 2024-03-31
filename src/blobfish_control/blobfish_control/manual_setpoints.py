@@ -21,6 +21,7 @@ class Setpoints_Node(Node):
         self.yaw_setpoint = 0.0
         self.pitch_setpoint = 0.0
         self.roll_setpoint = 0.0
+        self.depth_setpoint = 0.0
         
     def read_keys(self, msg):
         keypress = chr(msg.data)
@@ -69,8 +70,14 @@ class Setpoints_Node(Node):
             self.roll_setpoint += self.big_unit
         elif keypress == 'l':
             self.roll_setpoint -= self.small_unit
-        elif keypress == 'L':
-            self.roll_setpoint -= self.big_unit
+        elif keypress == 'Y':
+            self.depth_setpoint += self.big_unit
+        elif keypress == 'y':
+            self.depth_setpoint += self.small_unit
+        elif keypress == 'H':
+            self.depth_setpoint -= self.big_unit
+        elif keypress == 'h':
+            self.depth_setpoint -= self.small_unit
         
         if keypress in 'wWsS':
             speed = Float64()
@@ -78,15 +85,17 @@ class Setpoints_Node(Node):
             self.get_logger().info(f"Speed setpoint: {self.speed_setpoint}")
             self.speed_pub.publish(speed)
         
-        elif keypress in 'dDaAiIkKjJlL':
-            rph = Twist()
-            rph.angular.x = self.roll_setpoint
-            rph.angular.y = self.pitch_setpoint
-            rph.angular.z = self.yaw_setpoint
+        elif keypress in 'dDaAiIkKjJlLyYhH':
+            rphxyz = Twist()
+            rphxyz.angular.x = self.roll_setpoint
+            rphxyz.angular.y = self.pitch_setpoint
+            rphxyz.angular.z = self.yaw_setpoint
+            rphxyz.linear.z = self.depth_setpoint
             self.get_logger().info(f"Yaw setpoint: {self.yaw_setpoint}")
             self.get_logger().info(f"Pitch setpoint: {self.pitch_setpoint}")
             self.get_logger().info(f"Roll setpoint: {self.roll_setpoint}")
-            self.rph_pub.publish(rph)
+            self.get_logger().info(f"Depth setpoint: {self.depth_setpoint}")
+            self.rph_pub.publish(rphxyz)
         
         # Publish help message
         elif keypress == 'h':
@@ -94,6 +103,7 @@ class Setpoints_Node(Node):
             self.get_logger().info("Press A / D to control yaw")
             self.get_logger().info("Press I / K to control pitch")
             self.get_logger().info("Press J / L to control pitch")
+            self.get_logger().info("Press Y / H to control depth")
             self.get_logger().info("Press capital letters to change by larger amount, lowercase to change by smaller amount")
             self.get_logger().info("Press z to disable setpoint control")
         
