@@ -1,5 +1,9 @@
 #include <Servo.h>
 #include "arduino_jetson_interface.h"
+#include <Wire.h>
+#include "MS5837.h"
+
+MS5837 sensor;
 
 // Just to make it easier to see which pins, doesn't take up too much space
 const byte motor_1 = 2;
@@ -25,6 +29,12 @@ SimpleSerialProtocol ssp{Serial, BaudRate, CharTimeout, onError, 'a', 'z'};
 ArdJetInterface aji {ssp, LED_BUILTIN};
 
 void setup() {
+    Wire.begin();
+
+    sensor.setModel(MS5837::MS5837_02BA);
+    sensor.init();
+    
+    sensor.setFluidDensity(997); // kg/m^3 (997 freshwater, 1029 for seawater)
     for (int i = 0; i < NUM_MOTORS; i++) {
         motors[i].attach(motor_pins[i]);
         motors[i].writeMicroseconds(1500);
@@ -51,6 +61,10 @@ void loop() {
 
     // Continue blinking error
     aji.continue_blinking();
+    
+    // Pressure sensor read below
+    sensor.read();
+    aji.send_depth(sensor.depth());
 
 }
 

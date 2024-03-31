@@ -9,7 +9,7 @@ class SoloMotorNode(Node):
         super().__init__("solo_motor_node")
 
         self.declare_parameter("motor_value", 1500)
-        self.motor_pub = self.create_publisher(Motors, "motor_values", 10)
+        self.motor_pub = self.create_publisher(Motors, "blobfish/motor_values", 10)
         self.create_subscription(Char, "/keypress", self.track_keypresses, 10)
         self.current_motor = 1
         self.publish_motor_params()

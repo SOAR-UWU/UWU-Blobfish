@@ -2,7 +2,7 @@
 from simple_pid import PID
 import rclpy
 from rclpy.node import Node
-from std_msgs.msg import Float64
+from std_msgs.msg import Float64, Float32
 from geometry_msgs.msg import Twist, Vector3
 
 
@@ -35,6 +35,9 @@ class PID_Node(Node):
         self.declare_parameter("kp_z", 0.03)
         self.declare_parameter("ki_z", 0.0)
         self.declare_parameter("kd_z", 0.0)
+
+        # Just something to reduce the speed since it's not being put through PID
+        self.declare_parameter("speed_coeff", 0.03)
         
         self.setpoint_roll = 0.0
         self.setpoint_pitch = 0.0
@@ -44,6 +47,9 @@ class PID_Node(Node):
         self.setpoint_z = 0.0
 
         self.speed = 0.0
+        
+        # Variable to buffer depth to publish it together with the other values
+        self.current_depth = 0.0
 
         kp_roll = self.get_parameter("kp_roll").value
         ki_roll = self.get_parameter("ki_roll").value
@@ -69,6 +75,8 @@ class PID_Node(Node):
         ki_z = self.get_parameter("ki_z").value
         kd_z = self.get_parameter("kd_z").value
 
+        self.speed_coeff  = self.get_parameter("speed_coeff").value
+
         self.pid_r = PID(kp_roll, ki_roll, kd_roll, output_limits=(-1.0, 1.0), sample_time=0.005, setpoint=0)
         self.pid_p = PID(kp_pitch, ki_pitch, kd_pitch, output_limits=(-1.0, 1.0), sample_time=0.005, setpoint=0)
         self.pid_h = PID(kp_yaw, ki_yaw, kd_yaw, output_limits=(-1.0, 1.0), sample_time=0.005, setpoint=0)
@@ -82,8 +90,9 @@ class PID_Node(Node):
         self.create_subscription(Twist, 'blobfish/imu_measurements', self.calculate_control_effort, qos_profile)
         self.create_subscription(Vector3, 'blobfish/yawpitchroll_setpoints', self.set_setpoints, 10)
         self.create_subscription(Float64, 'blobfish/speed_setpoint', self.set_speed, 10)
-        #get imu data from vectornav/pose topic
-        #get x y z from some topic?
+        self.create_subscription(Float32, 'depth', self.read_depth, 10)
+        
+        self.current_depth = 0
 
     def calculate_control_effort(self, msg):
         kp_roll = self.get_parameter("kp_roll").value
@@ -122,7 +131,7 @@ class PID_Node(Node):
         current_r = msg.angular.z
         # current_x = msg.linear.x
         # current_y = msg.linear.y
-        current_z = msg.linear.z
+        current_z = self.current_depth
 
         error_r = current_r - self.setpoint_roll
         if error_r < -180:
@@ -148,11 +157,14 @@ class PID_Node(Node):
         pid_vals.angular.x = self.pid_r(error_h)
         pid_vals.angular.y = self.pid_p(error_p)
         pid_vals.angular.z = self.pid_h(error_r)
-        pid_vals.linear.x = self.speed
+        pid_vals.linear.x = self.speed * self.speed_coeff
         pid_vals.linear.y = 0.0   # not correcting for y axis (sideways movement)
         pid_vals.linear.z = self.pid_z(error_z)
 
         self.output_pid.publish(pid_vals)
+
+    def read_depth(self, msg):
+        self.current_depth = msg.data
 
     def set_setpoints(self, setpoints):
         self.setpoint_roll = setpoints.z

@@ -89,6 +89,18 @@ class ArdJetInterface {
 
     return true;
   }
+
+  /**
+   * @brief Send a pressure value over the Serial connection.
+   * 
+   * @param pressure 
+   */
+  void send_depth(float depth) {
+    ssp.writeFloat(depth);
+
+    // End pressure message
+    ssp.writeEot();
+  }
   
   /**
    * @brief Rapidly flash the onboard LED. For debugging.
