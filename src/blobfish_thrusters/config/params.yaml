@@ -7,11 +7,3 @@ thruster_manager:
     ml_order: 4
     bl_order: 1
     mr_order: 3
-    br_direction: 1
-    bm_direction: 1
-    fl_direction: 1
-    fr_direction: -1
-    ml_direction: -1
-    bl_direction: -1
-    mr_direction: 1
-    

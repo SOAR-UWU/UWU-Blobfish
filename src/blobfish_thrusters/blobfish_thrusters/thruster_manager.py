@@ -19,9 +19,9 @@ class Thruster_Manager(Node):
             "br": [0,   1,    0,    1,     -1,   0],
             "bm": [0,   0,    1,    0,     0,    0],
             "fl": [0,   1,    0,    -1,    1,    0],
-            "fr": [0,   1,    0,    1,     1,    0],
-            "ml": [1,   0,    0,    0,     0,    -1],
-            "bl": [0,   1,    0,    -1,    -1,   0],
+            "fr": [0,   -1,    0,   -1,    -1,    0],
+            "ml": [-1,  0,    0,    0,     0,    1],
+            "bl": [0,   -1,   0,    1,     1,    0],
             "mr": [1,   0,    0,    0,     0,    1]
         }
 
@@ -36,14 +36,6 @@ class Thruster_Manager(Node):
         self.declare_parameter("bl_order", Parameter.Type.INTEGER)
         self.declare_parameter("mr_order", Parameter.Type.INTEGER)
 
-        self.declare_parameter("br_direction", Parameter.Type.INTEGER)
-        self.declare_parameter("bm_direction", Parameter.Type.INTEGER)
-        self.declare_parameter("fl_direction", Parameter.Type.INTEGER)
-        self.declare_parameter("fr_direction", Parameter.Type.INTEGER)
-        self.declare_parameter("ml_direction", Parameter.Type.INTEGER)
-        self.declare_parameter("bl_direction", Parameter.Type.INTEGER)
-        self.declare_parameter("mr_direction", Parameter.Type.INTEGER)
-
         # Get the values of the declared parameters
         self.motor_names = [f"motor_{num}" for num in range(1, 8)]
         self.motors = ["br", "bm", "fl", "fr", "ml", "bl", "mr"]
@@ -52,8 +44,7 @@ class Thruster_Manager(Node):
         for motor_name, motor_vector in motor_vector_collection.items():
             motor_vector = np.array(motor_vector)
             motor_pos = self.get_parameter(f"{motor_name}_order")
-            motor_dir = self.get_parameter(f"{motor_name}_direction")
-            motor_orders.append((motor_pos.value, motor_vector * motor_dir.value))
+            motor_orders.append((motor_pos.value, motor_vector))
 
         motor_orders.sort(key=lambda x: x[0])
 
@@ -83,8 +74,6 @@ class Thruster_Manager(Node):
             self.motor_publisher.publish(motor_vals)
             return
             
-        ctrl_direction = self.get_parameters([f"{motor}_direction" for motor in self.motors])
-
         pid_weights = np.array([
             [pid_msg.angular.x],    # roll
             [pid_msg.angular.y],    # pitch
@@ -94,8 +83,7 @@ class Thruster_Manager(Node):
             [pid_msg.linear.z]      # depth
         ])
         pid_vec = (self.motor_matrix @ pid_weights).flatten()
-        scaling_vector = self.scale * np.array([param.value for param in ctrl_direction])
-        scaled_pid_vec = np.multiply(scaling_vector, pid_vec)
+        scaled_pid_vec = np.multiply(self.scale, pid_vec)
 
         out_vec = (scaled_pid_vec + 1500).clip(1200, 1800)
         
