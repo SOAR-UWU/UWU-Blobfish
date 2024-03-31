@@ -78,14 +78,13 @@ the number of motors ({NUM_MOTORS})")
         if data == b'':
             return None
         
-        if self.await_eot(0.01):
-            return None
+        self.await_eot(0.01)
 
         if self.endianness == 'l':
             ret = struct.unpack('<f', self.ser.read(4))
         else:
             ret = struct.unpack('>f', self.ser.read(4))
-        return ret
+        return ret[0]
 
     def write_uint16(self, n: int):
         """Write an integer to the serial port as an unsigned 16-bit integer.
