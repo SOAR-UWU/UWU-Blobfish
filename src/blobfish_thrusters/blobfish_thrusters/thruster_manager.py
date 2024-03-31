@@ -15,14 +15,14 @@ class Thruster_Manager(Node):
         # The ROS param <motor_name>_order should be a number from 1 to 7, denoting
         # the number of that motor based on the motor_msg.
         motor_vector_collection = {
-            # h p r x y z 
-            "br": [1,    0,    0,    1,     -1,   0],
-            "bm": [0,    1,    0,    0,     0,    0],
-            "fl": [1,    0,    0,    -1,    1,    0],
-            "fr": [1,    0,    0,    1,     1,    0],
-            "ml": [0,    0,    1,    0,     0,    -1],
-            "bl": [1,    0,    0,    -1,    -1,   0],
-            "mr": [0,    0,    1,    0,     0,    1]
+            # r p h x y z 
+            "br": [0,   1,    0,    1,     -1,   0],
+            "bm": [0,   0,    1,    0,     0,    0],
+            "fl": [0,   1,    0,    -1,    1,    0],
+            "fr": [0,   1,    0,    1,     1,    0],
+            "ml": [1,   0,    0,    0,     0,    -1],
+            "bl": [0,   1,    0,    -1,    -1,   0],
+            "mr": [1,   0,    0,    0,     0,    1]
         }
 
         # Check the config file for the actual values of these parameters
@@ -86,9 +86,9 @@ class Thruster_Manager(Node):
         ctrl_direction = self.get_parameters([f"{motor}_direction" for motor in self.motors])
 
         pid_weights = np.array([
-            [pid_msg.angular.x],    # yaw
+            [pid_msg.angular.x],    # roll
             [pid_msg.angular.y],    # pitch
-            [pid_msg.angular.z],    # roll
+            [pid_msg.angular.z],    # yaw
             [pid_msg.linear.x],     # forward
             [pid_msg.linear.y],     # sideways (unused)
             [pid_msg.linear.z]      # depth

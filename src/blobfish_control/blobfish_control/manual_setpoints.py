@@ -2,14 +2,14 @@
 import rclpy
 from rclpy.node import Node
 from std_msgs.msg import Float64, Char
-from geometry_msgs.msg import Vector3
+from geometry_msgs.msg import Twist
 from rclpy.parameter import Parameter
 
 
 class Setpoints_Node(Node):
     def __init__(self):
         super().__init__("setpoints_node")
-        self.yawpitchroll_pub = self.create_publisher(Vector3, 'blobfish/yawpitchroll_setpoints', 10)
+        self.rph_pub = self.create_publisher(Twist, 'blobfish/state_setpoints', 10)
         self.speed_pub = self.create_publisher(Float64, 'blobfish/speed_setpoint', 10)
         self.create_subscription(Char, 'keypress', self.read_keys, 10)
         self.declare_parameter("small_unit", Parameter.Type.DOUBLE)
@@ -26,17 +26,17 @@ class Setpoints_Node(Node):
         keypress = chr(msg.data)
 
         if self.setpoint_control_enabled:
-            if keypress == 'c':
+            if keypress == 'z':
                 self.setpoint_control_enabled = False
                 self.get_logger().info("Setpoint control disabled")
                 return
             
         if not self.setpoint_control_enabled:
-            if keypress == 'c':
+            if keypress == 'z':
                 self.setpoint_control_enabled = True
                 self.get_logger().info("Setpoint control enabled")
             if keypress == 'h':
-                self.get_logger().info("Press 'c' to enable manual setpoint control")
+                self.get_logger().info("Press 'z' to enable manual setpoint control")
                 return
 
         if keypress == 'w':
@@ -79,14 +79,14 @@ class Setpoints_Node(Node):
             self.speed_pub.publish(speed)
         
         elif keypress in 'dDaAiIkKjJlL':
-            yawpitchroll = Vector3()
-            yawpitchroll.x = self.yaw_setpoint
-            yawpitchroll.y = self.pitch_setpoint
-            yawpitchroll.z = self.roll_setpoint
+            rph = Twist()
+            rph.angular.x = self.roll_setpoint
+            rph.angular.y = self.pitch_setpoint
+            rph.angular.z = self.yaw_setpoint
             self.get_logger().info(f"Yaw setpoint: {self.yaw_setpoint}")
             self.get_logger().info(f"Pitch setpoint: {self.pitch_setpoint}")
             self.get_logger().info(f"Roll setpoint: {self.roll_setpoint}")
-            self.yawpitchroll_pub.publish(yawpitchroll)
+            self.rph_pub.publish(rph)
         
         # Publish help message
         elif keypress == 'h':
@@ -95,7 +95,7 @@ class Setpoints_Node(Node):
             self.get_logger().info("Press I / K to control pitch")
             self.get_logger().info("Press J / L to control pitch")
             self.get_logger().info("Press capital letters to change by larger amount, lowercase to change by smaller amount")
-            self.get_logger().info("Press c to disable setpoint control")
+            self.get_logger().info("Press z to disable setpoint control")
         
 def main(args=None):
     rclpy.init(args=args)

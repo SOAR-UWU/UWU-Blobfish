@@ -132,9 +132,9 @@ class PID_Node(Node):
         # self.pid_y.tunings = (kp_y, ki_y, kd_y)
         self.pid_z.tunings = (kp_z, ki_z, kd_z)
 
-        current_h = msg.angular.x
+        current_r = msg.angular.x
         current_p = msg.angular.y
-        current_r = msg.angular.z
+        current_h = msg.angular.z
         # current_x = msg.linear.x
         # current_y = msg.linear.y
         current_z = self.current_depth
@@ -160,9 +160,9 @@ class PID_Node(Node):
         error_z = current_z - self.setpoint_z
             
         pid_vals = Twist()
-        pid_vals.angular.x = self.pid_r(error_h)
+        pid_vals.angular.x = self.pid_r(error_r)
         pid_vals.angular.y = self.pid_p(error_p)
-        pid_vals.angular.z = self.pid_h(error_r)
+        pid_vals.angular.z = self.pid_h(error_h)
         pid_vals.linear.x = self.speed * self.speed_coeff
         pid_vals.linear.y = 0.0   # not correcting for y axis (sideways movement)
         pid_vals.linear.z = self.pid_z(error_z)
@@ -177,6 +177,7 @@ class PID_Node(Node):
         self.setpoint_roll = setpoints.angular.x
         self.setpoint_pitch = setpoints.angular.y
         self.setpoint_yaw = setpoints.angular.z
+        self.get_logger().info(f"Setpoints set: {self.setpoint_depth}, {self.setpoint_roll}, {self.setpoint_pitch}, {self.setpoint_yaw}")
 
     def set_speed(self, msg):
         self.speed = msg.data
