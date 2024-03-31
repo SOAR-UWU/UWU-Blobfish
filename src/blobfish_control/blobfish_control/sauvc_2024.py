@@ -149,7 +149,7 @@ class FinalRoundStrategyNode(BaseStrategyNode):
 
                 self.outer.output.speed = 0.8
                 self.outer.output.target_yaw = \
-                    self.outer.input.current_yaw - 0.001 * flare_pos.center.x
+                    self.outer.input.current_yaw + 0.001 * flare_pos.center.x
                 self.outer.output.target_depth = 1.3
 
                 rate.sleep()
