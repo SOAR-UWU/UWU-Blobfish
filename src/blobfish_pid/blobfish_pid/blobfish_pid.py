@@ -97,6 +97,7 @@ class PID_Node(Node):
         self.current_depth = 0
         self.current_axis = None
         self.current_variable = None
+        self.tuning = False
         self.unit = 0.003
 
     def calculate_control_effort(self, msg):
@@ -182,6 +183,20 @@ class PID_Node(Node):
 
     def proc_keypress(self, msg):
         keypress = chr(msg.data)
+
+        if not self.tuning:
+            if keypress == 'h':
+                self.get_logger().info("Press 'c' to tune PID parameters")
+            elif keypress == 'c':
+                self.get_logger().info("Tuning PID parameters, press 'c' again to stop")
+                self.tuning = True
+            return
+
+        if keypress == "c":
+            self.get_logger().info("Tuning for PID parameters stopped, press 'c' again to start")
+            self.tuning = False
+            return
+            
         if keypress in "pP":
             self.current_variable = "p"
             self.get_logger().info("Tuning P")
@@ -207,12 +222,6 @@ class PID_Node(Node):
             self.current_axis = "y"
             self.get_logger().info("Tuning y")
 
-        if keypress == "c":
-            self.setpoint_vel_x += self.unit
-            self.get_logger().info(f"New forward setpoint: {self.setpoint_vel_x}")
-        if keypress == "C":
-            self.setpoint_vel_x -= self.unit
-            self.get_logger().info(f"New forward setpoint: {self.setpoint_vel_x}")
 
         if keypress in "hH":
             self.get_logger().info("Help:")
