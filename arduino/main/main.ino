@@ -64,7 +64,7 @@ void loop() {
     
     // Pressure sensor read below
     sensor.read();
-    aji.send_depth(sensor.pressure());
+    aji.send_depth(sensor.depth());
 
 }
 
