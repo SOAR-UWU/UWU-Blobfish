@@ -1,6 +1,7 @@
 import rclpy
 from rclpy.node import Node
 from geometry_msgs.msg import Twist
+from std_msgs.msg import Char
 from blobfish_msgs.msg import Motors, MotorOffset
 import numpy as np
 from rclpy.parameter import Parameter
@@ -62,11 +63,26 @@ class Thruster_Manager(Node):
 
         self.scale = 300    # how much to scale the pid value
         self.create_subscription(Twist, 'blobfish/control_effort', self.calculate_thrusters, 10)
+        self.create_subscription(Char, 'keypress', self.toggle_motors, 10)
         self.motor_publisher = self.create_publisher(Motors, 'blobfish/motor_values', 10)
         self.get_logger().info("Thruster manager started")
+        self.stopped = False
 
+    def toggle_motors(self, msg):
+        keypress = chr(msg.data)
+        if keypress == " ":
+            self.stopped = not self.stopped
+        elif keypress == "h":
+            self.get_logger().info("Press SPACE to turn off/on the motors")
     
     def calculate_thrusters(self, pid_msg):
+        if self.stopped:
+            motor_vals = Motors()
+            for i, name in enumerate(self.motor_names):
+                setattr(motor_vals, name, 1500)
+            self.motor_publisher.publish(motor_vals)
+            return
+            
         ctrl_direction = self.get_parameters([f"{motor}_direction" for motor in self.motors])
 
         pid_weights = np.array([
