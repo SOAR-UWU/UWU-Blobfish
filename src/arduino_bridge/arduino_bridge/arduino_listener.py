@@ -1,7 +1,8 @@
 import rclpy
 from rclpy.node import Node
-from std_msgs.msgs import Float32
+from std_msgs.msg import Float32
 import os
+from rclpy.parameter import Parameter
 
 from blobfish_msgs.msg import Motors
 
@@ -20,10 +21,10 @@ class ArduinoBridge(Node):
             10
         )
         self.depth_publisher = self.create_publisher(Float32, "depth", 10)
-        self.declare_parameter('arduino_files', "/workspaces/isaac_ros-dev/arduino")
-        self.declare_parameter('arduino_port', "/dev/ttyUSB1")
-        self.declare_parameter("baud_rate", 19200)
-        self.declare_parameter("board_fqbn", "arduino:avr:nano:cpu=atmega328old")
+        self.declare_parameter('arduino_files', Parameter.Type.STRING)
+        self.declare_parameter('arduino_port', Parameter.Type.STRING)
+        self.declare_parameter("baud_rate", Parameter.Type.INTEGER)
+        self.declare_parameter("board_fqbn", Parameter.Type.STRING)
         ARDUINO_FILES = self.get_parameter("arduino_files").value
         ARDUINO_PORT = self.get_parameter("arduino_port").value
         BAUD_RATE = self.get_parameter("baud_rate").value
@@ -71,7 +72,7 @@ class ArduinoBridge(Node):
         if depth is None:
             return None
         msg = Float32()
-        msg.data = depth
+        msg.data = float(depth)
         self.depth_publisher.publish(msg)
 
 
@@ -80,7 +81,7 @@ def main(args=None):
 
     bridge = ArduinoBridge()
     while rclpy.ok():
-        rclpy.spin_once(bridge, timeout_sec=0)
+        rclpy.spin_once(bridge, timeout_sec=0.01)
         bridge.check_depth_value()
 
     bridge.destroy_node()
