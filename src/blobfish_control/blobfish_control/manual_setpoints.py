@@ -38,7 +38,7 @@ class Setpoints_Node(Node):
                 self.get_logger().info("Setpoint control enabled")
             if keypress == 'h':
                 self.get_logger().info("Press 'z' to enable manual setpoint control")
-                return
+            return
 
         if keypress == 'w':
             self.speed_setpoint += self.small_unit
@@ -70,13 +70,13 @@ class Setpoints_Node(Node):
             self.roll_setpoint += self.big_unit
         elif keypress == 'l':
             self.roll_setpoint -= self.small_unit
-        elif keypress == 'Y':
+        elif keypress == 'T':
             self.depth_setpoint += self.big_unit
-        elif keypress == 'y':
+        elif keypress == 't':
             self.depth_setpoint += self.small_unit
-        elif keypress == 'H':
+        elif keypress == 'G':
             self.depth_setpoint -= self.big_unit
-        elif keypress == 'h':
+        elif keypress == 'g':
             self.depth_setpoint -= self.small_unit
         
         if keypress in 'wWsS':
@@ -85,7 +85,7 @@ class Setpoints_Node(Node):
             self.get_logger().info(f"Speed setpoint: {self.speed_setpoint}")
             self.speed_pub.publish(speed)
         
-        elif keypress in 'dDaAiIkKjJlLyYhH':
+        elif keypress in 'dDaAiIkKjJlLtTgG':
             rphxyz = Twist()
             rphxyz.angular.x = self.roll_setpoint
             rphxyz.angular.y = self.pitch_setpoint
