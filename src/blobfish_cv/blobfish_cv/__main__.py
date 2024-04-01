@@ -76,19 +76,19 @@ def visualize(im, res):
     # Image should be BGR.
     im = im.copy()
     for o in res["objs"]:
-        draw_one(im, o, (0, 0, 0), 2)
+        draw_one(im, o, (0, 0, 0), 2)  # Black
     if res["largest"] is not None:
-        draw_one(im, res["largest"], (0, 255, 0), 3)
+        draw_one(im, res["largest"], (0, 255, 0), 3)  # Green
     if res["flare"] is not None:
-        draw_one(im, res["flare"], (0, 128, 255), 2)
+        draw_one(im, res["flare"], (0, 128, 255), 2)  # Orange
     if res["gate"] is not None:
-        draw_one(im, res["gate"], (128, 255, 128), 2)
+        draw_one(im, res["gate"], (128, 255, 128), 2)  # Light Green
     if res["blue"] is not None:
-        draw_one(im, res["blue"], (255, 0, 0), 2)
+        draw_one(im, res["blue"], (255, 0, 0), 2)  # Blue
     if res["red"] is not None:
-        draw_one(im, res["red"], (0, 0, 255), 2)
+        draw_one(im, res["red"], (0, 0, 255), 2)  # Red
     if res["yellow"] is not None:
-        draw_one(im, res["yellow"], (255, 255, 0), 2)
+        draw_one(im, res["yellow"], (255, 255, 0), 2)  # Yellow
     return im
 
 
