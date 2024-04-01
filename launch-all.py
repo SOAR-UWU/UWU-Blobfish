@@ -5,7 +5,6 @@ from ament_index_python.packages import get_package_share_directory
 
 from launch import LaunchDescription
 from launch.actions import IncludeLaunchDescription
-from launch_ros.actions import Node
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 
 hardware_available = True
@@ -21,6 +20,7 @@ def generate_launch_description():
     thruster_pkg = get_package_share_directory('blobfish_thrusters')
     arduino_pkg = get_package_share_directory('arduino_bridge')
     sensors_pkg = get_package_share_directory('blobfish_sensors')
+    cv_pkg = get_package_share_directory('blobfish_cv')
 
     vn_launch_dir = os.path.join(vn_pkg, 'launch')
     vn_launch = IncludeLaunchDescription(
@@ -47,27 +47,9 @@ def generate_launch_description():
       PythonLaunchDescriptionSource(os.path.join(sensors_launch_dir, 'imu_publisher_launch.py'))
     )
 
-    # TODO: Move all the config files above & below into a single folder for ease of access?
-    cam_node = Node(
-        package="usb_cam",
-        executable="usb_cam_node_exe",
-        # TODO: Hardcoded here for now
-        parameters=[
-            dict(
-                video_device="/dev/video0",
-                framerate=60.0,
-                image_width=640,
-                image_height=480,
-                brightness=-1,
-                gain=-1,
-                auto_white_balance=True,
-                white_balance=4000,
-                auto_exposure=True,
-                exposure=-1,
-                auto_focus=True,
-                focus=-1,  # NOTE: the usb cam we use doesn't have software-controlled focus
-            )
-        ],
+    cv_launch_dir = os.path.join(cv_pkg, 'launch')
+    cv_launch = IncludeLaunchDescription(
+      PythonLaunchDescriptionSource(os.path.join(cv_launch_dir, 'cv.launch.py'))
     )
 
     # Create the launch description and populate
@@ -77,7 +59,7 @@ def generate_launch_description():
         ld.add_action(vn_launch)
         ld.add_action(arduino_launch)
         ld.add_action(sensors_launch)
-        ld.add_action(cam_node)
+        ld.add_action(cv_launch)
     ld.add_action(pid_launch)
     ld.add_action(thruster_launch)
     return ld
