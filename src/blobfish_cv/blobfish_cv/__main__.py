@@ -15,6 +15,8 @@ def detect(
     *,
     filter_method,
     filter_common_thres,
+    filter_common_s_range,
+    filter_common_v_range,
     filter_hsv_lower,
     filter_hsv_upper,
     pp_open,
@@ -37,7 +39,12 @@ def detect(
 
     # Filter out background.
     if filter_method == "common":
-        mask = filter_by_common(im, thres=filter_common_thres)
+        mask = filter_by_common(
+            im,
+            thres=filter_common_thres,
+            s_range=filter_common_s_range,
+            v_range=filter_common_v_range,
+        )
     elif filter_method == "hsv":
         mask = filter_by_hsv(im, lower=filter_hsv_lower, upper=filter_hsv_upper)
 

@@ -1,6 +1,6 @@
 """Filter out background using various techniques."""
 
-from typing import Tuple, Union
+from typing import Tuple
 
 import cv2
 import numpy as np
@@ -15,27 +15,30 @@ from .utils import bincount_app, hue_dist_im
 __all__ = ["filter_by_common", "filter_by_hsv", "postprocess_noise"]
 
 
-def filter_by_common(im: np.ndarray, thres: Union[int, Tuple[int, int, int]] = 10):
+def filter_by_common(
+    im: np.ndarray,
+    thres: int = 10,
+    s_range: Tuple[int, int] = (0, 255),
+    v_range: Tuple[int, int] = (0, 255),
+):
     """Get object bitmask by filtering out most common color.
 
     Args:
         im (np.ndarray): HWC HSV image.
-        thres (int | tuple): Hue difference threshold. If tuple, filter saturation and value too.
+        thres (int): Hue difference threshold. If tuple, filter saturation and value too.
+        s_range (tuple): Saturation range.
+        v_range (tuple): Value range.
 
     Returns:
         np.ndarray: Object bitmask.
     """
-    hthres = thres if isinstance(thres, int) else thres[0]
-    sthres = None if isinstance(thres, int) else thres[1]
-    vthres = None if isinstance(thres, int) else thres[2]
+    hthres = thres
 
-    h, s, v = bincount_app(im.reshape(-1, 3))
+    h, _, _ = bincount_app(im.reshape(-1, 3))
 
     mask = hue_dist_im(im, h) > hthres
-    if sthres is not None:
-        mask &= np.abs(im[:, :, 1] - s) > sthres
-    if vthres is not None:
-        mask &= np.abs(im[:, :, 2] - v) > vthres
+    mask &= (s_range[0] <= im[:, :, 1]) & (im[:, :, 1] <= s_range[1])
+    mask &= (v_range[0] <= im[:, :, 2]) & (im[:, :, 2] <= v_range[1])
 
     return mask.astype(np.uint8) * 255
 

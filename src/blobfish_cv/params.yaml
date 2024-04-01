@@ -1,9 +1,10 @@
 # NOTE:
-# cls_color, cls_color_thres and filter_common_thres support (H, S, V) tuples too.
+# cls_color & cls_color_thres support (H, S, V) tuples too.
 
 filter_method: common
-# TODO: tbh thres should be different in either direction? So lower/upper common color thres?
-filter_common_thres: [60, 254, 250]
+filter_common_thres: 30
+filter_common_s_range: [0, 255]
+filter_common_v_range: [0, 220]
 filter_hsv_lower: [160, 100, 100]
 filter_hsv_upper: [360, 255, 255]
 pp_open: 2
