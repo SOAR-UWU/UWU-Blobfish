@@ -1,0 +1,19 @@
+filter_method: common
+filter_common_thres: 50
+filter_hsv_lower: [160, 100, 100]
+filter_hsv_upper: [360, 255, 255]
+pp_open: 2
+pp_close: 5
+pp_blur: 0
+opi_small: 0.005
+opi_large: 0.7
+cls_color_flare: 33
+cls_color_thres_flare: 15
+cls_sol_gate: 0.15
+cls_sol_thres_gate: 0.15
+cls_color_blue: 100
+cls_color_thres_blue: 15
+cls_color_red: 100
+cls_color_thres_red: 15
+cls_color_yellow: 100
+cls_color_thres_yellow: 15

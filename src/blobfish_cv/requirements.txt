@@ -1,0 +1,3 @@
+opencv-python==4.*
+pyyaml
+numpy

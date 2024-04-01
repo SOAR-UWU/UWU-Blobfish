@@ -9,7 +9,7 @@ from sensor_msgs.msg import Image
 from std_msgs.msg import Char
 from vision_msgs.msg import BoundingBox2D, BoundingBox2DArray, Point2D
 
-from .lib.opi import detect_opi
+from .lib.describe import describe_opi
 
 NODE_NAME = "detection"
 
@@ -94,7 +94,7 @@ class DetectNode(Node):
         vh, vw, _ = im.shape
 
         # TODO: parameters to live tune this.
-        objs, mask = detect_opi(im, WATER_LOWER_BOUND, WATER_UPPER_BOUND)
+        objs, mask = describe_opi(im, WATER_LOWER_BOUND, WATER_UPPER_BOUND)
         self.mask_pub.publish(self.cv_bridge.cv2_to_imgmsg(mask, "mono8", header))
 
         bbox_arr = BoundingBox2DArray(header=header)
@@ -108,13 +108,10 @@ class DetectNode(Node):
 
         zipped = list(zip(objs, bboxes))
 
-        # Find the largest object.
-        # TODO: Filter away large object whose color is too close to blue?
-        # I had to mess up the filtering to get gate to detect consistently, so
-        # we can combine other tricks to filter out artifacts due to that.
         largest, largest_bbox = max(zipped, key=lambda x: x[0].area)
 
         # Find the flare. J-H: works now.
+        # TODO: Should also take into account the value & saturation.
         colored = [z for z in zipped if z[0].color is not None]
         if len(colored) > 0:
             flare, flare_bbox = min(
