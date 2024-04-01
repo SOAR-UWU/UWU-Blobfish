@@ -99,6 +99,7 @@ class PID_Node(Node):
         self.current_variable = None
         self.tuning = False
         self.unit = 0.003
+        self.using_depth = True
 
     def calculate_control_effort(self, msg):
         kp_roll = self.get_parameter("kp_roll").value
@@ -170,6 +171,8 @@ class PID_Node(Node):
         self.output_pid.publish(pid_vals)
 
     def read_depth(self, msg):
+        if not self.using_depth:
+            return
         self.current_depth = msg.data
 
     def set_setpoints(self, setpoints):
@@ -185,9 +188,20 @@ class PID_Node(Node):
     def proc_keypress(self, msg):
         keypress = chr(msg.data)
 
+        # Disable the use of the depth sensor (current depth always reads 0)
+        if keypress == 'q':
+            self.using_depth = not self.using_depth
+            self.get_logger().info(f"Using depth sensor for control: {self.using_depth}")
+            if not self.using_depth:
+                self.current_depth = 0
+
         if not self.tuning:
             if keypress == 'h':
                 self.get_logger().info("Press 'c' to tune PID parameters")
+                if self.using_depth:
+                    self.get_logger().info("Press 'q' to disable depth reading from sensor")
+                else:
+                    self.get_logger().info("Press 'q' to enable depth reading from sensor")
             elif keypress == 'c':
                 self.get_logger().info("Tuning PID parameters, press 'c' again to stop")
                 self.tuning = True
@@ -238,6 +252,10 @@ class PID_Node(Node):
             self.get_logger().info(". - Increase")
             self.get_logger().info("Current axis: " + str(self.current_axis))
             self.get_logger().info("Current coefficient: " + str(self.current_variable))
+            if self.using_depth:
+                self.get_logger().info("Press 'q' to disable depth reading from sensor")
+            else:
+                self.get_logger().info("Press 'q' to enable depth reading from sensor")
         
         if self.current_axis != None and self.current_variable != None:
             if keypress in ",.":
