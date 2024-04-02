@@ -4,6 +4,6 @@ thruster_manager:
     bm_order: 0
     fl_order: 2
     fr_order: 6
-    ml_order: 4
-    bl_order: 1
+    ml_order: 1
+    bl_order: 4
     mr_order: 3

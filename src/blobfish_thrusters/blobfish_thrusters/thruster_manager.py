@@ -16,13 +16,13 @@ class Thruster_Manager(Node):
         # the number of that motor based on the motor_msg.
         motor_vector_collection = {
             # r p h x y z 
-            "br": [0,   1,    0,    1,     -1,   0],
-            "bm": [0,   0,    1,    0,     0,    0],
-            "fl": [0,   1,    0,    -1,    1,    0],
-            "fr": [0,   -1,    0,   -1,    -1,    0],
-            "ml": [-1,  0,    0,    0,     0,    1],
-            "bl": [0,   -1,   0,    1,     1,    0],
-            "mr": [1,   0,    0,    0,     0,    1]
+            "br": [0,   0,  -1,  1,     -1,   0],
+            "bm": [0,   1,  0,  0,     0,    0],
+            "fl": [0,   0,  -1,  -1,    1,    0],
+            "fr": [0,    0, 1,  -1,    -1,    0],
+            "ml": [-1,  0,  0,  0,     0,    1],
+            "bl": [0,   0,  1,  1,     1,    0],
+            "mr": [1,   0,  0,  0,     0,    1]
         }
 
         # Check the config file for the actual values of these parameters
