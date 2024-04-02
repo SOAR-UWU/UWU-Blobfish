@@ -158,7 +158,7 @@ class PID_Node(Node):
 
         # error_x = current_x - setpoint_x
         # error_y = current_y - setpoint_y
-        error_z = current_z - self.setpoint_z
+        error_z = current_z - self.setpoint_depth
             
         pid_vals = Twist()
         pid_vals.angular.x = self.pid_r(error_r)
