@@ -4,7 +4,7 @@ import smach
 import time
 from rclpy.node import Node
 from std_msgs.msg import Float64
-from geometry_msgs.msg import Twist
+from geometry_msgs.msg import Twist, Pose2D
 from vision_msgs.msg import BoundingBox2D
 
 #TO GO STRAIGHT
@@ -117,20 +117,22 @@ class BaseStrategyNode(Node):
 
     def _on_output_update(self):
         if time.time() - self._time_last_publish > 0.01:
-            self.effective_yaw = self.input.current_yaw - 0.0003 * self.input.gate_pos.center.x
-            self.effective_depth = self.input.current_depth + 0.000125 * self.input.gate_pos.center.y
-            self.effective_pitch = self.input.current_pitch + 0.0001 * self.input.gate_pos.center.y
+            self.effective_yaw = self.output.target_yaw
+            self.effective_depth = self.output.target_depth
+            self.effective_pitch = 0
             self.effective_roll = 0
             self._time_last_publish = time.time()
 
-            self._output.angular.z = self.effective_yaw
-            self._output.linear.z = self.effective_depth
-            self._output.angular.y = self.effective_pitch
-            self._output.angular.x = self.effective_roll
+            self._output.angular.z = self.effective_yaw*1.0
+            self._output.linear.z = self.effective_depth*1.0
+            self._output.angular.y = self.effective_pitch*1.0
+            self._output.angular.x = self.effective_roll*1.0
             
             #self._roll_pub.publish(Float64(0))
+            speed = Float64()
+            speed.data = 0.5
             self._setpoint_pub.publish(self._output)
-            self._speed_setpoint_pub.publish(Float64(0.5))
+            self._speed_setpoint_pub.publish(speed)
 
     def execute(self):
         return self.sm.execute()
