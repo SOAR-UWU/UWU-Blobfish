@@ -28,7 +28,7 @@ def generate_launch_description():
     control_launch_dir = os.path.join(control_pkg, "launch")
     control_launch = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
-            os.path.join(control_launch_dir, "control_launch.py")
+            os.path.join(control_launch_dir, "strategy_launch.py")
         )
     )
 
