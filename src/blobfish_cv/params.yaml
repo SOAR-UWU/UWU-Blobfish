@@ -1,24 +1,24 @@
-# NOTE:
+# NOTE: Copy this file.
 # cls_color & cls_color_thres support (H, S, V) tuples too.
 
-filter_method: common
-filter_common_thres: 30
+filter_method: hsv
+filter_common_thres: 60
 filter_common_s_range: [0, 255]
-filter_common_v_range: [0, 220]
-filter_hsv_lower: [160, 100, 100]
+filter_common_v_range: [0, 200]
+filter_hsv_lower: [160, 50, 100]
 filter_hsv_upper: [360, 255, 255]
-pp_open: 2
-pp_close: 5
+pp_open: 10
+pp_close: 20
 pp_blur: 0
-opi_small: 0.005
+opi_small: 0.0000001
 opi_large: 0.7
 cls_color_flare: 33
-cls_color_thres_flare: 15
+cls_color_thres_flare: 33
 cls_sol_gate: 0.15
 cls_sol_thres_gate: 0.15
 cls_color_blue: 100
-cls_color_thres_blue: 15
+cls_color_thres_blue: 0
 cls_color_red: 100
-cls_color_thres_red: 15
+cls_color_thres_red: 0
 cls_color_yellow: 100
-cls_color_thres_yellow: 15
+cls_color_thres_yellow: 0

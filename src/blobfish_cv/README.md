@@ -42,7 +42,7 @@ def visualize(im, res):
     for o in res["objs"]:
         draw_one(im, o, (0, 0, 0), 2)  # Black
     if res["largest"] is not None:
-        draw_one(im, res["largest"], (0, 255, 0), 3)  # Green
+        draw_one(im, res["largest"], (0, 128, 0), 3)  # Dark Green
     if res["flare"] is not None:
         draw_one(im, res["flare"], (0, 128, 255), 2)  # Orange
     if res["gate"] is not None:
@@ -52,6 +52,6 @@ def visualize(im, res):
     if res["red"] is not None:
         draw_one(im, res["red"], (0, 0, 255), 2)  # Red
     if res["yellow"] is not None:
-        draw_one(im, res["yellow"], (255, 255, 0), 2)  # Yellow
+        draw_one(im, res["yellow"], (0, 255, 255), 2)  # Yellow
     return im
 ```

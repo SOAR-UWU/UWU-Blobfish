@@ -54,7 +54,8 @@ def describe_opi(
 
     # https://docs.opencv.org/4.x/d9/d8b/tutorial_py_contours_hierarchy.html
     # NOTE: Use CHAIN_APPROX_NONE; Using the exact bounds detected helps...
-    cnt, h = cv2.findContours(mask, cv2.RETR_LIST, cv2.CHAIN_APPROX_NONE)
+    # cnt, h = cv2.findContours(mask, cv2.RETR_LIST, cv2.CHAIN_APPROX_NONE)
+    cnt, h = cv2.findContours(mask, cv2.RETR_LIST, cv2.CHAIN_APPROX_TC89_KCOS)
 
     # TODO: Is there use for hierarchy?
     # NOTE: "Donut-hole" filtering of contours is possible by AND of contour & bitmask,
