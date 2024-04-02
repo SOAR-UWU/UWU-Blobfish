@@ -63,8 +63,8 @@ void loop() {
     aji.continue_blinking();
     
     // Pressure sensor read below
-    sensor.read();
-    aji.send_depth(sensor.depth());
+    // sensor.read();
+    // aji.send_depth(sensor.depth());
 
 }
 

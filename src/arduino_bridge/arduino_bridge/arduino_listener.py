@@ -80,9 +80,10 @@ def main(args=None):
     rclpy.init(args=args)
 
     bridge = ArduinoBridge()
-    while rclpy.ok():
-        rclpy.spin_once(bridge, timeout_sec=0.01)
-        bridge.check_depth_value()
+    rclpy.spin(bridge)
+    # while rclpy.ok():
+    #     rclpy.spin_once(bridge, timeout_sec=0.01)
+        # bridge.check_depth_value()
 
     bridge.destroy_node()
     rclpy.shutdown()
