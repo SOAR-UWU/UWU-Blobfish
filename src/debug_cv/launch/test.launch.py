@@ -13,6 +13,7 @@ from launch_ros.actions import Node
 def generate_launch_description():
     foxglove_pkg = get_package_share_directory("foxglove_bridge")
     cv_pkg = get_package_share_directory("blobfish_cv")
+    control_pkg = get_package_share_directory("blobfish_control")
 
     foxglove_launch_dir = os.path.join(foxglove_pkg, "launch")
     foxglove_launch = IncludeLaunchDescription(
@@ -24,6 +25,12 @@ def generate_launch_description():
     cv_launch = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(os.path.join(cv_launch_dir, "cv.launch.py"))
     )
+    control_launch_dir = os.path.join(control_pkg, "launch")
+    control_launch = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(
+            os.path.join(control_launch_dir, "control_launch.py")
+        )
+    )
 
     playback_node = Node(
         package="debug_cv",
@@ -34,4 +41,5 @@ def generate_launch_description():
     ld.add_action(foxglove_launch)
     ld.add_action(cv_launch)
     ld.add_action(playback_node)
+    ld.add_action(control_launch)
     return ld

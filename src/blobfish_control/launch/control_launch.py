@@ -13,7 +13,7 @@ def generate_launch_description():
 
     set_manual_setpoints = Node(
         package="blobfish_control",
-        executable="manual_setpoint",
+        executable="base_strategy",
         parameters=[configs]
     )
 

@@ -27,6 +27,7 @@ setup(
         'console_scripts': [
             "key_publisher = blobfish_control.publish_key:main",
             "manual_setpoint = blobfish_control.manual_setpoints:main",
+            "base_strategy = blobfish_control.base_strategy:main",
         ],
     },
 )

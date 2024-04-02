@@ -21,7 +21,7 @@ def generate_launch_description():
         package="blobfish_cv",
         executable="detect",
         remappings=[
-            ("~/gate_bbox", "/blobfish_cv/gate/pos"),
+            ("~/largest_bbox", "/blobfish_cv/gate/pos"),
             ("~/flare_bbox", "/blobfish_cv/flare/pos"),
         ],
     )
