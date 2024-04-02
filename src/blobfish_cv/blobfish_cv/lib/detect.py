@@ -29,6 +29,7 @@ def detect(
     cls_color_thres_red,
     cls_color_yellow,
     cls_color_thres_yellow,
+    **kwargs,
 ):
     im = cv2.cvtColor(im, cv2.COLOR_BGR2HSV)
 
