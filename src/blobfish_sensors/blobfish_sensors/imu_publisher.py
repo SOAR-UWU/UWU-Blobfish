@@ -6,6 +6,7 @@ from rclpy.node import Node
 from geometry_msgs.msg import Twist
 from sensor_msgs.msg import Imu
 from sensor_msgs.msg import FluidPressure
+from vectornav_msgs.msg import CommonGroup
 
 class IMU_Publisher_Node(Node):
   def __init__(self):
@@ -18,7 +19,7 @@ class IMU_Publisher_Node(Node):
     self.state.angular.y = 0.0
     self.state.angular.z = 0.0
     self.state_pub = self.create_publisher(Twist, 'blobfish/imu_measurements', 10)
-    self.create_subscription(Imu, 'vectornav/imu', self.imu_callback, 10)
+    self.create_subscription(CommonGroup, 'vectornav/raw/common', self.imu_callback, 10)
 
     self.count = 0
     self.declare_parameter('imu_num_cal_samples', 100)
@@ -29,8 +30,9 @@ class IMU_Publisher_Node(Node):
     self.roll_calib = 0
 
   def imu_callback(self, msg):
-    quaternion = msg.orientation
-    roll, pitch, yaw = self.euler_from_quaternion(quaternion)
+    # quaternion = msg.orientation
+    # roll, pitch, yaw = self.euler_from_quaternion(quaternion)
+    roll, pitch, yaw = msg.yawpitchroll.z, msg.yawpitchroll.y, msg.yawpitchroll.x
     self.state.angular.x = roll
     self.state.angular.y = pitch
     self.state.angular.z = yaw
@@ -64,7 +66,7 @@ class IMU_Publisher_Node(Node):
       self.count+=1
 
     else:
-      quat_msg = msg.orientation
+      # quat_msg = msg.orientation
       # Calibrate the IMU data to remove gravity
 
       # quat = [quat_msg.w, quat_msg.x, quat_msg.y, quat_msg.z]
@@ -85,9 +87,9 @@ class IMU_Publisher_Node(Node):
 
       # self.depth += world_vel[2]
 
-      self.state.angular.x = (raw_roll - self.average_yaw_value) * 180 / math.pi
-      self.state.angular.y = (raw_pitch - self.average_pitch_value) * 180 / math.pi
-      self.state.angular.z = (raw_yaw - self.average_roll_value) * 180 / math.pi
+      self.state.angular.x = (raw_roll - self.average_roll_value)
+      self.state.angular.y = (raw_pitch - self.average_pitch_value)
+      self.state.angular.z = (raw_yaw - self.average_yaw_value)
       # self.state.velocity.x = self.vel_x
       # self.state.velocity.y = self.vel_y
       # self.state.velocity.z = self.vel_z
