@@ -7,6 +7,7 @@ from launch.launch_description_sources import (
     AnyLaunchDescriptionSource,
     PythonLaunchDescriptionSource,
 )
+from launch_ros.actions import Node
 
 
 def generate_launch_description():
@@ -24,7 +25,13 @@ def generate_launch_description():
         PythonLaunchDescriptionSource(os.path.join(cv_launch_dir, "cv.launch.py"))
     )
 
+    playback_node = Node(
+        package="debug_cv",
+        executable="play_vid",
+    )
+
     ld = LaunchDescription()
     ld.add_action(foxglove_launch)
     ld.add_action(cv_launch)
+    ld.add_action(playback_node)
     return ld

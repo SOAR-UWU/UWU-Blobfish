@@ -17,10 +17,17 @@ def generate_launch_description():
 
     record_node = Node(package="debug_cv", executable="record_vid")
 
-    cv_node = Node(package="blobfish_cv", executable="detect")
+    cv_node = Node(
+        package="blobfish_cv",
+        executable="detect",
+        remappings=[
+            ("~/gate_bbox", "/blobfish_cv/gate/pos"),
+            ("~/flare_bbox", "/blobfish_cv/flare/pos"),
+        ],
+    )
 
     ld = LaunchDescription()
-    ld.add_action(cam_node)
+    # ld.add_action(cam_node)
     ld.add_action(record_node)
     ld.add_action(cv_node)
     return ld

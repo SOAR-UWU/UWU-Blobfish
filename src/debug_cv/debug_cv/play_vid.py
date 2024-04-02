@@ -26,7 +26,7 @@ class VidRecordNode(Node):
 
         self.cur_cap = None
         self.cur_timer = None
-        self.open()
+        self.open("video.mp4")
 
     @property
     def img_topic(self):
@@ -36,20 +36,20 @@ class VidRecordNode(Node):
     def video_path(self):
         return self.get_parameter("video_path").get_parameter_value().string_value
 
-    def open(self):
+    def open(self, video_path):
         assert self.cur_cap is None, "Video capture already open!"
-        self.cur_cap = cv2.VideoCapture(self.video_path)
+        self.cur_cap = cv2.VideoCapture(video_path)
         if not self.cur_cap.isOpened():
             self._logger.error(
-                f"Failed to open {self.video_path}. Waiting for path change..."
+                f"Failed to open {video_path}. Waiting for path change..."
             )
             self.close()
             return
 
-        self._logger.info(f"Opened {self.video_path} for playback.")
+        self._logger.info(f"Opened {video_path} for playback.")
         fps = int(self.cur_cap.get(cv2.CAP_PROP_FPS))
 
-        self.cur_timer = self.create_timer(1000 / fps, self.play_frame)
+        self.cur_timer = self.create_timer(1 / fps, self.play_frame)
 
     def play_frame(self):
         if self.cur_cap.isOpened():
@@ -57,7 +57,7 @@ class VidRecordNode(Node):
             cur_idx = int(self.cur_cap.get(cv2.CAP_PROP_POS_FRAMES))
             nframes = int(self.cur_cap.get(cv2.CAP_PROP_FRAME_COUNT))
             self._logger.debug(f"FRAME {cur_idx}/{nframes}")
-            self.img_pub.publish(self.cv_bridge.cv2_to_imgmsg(frame))
+            self.img_pub.publish(self.cv_bridge.cv2_to_imgmsg(frame, "bgr8"))
         else:
             self._logger.error("Video capture closed!")
             self.close()
@@ -84,15 +84,16 @@ class VidRecordNode(Node):
             self.screenshot()
 
     def params_changed(self, params):
-        changed = {p.name for p in params}
+        changed = {p.name: p for p in params}
         if IMG_TOPIC_NAME in changed:
             self.img_pub.destroy()
             self.img_pub = self.create_publisher(Image, self.img_topic)
             self._logger.info(f"New img topic: {self.img_topic}")
         if "video_path" in changed:
-            self._logger.info(f"New video path: {self.video_path}")
+            video_path = changed["video_path"].value.string_value
+            self._logger.info(f"New video path: {video_path}")
             self.close()
-            self.open()
+            self.open(video_path)
         return SetParametersResult(successful=True)
 
 

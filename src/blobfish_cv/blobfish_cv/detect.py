@@ -91,7 +91,7 @@ class DetectNode(Node):
         im = self.cv_bridge.imgmsg_to_cv2(msg, "bgr8")
         vh, vw, _ = im.shape
 
-        res = detect(im, self.params)
+        res = detect(im, **self.params)
 
         if self.mask_pub.get_subscription_count() > 0:
             maskmsg = self.cv_bridge.cv2_to_imgmsg(res["mask"], "mono8", header)
@@ -110,12 +110,35 @@ class DetectNode(Node):
             self.bbox_pub.publish(bbox_arr)
             return
 
-        self.flare_bbox_pub.publish(cvt_bbox(res["flare"].bbox))
-        self.gate_bbox_pub.publish(cvt_bbox(res["gate"].bbox))
-        self.largest_bbox_pub.publish(cvt_bbox(res["largest"].bbox))
-        self.red_bbox_pub.publish(cvt_bbox(res["red"].bbox))
-        self.blue_bbox_pub.publish(cvt_bbox(res["blue"].bbox))
-        self.yellow_bbox_pub.publish(cvt_bbox(res["yellow"].bbox))
+        if res["flare"] is not None:
+            self.flare_bbox_pub.publish(cvt_bbox(res["flare"].bbox, vw, vh))
+        else:
+            self.flare_bbox_pub.publish(BoundingBox2D())
+
+        if res["gate"] is not None:
+            self.gate_bbox_pub.publish(cvt_bbox(res["gate"].bbox, vw, vh))
+        else:
+            self.gate_bbox_pub.publish(BoundingBox2D())
+
+        if res["largest"] is not None:
+            self.largest_bbox_pub.publish(cvt_bbox(res["largest"].bbox, vw, vh))
+        else:
+            self.largest_bbox_pub.publish(BoundingBox2D())
+
+        if res["red"] is not None:
+            self.red_bbox_pub.publish(cvt_bbox(res["red"].bbox, vw, vh))
+        else:
+            self.red_bbox_pub.publish(BoundingBox2D())
+
+        if res["blue"] is not None:
+            self.blue_bbox_pub.publish(cvt_bbox(res["blue"].bbox, vw, vh))
+        else:
+            self.blue_bbox_pub.publish(BoundingBox2D())
+
+        if res["yellow"] is not None:
+            self.yellow_bbox_pub.publish(cvt_bbox(res["yellow"].bbox, vw, vh))
+        else:
+            self.yellow_bbox_pub.publish(BoundingBox2D())
 
 
 def main():
