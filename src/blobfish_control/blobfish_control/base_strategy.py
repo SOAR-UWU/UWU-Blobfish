@@ -20,6 +20,8 @@ class Input:
         self.initial_pitch = 0
         self.gate_pos = BoundingBox2D()
         self.flare_pos = BoundingBox2D()
+        self.image_size_x = 640
+        self.image_size_y = 480
 
 
 class Output:
@@ -92,8 +94,8 @@ class BaseStrategyNode(Node):
         self._depth_first_update = True
         self._pitch_first_update = True
         self.state_subscriber_ = self.create_subscription(Twist, 'blobfish/imu_measurements', self._on_state_update, 10)
-        self.cv_gate_subscriber_ = self.create_subscription(BoundingBox2D, '/bubbles_cv/gate/pos', self._on_gate_pos_update, 10)
-        self.cv_flare_subscriber_ = self.create_subscription(BoundingBox2D, '/bubbles_cv/flare/pos', self._on_flare_pos_update, 10)
+        self.cv_gate_subscriber_ = self.create_subscription(BoundingBox2D, '/blobfish_cv/gate/pos', self._on_gate_pos_update, 10)
+        self.cv_flare_subscriber_ = self.create_subscription(BoundingBox2D, '/blobfish_cv/flare/pos', self._on_flare_pos_update, 10)
         
         self._time_last_publish = 0
 

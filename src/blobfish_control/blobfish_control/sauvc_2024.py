@@ -43,6 +43,12 @@ class FinalRoundStrategyNode(BaseStrategyNode):
             rate = rclpy.Rate(100)
             while not rclpy.is_shutdown():
                 gate_pose = self.outer.input.gate_pos
+                flare_pose = self.outer.input.flare_pos
+                image_size_x = self.outer.input.image_size_x 
+                image_size_y = self.outer.input.image_size_y
+
+                if flare_pose.size_x > 5:
+                    print('flare_detected.')
 
                 if gate_pose.size_x < 0:
                     return 'lost_target'
@@ -52,8 +58,10 @@ class FinalRoundStrategyNode(BaseStrategyNode):
                     return 'passed_gate'
 
                 self.outer.output.speed = 0.8
-                self.outer.output.target_yaw = \
-                    self.outer.input.current_yaw - 0.001 * gate_pose.center.x
+                if flare_pose.center.x >= gate_pose.center.x:    
+                    self.outer.output.target_yaw = self.outer.input.current_yaw - (0.001 * gate_pose.center.x) + (0.2 * (abs(image_size_x - flare_pose.center.x)))
+                elif flare_pose.center.x < gate_pose.center.x: 
+                    self.outer.output.target_yaw = self.outer.input.current_yaw - (0.001 * gate_pose.center.x) - (0.2 * (abs(flare_pose.center.x)))
                 self.outer.output.target_depth = 1
 
                 rate.sleep()
