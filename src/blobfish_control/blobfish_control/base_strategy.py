@@ -90,9 +90,7 @@ class BaseStrategyNode(Node):
         self._setpoint_pub = self.create_publisher(Twist, 'blobfish/state_setpoints', 10)
         self._speed_setpoint_pub = self.create_publisher(Float64, 'blobfish/speed_setpoint', 10) 
 
-        self._yaw_first_update = True
-        self._depth_first_update = True
-        self._pitch_first_update = True
+        self._state_first_update = True
         self.state_subscriber_ = self.create_subscription(Twist, 'blobfish/imu_measurements', self._on_state_update, 10)
         self.cv_gate_subscriber_ = self.create_subscription(BoundingBox2D, '/blobfish_cv/gate/pos', self._on_gate_pos_update, 10)
         self.cv_flare_subscriber_ = self.create_subscription(BoundingBox2D, '/blobfish_cv/flare/pos', self._on_flare_pos_update, 10)
