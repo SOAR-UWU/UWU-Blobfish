@@ -87,7 +87,7 @@ class DetectNode(Node):
             self.cur_cfg, self.cfg_mtime = load_config(path)
 
     def img_callback(self, msg: Image):
-        _update_cfg()
+        self._update_cfg()
         if not self.cur_cfg:
             self._logger.error(f"Ensure config path is set! Currently: {self.params['config_path']}")
             return
