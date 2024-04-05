@@ -1,3 +1,6 @@
+import os
+
+import yaml
 import rclpy
 from cv_bridge import CvBridge
 from rclpy.node import Node
@@ -30,6 +33,12 @@ DEBUG_IMG_TOPIC = "~/debug_img"
 
 QOS_PROFILE = QoSPresetProfiles.SENSOR_DATA.value
 
+def get_mtime(path):
+    return os.path.getmtime(path)
+
+def load_config(path):
+    with open(path, "r") as f:
+        return yaml.safe_load(f), get_mtime(path)
 
 class DetectNode(Node):
     def __init__(self):
@@ -58,40 +67,36 @@ class DetectNode(Node):
         self.declare_parameters(
             namespace="",
             parameters=[
-                ("filter_method", "common"),
-                ("filter_common_thres", 30),
-                ("filter_common_s_range", (0, 255)),
-                ("filter_common_v_range", (0, 220)),
-                ("filter_hsv_lower", (160, 100, 100)),
-                ("filter_hsv_upper", (360, 255, 255)),
-                ("pp_open", 2),
-                ("pp_close", 5),
-                ("pp_blur", 0),
-                ("opi_small", 0.005),
-                ("opi_large", 0.7),
-                ("cls_color_flare", 33),
-                ("cls_color_thres_flare", 15),
-                ("cls_sol_gate", 0.15),
-                ("cls_sol_thres_gate", 0.15),
-                ("cls_color_blue", 100),
-                ("cls_color_thres_blue", 15),
-                ("cls_color_red", 100),
-                ("cls_color_thres_red", 15),
-                ("cls_color_yellow", 100),
-                ("cls_color_thres_yellow", 15),
+                ("config_path", "/insert/path/here.yaml"),
             ],
         )
+
+        self.cur_cfg = None
+        self.cfg_mtime = 0
 
     @property
     def params(self):
         return {n: p.value for n, p in self._parameters.items()}
 
+    def _update_cfg(self):
+        path = self.params["config_path"]
+        if self.cur_cfg is None:
+            self.cur_cfg, self.cfg_mtime = load_config(path)
+            return
+        if get_mtime(path) > self.cfg_mtime:
+            self.cur_cfg, self.cfg_mtime = load_config(path)
+
     def img_callback(self, msg: Image):
+        _update_cfg()
+        if not self.cur_cfg:
+            self._logger.error(f"Ensure config path is set! Currently: {self.params['config_path']}")
+            return
+
         header = msg.header
         im = self.cv_bridge.imgmsg_to_cv2(msg, "bgr8")
         vh, vw, _ = im.shape
 
-        res = detect(im, **self.params)
+        res = detect(im, **self.cur_cfg)
 
         if self.mask_pub.get_subscription_count() > 0:
             maskmsg = self.cv_bridge.cv2_to_imgmsg(res["mask"], "mono8", header)
