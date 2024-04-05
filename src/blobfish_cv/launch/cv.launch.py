@@ -22,7 +22,7 @@ def generate_launch_description():
 
     cv_node1 = Node(
         package="blobfish_cv",
-        executable="detect_flare",
+        executable="detect",
         remappings=[
             ("~/flare_bbox", "/blobfish_cv/flare/pos"),
         ],
@@ -32,7 +32,7 @@ def generate_launch_description():
 
     cv_node2 = Node(
         package="blobfish_cv",
-        executable="detect_others",
+        executable="detect",
         remappings=[
             ("~/gate_bbox", "/blobfish_cv/gate/pos"),
         ],
