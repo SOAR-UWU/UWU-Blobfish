@@ -81,9 +81,11 @@ class DetectNode(Node):
     def _update_cfg(self):
         path = self.params["config_path"]
         if self.cur_cfg is None:
+            self._logger.info(f"Loading config: {path}")
             self.cur_cfg, self.cfg_mtime = load_config(path)
             return
         if get_mtime(path) > self.cfg_mtime:
+            self._logger.info(f"Updating config: {path}")
             self.cur_cfg, self.cfg_mtime = load_config(path)
 
     def img_callback(self, msg: Image):
