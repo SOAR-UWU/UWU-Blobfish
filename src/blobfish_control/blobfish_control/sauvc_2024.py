@@ -160,11 +160,15 @@ class FinalRoundStrategyNode(BaseStrategyNode):
                 flare_pos = self.outer.input.flare_pos
 
                 if flare_pos.size_x < 0:
-                    self.status_pub.publish('SearchFlare')
+                    status = String()
+                    status.data = 'SearchFlare'
+                    self.status_pub.publish(status)
                     return 'lost_target'
 
                 if flare_pos.size_x > 100:
-                    self.status_pub.publish('HitFlare')
+                    status = String()
+                    status.data = 'HitFlare'
+                    self.status_pub.publish(status)
                     return 'close_enough'
 
                 self.outer.output.speed = 0.8
@@ -197,7 +201,9 @@ class FinalRoundStrategyNode(BaseStrategyNode):
                 self.outer.output.target_depth = 1.3
 
                 if time.time() - start_time > 20:
-                    self.status_pub.publish('Surfacing')
+                    status = String()
+                    status.data = 'Surfacing'
+                    self.status_pub.publish(status)
                     return 'finished'
 
                 # rate.sleep()
@@ -212,11 +218,13 @@ class FinalRoundStrategyNode(BaseStrategyNode):
             # rate = FinalRoundStrategyNode.create_rate(frequency=1)
             start_time = time.time()
             while time.time() - start_time < 20 and (rclpy.ok()):
+                status = String()
+                status.data = 'Succeeded'
                 self.outer.output.speed = 0
                 self.outer.output.target_yaw = 2.1
                 self.outer.output.target_depth = 0
                 # rate.sleep()
-                self.status_pub.publish('Succeeded')
+                self.status_pub.publish(status)
             return 'finished'
 
     def __init__(self):
