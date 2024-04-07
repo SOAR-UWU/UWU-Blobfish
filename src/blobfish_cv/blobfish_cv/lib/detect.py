@@ -2,7 +2,13 @@ import cv2
 
 from .classify import find_by_hue, find_by_solidity, find_largest
 from .describe import describe_opi
-from .filter import filter_by_common, filter_by_hsv, postprocess_noise
+from .filter import (
+    filter_by_bg,
+    filter_by_common,
+    filter_by_hsv,
+    filter_by_motion,
+    postprocess_noise,
+)
 
 
 def detect(
@@ -31,7 +37,7 @@ def detect(
     cls_color_thres_yellow,
     **kwargs,
 ):
-    im = cv2.cvtColor(im, cv2.COLOR_BGR2HSV)
+    im = cv2.cvtColor(im, cv2.COLOR_BGR2HLS)
 
     # Filter out background.
     if filter_method == "common":
@@ -43,9 +49,25 @@ def detect(
         )
     elif filter_method == "hsv":
         mask = filter_by_hsv(im, lower=filter_hsv_lower, upper=filter_hsv_upper)
+    elif filter_method == "motion":
+        mask = filter_by_motion(im)
+    elif filter_method == "bg":
+        mask = filter_by_bg(im)
 
     # Postprocess noise.
     mask = postprocess_noise(mask, open_val=pp_open, close_val=pp_close, blur=pp_blur)
+
+    if False:
+        return dict(
+            mask=mask,
+            objs=[],
+            largest=None,
+            flare=None,
+            gate=None,
+            blue=None,
+            red=None,
+            yellow=None,
+        )
 
     # Detect & describe objects.
     objs = describe_opi(im, mask, small_thres=opi_small, large_thres=opi_large)

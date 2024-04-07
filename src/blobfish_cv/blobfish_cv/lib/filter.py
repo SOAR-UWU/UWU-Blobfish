@@ -12,7 +12,29 @@ from .utils import bincount_app, hue_dist_im
 # - since opencv bg removers suck for non-moving target, rembg: https://github.com/danielgatis/rembg
 # - barring perf issues, SAM should be best: https://github.com/MrSyee/SAM-remove-background
 
-__all__ = ["filter_by_common", "filter_by_hsv", "postprocess_noise"]
+__all__ = [
+    "filter_by_common",
+    "filter_by_bg",
+    "filter_by_motion",
+    "filter_by_hsv",
+    "postprocess_noise",
+]
+
+sfilter = cv2.saliency.MotionSaliencyBinWangApr2014.create()
+sfilter.setImagesize(640, 480)
+sfilter.init()
+
+bfilter = cv2.createBackgroundSubtractorMOG2(detectShadows=True)
+
+
+def filter_by_bg(im: np.ndarray):
+    return bfilter.apply(im) * 255
+
+
+def filter_by_motion(im: np.ndarray):
+    im = cv2.cvtColor(cv2.cvtColor(im, cv2.COLOR_HLS2BGR), cv2.COLOR_BGR2GRAY)
+    retval, mask = sfilter.computeSaliency(im)
+    return mask * 255
 
 
 def filter_by_common(
@@ -37,8 +59,8 @@ def filter_by_common(
     h, _, _ = bincount_app(im.reshape(-1, 3))
 
     mask = hue_dist_im(im, h) > hthres
-    mask &= (s_range[0] <= im[:, :, 1]) & (im[:, :, 1] <= s_range[1])
-    mask &= (v_range[0] <= im[:, :, 2]) & (im[:, :, 2] <= v_range[1])
+    mask &= (v_range[0] <= im[:, :, 1]) & (im[:, :, 1] <= v_range[1])
+    mask &= (s_range[0] <= im[:, :, 2]) & (im[:, :, 2] <= s_range[1])
 
     return mask.astype(np.uint8) * 255
 

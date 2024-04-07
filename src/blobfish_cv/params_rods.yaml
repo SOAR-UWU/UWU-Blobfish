@@ -1,13 +1,16 @@
-filter_method: hsv
+# NOTE: Copy this file.
+# cls_color & cls_color_thres support (H, S, V) tuples too.
+
+filter_method: bg
 filter_common_thres: 0
 filter_common_s_range: [0, 255]
-filter_common_v_range: [0, 85]
+filter_common_v_range: [0, 90]
 filter_hsv_lower: [0, 80, 0]
 filter_hsv_upper: [360, 255, 255]
-pp_open: 3
-pp_close: 30
+pp_open: 0
+pp_close: 0
 pp_blur: 0
-opi_small: 0.0005
+opi_small: 0.0001
 opi_large: 0.7
 cls_color_flare: 0
 cls_color_thres_flare: 0

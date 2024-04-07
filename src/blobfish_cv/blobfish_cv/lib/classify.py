@@ -34,10 +34,11 @@ def find_by_solidity(objs: List[OPI], sol: float, thres: float = 0.1) -> OPI:
     """
     if len(objs) == 0:
         return None
-    target = min(objs, key=lambda x: abs(x.solidity - sol))
-    if abs(target.solidity - sol) > thres:
-        return None
-    return target
+    scores = [o for o in objs if abs(o.solidity - sol) <= thres]
+    if len(scores) > 0:
+        return max(scores, key=lambda x: x.area)
+
+    return None
 
 
 def find_by_hue(
@@ -66,11 +67,11 @@ def find_by_hue(
 
     if is_hue:
 
-        def diff(o):
+        def diff(o: OPI):
             return hue_dist(o.color[0], color)
     else:
 
-        def diff(o):
+        def diff(o: OPI):
             return (
                 hue_dist(o.color[0], color[0]),
                 abs(o.color[1] - color[1]),
@@ -78,12 +79,15 @@ def find_by_hue(
             )
 
     scores = [(o, diff(o)) for o in objs]
-    target, score = min(scores, key=lambda x: x[1] if is_hue else sum(x[1]))
+    if is_hue:
+        scores = [(o, d) for o, d in scores if d <= thres]
+    else:
+        scores = [
+            (o, sum(d)) for o, d in scores if all(s <= t for s, t in zip(d, thres))
+        ]
 
-    if is_hue and score > thres:
-        return None
+    if len(scores) > 0:
+        target, _ = max(scores, key=lambda x: x[0].area)
+        return target
 
-    if not is_hue and any(s > t for s, t in zip(score, thres)):
-        return None
-
-    return target
+    return None

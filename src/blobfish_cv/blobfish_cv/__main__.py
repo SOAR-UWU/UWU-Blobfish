@@ -37,7 +37,7 @@ def play_vid(args):
             print(f"FRAME {cur_idx}/{nframes}")
 
             while True:
-                key = chr(cv2.waitKey(1000 // fps) & 0xFF)
+                key = chr(cv2.waitKey(500 // fps) & 0xFF)
                 if key == "q":
                     raise KeyboardInterrupt
                 elif key == "d":
