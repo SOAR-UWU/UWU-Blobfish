@@ -4,31 +4,17 @@ Code for a submersible.
 
 ## Installation
 
-If using the Nvidia Jetson or a Nvidia GPU, using the [ISAAC ROS Docker Environment](#isaac-ros-docker-environment) method is recommended. Otherwise, refer to the documentation on Google Drive.
+### UWU Thumbdrive
 
-### ISAAC ROS Docker Environment
+TODO.
 
-Ensure [Docker](https://www.docker.com/get-started/) for your OS is installed. For recent versions of Windows and Docker, Nvidia GPU support should be built-in. For Linux, follow the [Nvidia Docker installation instructions](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/install-guide.html).
+### Native Ubuntu 22.04
 
-In a terminal (current directory doesn't matter), run:
+TODO.
 
-```sh
-./activate.sh
-```
+### Devcontainers (WSL/Linux)
 
-This will open a shell inside the Docker container with a pre-defined environment, **and the entire repository mounted as `/workspaces/isaac_ros-dev`**. Subsequent runs of `activate.sh` re-use the same container instead of creating a new one. To reset the environment, remove the container by running the following command on the host machine:
-
-```sh
-docker rm -f isaac_ros_dev-container
-```
-
-**Note**: Resetting the environment is necessary if any `Dockerfile` is modified, or if `CONFIG_IMAGE_KEY` inside `.isaac_ros_common-config` is changed, to rebuild the container so that changes take effect.
-
-**Note**: For an alternative workflow using VSCode Dev Containers (which support Python Intellisense), you can use "> Dev Containers: Attach to Running Container...", see: <https://code.visualstudio.com/docs/devcontainers/attach-container>.
-
-### Native ROS2
-
-Refer to the documentation on Google Drive.
+TODO.
 
 ## Developer Guide
 
@@ -43,7 +29,7 @@ Refer to the documentation on Google Drive.
 See respective `README.md` files in each folder for more information.
 
 - `arduino/`: Arduino code.
-- `docker/`: Additional image layers for the ISAAC ROS Docker Environment.
+- `scripts/`: Both convenience and important key scripts. See [`scripts/README.md`](scripts/README.md).
 - `src/`: First-party ROS2 packages.
 - `thirdparty/`: Third-party ROS2 packages added as git submodules.
 

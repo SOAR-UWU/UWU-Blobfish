@@ -2,8 +2,7 @@
 
 The code here is meant for deployment on the **Jetson**. To build and run:
 
-1. Ensure you are in the Docker container, see [`README.md`](../README.md#isaac-ros-docker-environment) in root directory.
-2. Run the following commands in **`/workspaces/isaac_ros-dev`**:
+TODO: Rewrite for native install.
 
 ```sh
 # Install all dependencies.
