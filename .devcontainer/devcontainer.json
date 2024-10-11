@@ -1,0 +1,61 @@
+// Format details: https://aka.ms/devcontainer.json
+// Custom Dockerfile: https://containers.dev/guide/dockerfile
+{
+  "name": "Blobfish Dev",
+
+  // https://github.com/devcontainers/templates/tree/main/src/ubuntu
+  "image": "mcr.microsoft.com/devcontainers/base:jammy",
+
+  // https://containers.dev/features
+  "features": {},
+
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        // ROS support for VS Code.
+        "ms-iot.vscode-ros",
+        // CMake syntax highlighting.
+        "twxs.cmake",
+        // All-in-one Python type-checking, linter & formatter.
+        "charliermarsh.ruff",
+        // Snippet generator for Python docstrings.
+        "njpwerner.autodocstring"
+      ]
+    }
+  },
+
+  "hostRequirements": { "gpu": "optional" },
+
+  // Mount package caches.
+  "mounts": [
+    {
+      "type": "volume",
+      "source": "pip-cache",
+      "target": "/home/vscode/.cache/pip"
+    },
+    {
+      "type": "volume",
+      "source": "pip-cache",
+      "target": "/root/.cache/pip"
+    },
+    {
+      "type": "volume",
+      "source": "apt-cache",
+      "target": "/var/cache/apt"
+    },
+    {
+      "type": "volume",
+      "source": "apt-list-cache",
+      "target": "/var/lib/apt"
+    },
+    { "type": "bind", "source": "/dev/fuse", "target": "/dev/fuse" }
+  ],
+
+  "privileged": true,
+  "runArgs": ["--shm-size=32G"],
+  "shutdownAction": "none",
+
+  // See: https://containers.dev/implementors/json_reference/#lifecycle-scripts
+  "postCreateCommand": ".devcontainer/hooks/postCreate.sh",
+  "postStartCommand": ".devcontainer/hooks/postStart.sh"
+}
