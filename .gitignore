@@ -1,6 +1,11 @@
-.vscode
 .mypy_cache
 *__pycache__*
 build/
 install/
 log/
+
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
+!.vscode/launch.json
+!.vscode/tasks.json

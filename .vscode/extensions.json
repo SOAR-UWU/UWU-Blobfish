@@ -1,0 +1,7 @@
+{
+  "recommendations": [
+    "ms-iot.vscode-ros", // ROS support for VS Code.
+    "twxs.cmake", // CMake syntax highlighting.
+    "charliermarsh.ruff" // All-in-one Python type-checking, linter & formatter.
+  ]
+}
