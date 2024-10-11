@@ -2,7 +2,7 @@
 # Don't put install steps in here, each distinct install process should be its own
 # script in `install.d/`. This script is only for sourcing those scripts.
 
-set -eu
+set -e
 
 # Make sure we are on Ubuntu/Ubuntu WSL, not git bash or other distros.
 if [[ $(source /etc/os-release && echo $ID) != "ubuntu" ]]; then

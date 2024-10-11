@@ -3,8 +3,7 @@
 
 set -eo pipefail
 
-# Superfluous, but just to be sure.
-add-apt-repository -y main
-add-apt-repository -y restricted
-add-apt-repository -y universe
-add-apt-repository -y multiverse
+sudo apt update && sudo apt install -y software-properties-common
+
+# Some are superfluous, but just to be sure.
+sudo add-apt-repository -y main restricted universe multiverse
