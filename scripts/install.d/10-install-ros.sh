@@ -19,6 +19,16 @@ sudo apt update && sudo apt install -y \
   ros-dev-tools \
   ~nros-humble-rqt*
 
-echo "source /opt/ros/humble/setup.bash" >> ~/.bashrc
-source /opt/ros/humble/setup.bash
-sudo rosdep init
+if grep -q "#<<<10-install-ros.sh" ~/.bashrc; then
+  echo "ROS already sourced in \"~/.bashrc\"."
+else
+  echo "#<<<10-install-ros.sh" >> ~/.bashrc
+  echo "source /opt/ros/humble/setup.bash" >> ~/.bashrc
+fi
+
+if [[ -f /etc/ros/rosdep/sources.list.d/20-default.list ]]; then
+  echo "rosdep already initialized."
+else
+  source /opt/ros/humble/setup.bash
+  sudo rosdep init
+fi

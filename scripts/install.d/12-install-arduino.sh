@@ -4,7 +4,9 @@
 set -eo pipefail
 
 # Install the arduino-cli command.
-wget -qO- https://raw.githubusercontent.com/arduino/arduino-cli/master/install.sh | sudo BINDIR=/usr/local/bin sh
+if ! command -v arduino-cli &> /dev/null; then
+  wget -qO- https://raw.githubusercontent.com/arduino/arduino-cli/master/install.sh | sudo BINDIR=/usr/local/bin sh
+fi
 
 # Install tools.
 arduino-cli core install arduino:avr
