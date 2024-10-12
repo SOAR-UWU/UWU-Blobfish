@@ -34,6 +34,8 @@ source install/setup.bash
 ros2 launch launch-all.py
 ```
 
+Open <http://localhost:6080> to access the web-based VNC client to view any GUI applications.
+
 ## Developer Guide
 
 - New ROS2 packages should be added to `src/`.

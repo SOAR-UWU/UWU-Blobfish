@@ -7,7 +7,15 @@
   "image": "mcr.microsoft.com/devcontainers/base:jammy",
 
   // https://containers.dev/features
-  "features": {},
+  "features": {
+    "ghcr.io/devcontainers/features/desktop-lite:1": {
+      "password": "noPassword",
+      "webPort": 6080
+    }
+  },
+
+  // Use 'forwardPorts' to make a list of ports inside the container available locally.
+  "forwardPorts": [6080],
 
   "customizations": {
     "vscode": {
