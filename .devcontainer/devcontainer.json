@@ -56,7 +56,18 @@
       "source": "apt-list-cache",
       "target": "/var/lib/apt"
     },
-    { "type": "bind", "source": "/dev/fuse", "target": "/dev/fuse" }
+    // Access host devices within devcontainer.
+    {
+      "type": "bind",
+      "source": "/dev",
+      "target": "/dev"
+    }
+    // (WSL) Uncomment below if using WSL.
+    // {
+    //   "type": "bind",
+    //   "source": "/usr/lib/wsl",
+    //   "target": "/usr/lib/wsl"
+    // }
   ],
 
   "privileged": true,
