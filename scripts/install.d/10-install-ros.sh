@@ -13,7 +13,8 @@ echo "deb [arch=amd64 signed-by=/etc/apt/keyrings/ros-archive-keyring.gpg] http:
 
 # `ros-humble-desktop` and `ros-dev-tools` are blanket meta packages.
 # `~nros-humble-rqt*` installs all rqt plugins.
-sudo apt update && sudo apt install -y \
+sudo apt update
+sudo apt install -y \
   python3-pip \
   ros-humble-desktop \
   ros-dev-tools \

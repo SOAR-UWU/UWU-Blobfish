@@ -9,4 +9,5 @@ sudo wget -qO /etc/apt/keyrings/pkgs-osrf-archive-keyring.gpg https://packages.o
 echo "deb [arch=amd64 signed-by=/etc/apt/keyrings/pkgs-osrf-archive-keyring.gpg] http://packages.osrfoundation.org/gazebo/ubuntu-stable jammy main" \
   | sudo tee /etc/apt/sources.list.d/gazebo-stable.list > /dev/null
 
-sudo apt update && sudo apt install -y ros-humble-ros-gzharmonic
+sudo apt update
+sudo apt install -y ros-humble-ros-gzharmonic
