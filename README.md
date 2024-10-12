@@ -6,15 +6,33 @@ Code for a submersible.
 
 ### UWU Thumbdrive
 
-TODO.
+While the UWU thumbdrive is setup with many useful things, there are some additional project-specific things in the project install script. See [Native Install](#native-install) below for the steps.
 
-### Native Ubuntu 22.04
+### Native Install
 
-TODO.
+You must be using Ubuntu 22.04 as our project is based on ROS2 Humble. After cloning this repository to your preferred coding folder, run the following command inside the repository:
 
-### Devcontainers (WSL/Linux)
+```sh
+scripts/install.sh
+```
 
-TODO.
+That's it! The script will ensure all dependencies, even ROS2, are installed if they aren't already. Afterwards, run whatever you need to run. See [Common Commands](#common-commands) for some common commands.
+
+### Devcontainers (Windows/Linux)
+
+The official tutorial for installing Devcontainers on Windows or Linux: <https://code.visualstudio.com/docs/devcontainers/tutorial>
+
+As per the tutorial, run "Dev Containers: Reopen in Container" from the command palette. `scripts/install.sh` will be run automatically. Afterwards, see [Common Commands](#common-commands) for some common commands.
+
+### Common Commands
+
+```sh
+rosdep install -i --from-paths . -y
+colcon build --symlink-install
+colcon build --symlink-install --packages-up-to <package_names...>
+source install/setup.bash
+ros2 launch launch-all.py
+```
 
 ## Developer Guide
 

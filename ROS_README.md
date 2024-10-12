@@ -2,11 +2,9 @@
 
 The code here is meant for deployment on the **Jetson**. To build and run:
 
-TODO: Rewrite for native install.
-
 ```sh
 # Install all dependencies.
-rosdep install -i --from-path .
+rosdep install -i --from-paths .
 # Build all packages.
 colcon build
 # Source ROS2 environment.
