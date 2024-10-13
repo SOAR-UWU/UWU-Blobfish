@@ -35,6 +35,13 @@ services:
     # <<: *nvidia-opts
 ```
 
+### Known Issues
+
+#### Devcontainers (Windows)
+
+- If Gazebo fails to load worlds complaining about "OGRE" and "allocation", completely stop the container and restart it. There is a memory leak when using the iGPU.
+- Loading complex Gazebo worlds, especially for the first time, will take a long time. The window will be black and appear frozen. This is normal so just wait. Loading an empty world is a faster way to test if Gazebo is working.
+
 ### Common Commands
 
 ```sh
