@@ -8,11 +8,11 @@ sudo apt install -y \
 
 # Add a marker so we know this script has been run before. This is because running
 # this script multiple times will bloat the config with repeats.
-if grep -q "#<<<20-useful-utils.sh" /etc/bash.bashrc; then
-  echo "20-useful-utils.sh already ran once."
+if grep -q "#<<<$(basename "$0")" /etc/bash.bashrc; then
+  echo "$(basename "$0") already ran once."
   exit 0
 fi
-echo "#<<<20-useful-utils.sh" | sudo tee -a /etc/bash.bashrc > /dev/null
+echo "#<<<$(basename "$0")" | sudo tee -a /etc/bash.bashrc > /dev/null
 
 # Install fzf from git to get the latest version.
 wget -qO- https://github.com/junegunn/fzf/releases/download/v0.55.0/fzf-0.55.0-linux_amd64.tar.gz \

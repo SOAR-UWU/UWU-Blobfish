@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Enable all apt repositories.
+# Enable all apt repositories. Should run first.
 
 set -eo pipefail
 

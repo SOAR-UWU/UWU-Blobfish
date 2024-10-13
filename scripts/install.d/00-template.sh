@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 # Template for install scripts. Duplicate and rename this file, taking into account
-# execution order (e.g. 01-foo.sh, 02-bar.sh).
+# execution order (e.g. 01-foo.sh, 02-bar.sh). Put anything trivial (in time taken)
+# and order independent as 00-name.sh.
 # Take note that `install.sh` runs all scripts with the workspace root as the working
 # directory, so you can use relative paths from there.
 
