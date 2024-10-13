@@ -46,7 +46,8 @@ services:
       - /dev:/dev
 
     shm_size: 32G
-    # privileged: true
+    # Needed for iGPU on WSL.
+    privileged: true
 
     # Add additional GIDs to user by name or id.
     group_add:
