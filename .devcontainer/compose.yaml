@@ -16,6 +16,8 @@ x-nvidia-opts: &nvidia-opts
   environment:
     # https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/docker-specialized.html#driver-capabilities
     NVIDIA_DRIVER_CAPABILITIES: all
+    # For WSL, has no effect on Linux.
+    MESA_D3D12_DEFAULT_ADAPTER_NAME: NVIDIA
   deploy:
     resources:
       reservations:

@@ -11,6 +11,8 @@ services:
 
     environment:
       XDG_RUNTIME_DIR: /mnt/wslg/runtime-dir
+      LD_LIBRARY_PATH: /usr/lib/wsl/lib
+      LIBVA_DRIVER_NAME: d3d12
       # The env var DISPLAY in WSL Docker Desktop is wrong.
       DISPLAY: :0
 
