@@ -7,15 +7,10 @@
   "image": "mcr.microsoft.com/devcontainers/base:jammy",
 
   // https://containers.dev/features
-  "features": {
-    "ghcr.io/devcontainers/features/desktop-lite:1": {
-      "password": "noPassword",
-      "webPort": 6080
-    }
-  },
+  "features": {},
 
-  // Use 'forwardPorts' to make a list of ports inside the container available locally.
-  "forwardPorts": [6080],
+  // Use 'forwardPorts' to automatically forward parts.
+  "forwardPorts": [],
 
   "customizations": {
     "vscode": {
@@ -56,23 +51,65 @@
       "source": "apt-list-cache",
       "target": "/var/lib/apt"
     },
+    // Comment out below as Linux isn't WSL.
+    // Still waiting on conditional mounts: https://github.com/devcontainers/spec/issues/132
+    {
+      "type": "bind",
+      "source": "/usr/lib/wsl",
+      "target": "/usr/lib/wsl"
+    },
     // Access host devices within devcontainer.
     {
       "type": "bind",
       "source": "/dev",
       "target": "/dev"
-    }
-    // (WSL) Uncomment below if using WSL.
+    },
+    // GUI forwarding on Linux (X11/XWayland), no impact on WSL.
     // {
     //   "type": "bind",
-    //   "source": "/usr/lib/wsl",
-    //   "target": "/usr/lib/wsl"
+    //   "source": "/tmp/.X11-unix",
+    //   "target": "/tmp/.X11-unix"
     // }
+    // Cursed WSL2 Setup.
+    // See: https://stackoverflow.com/questions/73092750/how-to-show-gui-apps-from-docker-desktop-container-on-windows-11/73901260
+    {
+      "type": "bind",
+      "source": "/run/desktop/mnt/host/wslg/.X11-unix",
+      "target": "/tmp/.X11-unix"
+    },
+    {
+      "type": "bind",
+      "source": "/run/desktop/mnt/host/wslg",
+      "target": "/mnt/wslg"
+    }
   ],
 
-  "privileged": true,
-  "runArgs": ["--shm-size=32G"],
-  "shutdownAction": "none",
+  "runArgs": [
+    "--shm-size=32G",
+    // We add groups via `--group-add` manually as `updateRemoteUserUID` is dumb and
+    // refuses to work if host groups already exist in the container image.
+    // See my feat request to fix this: https://github.com/microsoft/vscode-remote-release/issues/10384
+    "--group-add=video",
+    // Docker's GPU logic doesn't mount Nvidia's graphics drivers, just the compute
+    // device. nvidia-container-runtime + NVIDIA_DRIVER_CAPABILITIES is needed to
+    // access Nvidia accelerated graphics within a container.
+    "--runtime=nvidia"
+  ],
+  // "privileged": true,
+  // "shutdownAction": "none",
+
+  "remoteEnv": {
+    // GUI forwarding (X11/XWayland/WSLg).
+    // Should be ${localEnv:DISPLAY}, but its "1" on WSLg when it should be ":0".
+    // Since its almost always ":0" regardless of display server, hardcode it.
+    "DISPLAY": ":0"
+  },
+
+  "containerEnv": {
+    // https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/docker-specialized.html#driver-capabilities
+    "NVIDIA_DRIVER_CAPABILITIES": "all",
+    "XDG_RUNTIME_DIR": "/mnt/wslg/runtime-dir"
+  },
 
   // See: https://containers.dev/implementors/json_reference/#lifecycle-scripts
   "postCreateCommand": ".devcontainer/hooks/postCreate.sh",

@@ -24,6 +24,8 @@ The official tutorial for installing Devcontainers on Windows or Linux: <https:/
 
 As per the tutorial, run "Dev Containers: Reopen in Container" from the command palette. `scripts/install.sh` will be run automatically. Afterwards, see [Common Commands](#common-commands) for some common commands.
 
+I've done a lot of black magic behind the scenes to ensure GUI apps are forwarded out of the container, regardless of whether you're on Windows or Linux. Also regardless of if you use WSLg, Wayland or X11. It will also prefer the discrete GPU, falling back to the integrated GPU if necessary.
+
 ### Common Commands
 
 ```sh
@@ -33,8 +35,6 @@ colcon build --symlink-install --packages-up-to <package_names...>
 source install/setup.bash
 ros2 launch launch-all.py
 ```
-
-Open <http://localhost:6080> to access the web-based VNC client to view any GUI applications.
 
 ## Developer Guide
 

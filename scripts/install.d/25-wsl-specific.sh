@@ -19,3 +19,5 @@ echo "#<<<25-wsl-specific.sh" | sudo tee -a /etc/bash.bashrc > /dev/null
 # Harmless on Linux, necessary on WSL for gui accel (compute accel still works without).
 echo "export LD_LIBRARY_PATH=/usr/lib/wsl/lib:\${LD_LIBRARY_PATH}" | sudo tee -a /etc/bash.bashrc > /dev/null
 echo "export LIBVA_DRIVER_NAME=d3d12" | sudo tee -a /etc/bash.bashrc > /dev/null
+# I think it falls back if a Nvidia GPU isn't found, but not sure.
+echo "export MESA_D3D12_DEFAULT_ADAPTER_NAME=NVIDIA" | sudo tee -a /etc/bash.bashrc > /dev/null
