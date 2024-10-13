@@ -1,0 +1,51 @@
+# Base compose options.
+# Workaround from: https://github.com/microsoft/vscode-remote-release/issues/2067#issuecomment-1666424762
+
+# Cache volumes.
+volumes:
+  pip-cache:
+  apt-cache:
+  apt-list-cache:
+
+# User-defined yaml anchor, doesn't affect compose config.
+x-nvidia-opts: &nvidia-opts
+  # We need nvidia-container-runtime + NVIDIA_DRIVER_CAPABILITIES=all to mount
+  # Nvidia's graphics driver into the container. Otherwise, only the CUDA compute
+  # device is mounted.
+  runtime: nvidia
+  environment:
+    # https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/docker-specialized.html#driver-capabilities
+    NVIDIA_DRIVER_CAPABILITIES: all
+  deploy:
+    resources:
+      reservations:
+        devices:
+          - driver: nvidia
+            capabilities: [gpu]
+            count: 1
+
+services:
+  devcontainer:
+    # Comment out if you don't have a Nvidia GPU.
+    <<: *nvidia-opts
+
+    # https://github.com/devcontainers/templates/tree/main/src/ubuntu
+    image: mcr.microsoft.com/devcontainers/base:jammy
+    command: sleep infinity
+
+    volumes:
+      # Workspace folder.
+      - ..:/workspaces/UWU-Blobfish
+      # Mount package caches.
+      - pip-cache:/root/.cache/pip
+      - apt-cache:/var/cache/apt
+      - apt-list-cache:/var/lib/apt
+      # Access host devices within devcontainer.
+      - /dev:/dev
+
+    shm_size: 32G
+    # privileged: true
+
+    # Add additional GIDs to user by name or id.
+    group_add:
+      - video

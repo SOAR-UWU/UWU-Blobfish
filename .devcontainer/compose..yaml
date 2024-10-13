@@ -1,0 +1,14 @@
+# Linux-specific compose options to be merged.
+# Workaround from: https://github.com/microsoft/vscode-remote-release/issues/2067#issuecomment-1666424762
+services:
+  devcontainer:
+    volumes:
+      # GUI forwarding (X11/XWayland).
+      - /tmp/.X11-unix:/tmp/.X11-unix
+
+    environment:
+      DISPLAY: ${DISPLAY}
+
+    # If your Linux host uses different GIDs compared to Ubuntu for devices, add
+    # them here.
+    group_add: []

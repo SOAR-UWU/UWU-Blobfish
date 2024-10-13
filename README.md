@@ -24,7 +24,16 @@ The official tutorial for installing Devcontainers on Windows or Linux: <https:/
 
 As per the tutorial, run "Dev Containers: Reopen in Container" from the command palette. `scripts/install.sh` will be run automatically. Afterwards, see [Common Commands](#common-commands) for some common commands.
 
-I've done a lot of black magic behind the scenes to ensure GUI apps are forwarded out of the container, regardless of whether you're on Windows or Linux. Also regardless of if you use WSLg, Wayland or X11. It will also prefer the discrete GPU, falling back to the integrated GPU if necessary.
+I've done a lot of black magic behind the scenes to ensure GUI apps are forwarded out of the container, regardless of whether you're on Windows or Linux. Also regardless of if you use WSLg, Wayland or X11. It will also prefer the discrete GPU, falling back to the integrated GPU if necessary. For Linux (X11/XWayland), remember to `xhost +local:root` before running any GUI apps.
+
+If you do not have a Nvidia GPU, comment out the below line in [`.devcontainer/compose.yaml`](.devcontainer/compose.yaml):
+
+```yaml
+services:
+  devcontainer:
+    # Comment out if you don't have a Nvidia GPU.
+    # <<: *nvidia-opts
+```
 
 ### Common Commands
 
