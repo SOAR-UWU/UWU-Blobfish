@@ -1,2 +1,0 @@
-# Detect imu & assign fixed device node.
-SUBSYSTEM=="tty", SUBSYSTEMS=="usb", ATTRS{idVendor}=="0403", ATTRS{idProduct}=="6001", MODE="0666", GROUP="dialout", SYMLINK+="imu0"

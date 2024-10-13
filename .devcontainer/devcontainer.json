@@ -1,0 +1,39 @@
+// Format details: https://aka.ms/devcontainer.json
+// Custom Dockerfile: https://containers.dev/guide/dockerfile
+{
+  "name": "Blobfish Dev",
+
+  "dockerComposeFile": [
+    "compose.yaml",
+    // Workaround from: https://github.com/microsoft/vscode-remote-release/issues/2067#issuecomment-1666424762
+    "compose.${localEnv:OS}.yaml"
+  ],
+  "service": "devcontainer",
+  "workspaceFolder": "/workspaces/UWU-Blobfish",
+
+  // https://containers.dev/features
+  "features": {},
+
+  // Use 'forwardPorts' to automatically forward parts.
+  "forwardPorts": [],
+
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        // ROS support for VS Code.
+        "ms-iot.vscode-ros",
+        // CMake syntax highlighting.
+        "twxs.cmake",
+        // All-in-one Python type-checking, linter & formatter.
+        "charliermarsh.ruff",
+        // Snippet generator for Python docstrings.
+        "njpwerner.autodocstring"
+      ]
+    }
+  },
+
+  // See: https://containers.dev/implementors/json_reference/#lifecycle-scripts
+  "postCreateCommand": ".devcontainer/hooks/postCreate.sh",
+  "postStartCommand": ".devcontainer/hooks/postStart.sh"
+  // "shutdownAction": "none",
+}

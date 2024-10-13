@@ -2,12 +2,9 @@
 
 The code here is meant for deployment on the **Jetson**. To build and run:
 
-1. Ensure you are in the Docker container, see [`README.md`](../README.md#isaac-ros-docker-environment) in root directory.
-2. Run the following commands in **`/workspaces/isaac_ros-dev`**:
-
 ```sh
 # Install all dependencies.
-rosdep install -i --from-path .
+rosdep install -i --from-paths .
 # Build all packages.
 colcon build
 # Source ROS2 environment.

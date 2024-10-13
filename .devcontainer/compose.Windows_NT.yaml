@@ -1,0 +1,21 @@
+# WSL-specific compose options to be merged.
+# Workaround from: https://github.com/microsoft/vscode-remote-release/issues/2067#issuecomment-1666424762
+services:
+  devcontainer:
+    volumes:
+      # WSL workarounds.
+      # See: https://stackoverflow.com/questions/73092750/how-to-show-gui-apps-from-docker-desktop-container-on-windows-11/73901260
+      - /usr/lib/wsl:/usr/lib/wsl
+      - /run/desktop/mnt/host/wslg/.X11-unix:/tmp/.X11-unix
+      - /run/desktop/mnt/host/wslg:/mnt/wslg
+
+    environment:
+      XDG_RUNTIME_DIR: /mnt/wslg/runtime-dir
+      LD_LIBRARY_PATH: /usr/lib/wsl/lib
+      LIBVA_DRIVER_NAME: d3d12
+      # The env var DISPLAY in WSL Docker Desktop is wrong.
+      DISPLAY: :0
+
+    # Accelerated graphics on WSL uses a different mechanism, nvidia-container-runtime
+    # is not needed. Set back to default.
+    runtime: !reset null
