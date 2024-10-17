@@ -1,1 +1,0 @@
-ros2 param dump /pid_node > src/blobfish_pid/config/$(date +%s).yaml
