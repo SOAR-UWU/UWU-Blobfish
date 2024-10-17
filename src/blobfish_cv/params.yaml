@@ -1,0 +1,21 @@
+filter_method: hsv
+filter_common_thres: 0
+filter_common_s_range: [0, 255]
+filter_common_v_range: [0, 85]
+filter_hsv_lower: [0, 80, 0]
+filter_hsv_upper: [360, 255, 255]
+pp_open: 3
+pp_close: 30
+pp_blur: 0
+opi_small: 0.0005
+opi_large: 0.7
+cls_color_flare: 0
+cls_color_thres_flare: 0
+cls_sol_gate: 0.15
+cls_sol_thres_gate: 0.1
+cls_color_blue: 100
+cls_color_thres_blue: 0
+cls_color_red: 100
+cls_color_thres_red: 0
+cls_color_yellow: 100
+cls_color_thres_yellow: 0

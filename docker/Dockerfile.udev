@@ -1,4 +1,0 @@
-ARG BASE_IMAGE
-FROM ${BASE_IMAGE}
-
-COPY --link --chown=root:root *.rules /etc/udev/rules.d/
