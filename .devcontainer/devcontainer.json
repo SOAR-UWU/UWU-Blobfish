@@ -33,6 +33,7 @@
   },
 
   // See: https://containers.dev/implementors/json_reference/#lifecycle-scripts
+  "initializeCommand": ".devcontainer/hooks/initialize.sh",
   "postCreateCommand": ".devcontainer/hooks/postCreate.sh",
   "postStartCommand": ".devcontainer/hooks/postStart.sh"
   // "shutdownAction": "none",
