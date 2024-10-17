@@ -3,4 +3,6 @@
 # I am not sure what happens for WSL though.
 
 # Allow X11/XWayland forwarding.
-xhost +local:root
+if command -v xhost > /dev/null; then
+  xhost +local:root
+fi
