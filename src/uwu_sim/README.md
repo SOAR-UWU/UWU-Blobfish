@@ -47,3 +47,14 @@ Things to model: <https://sauvc.org/rulebook/#tasks>
 - Exporting from Blender to Gazebo: <https://gazebosim.org/api/sim/8/tutorials.html#autotoc_md427>
 - Moment of Inertia Calculator: <https://amesweb.info/inertia/mass-moment-of-inertia-calculator.aspx>
   - Recommended inside the beginner Gazebo tutorial series.
+- Between Fusion 360 & Gazebo, the axes are the exact same. Left and right on the orbit cube match Gazebo. Only difference is front and back are swapped.
+  - Its actually Fusion 360 that is confusing: <https://forums.autodesk.com/t5/fusion-design-validate-document/why-left-is-right-and-right-is-left/td-p/6623908>
+- Fusion to SDF exporter: <https://github.com/andreasBihlmaier/FusionSDF>
+  - Out of 6 options, I tried this one first. Haven't tested the rest yet.
+  - Correctly exports components as links and all joints.
+  - Correctly exports materials.
+  - Scaling is correct regardless of document units.
+  - Have to correct the joint between base link and the main chassis.
+  - Have to fix all collisions since it exports all components as box collisions.
+  - Have to fix all joint types.
+  - Haven't tested if inertial & mass estimation is correct, but should definitely adjust mass at least.
