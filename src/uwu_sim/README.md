@@ -44,3 +44,5 @@ After `colcon build` and `source install/setup.bash`, all `.sdf` worlds under `w
 Things to model: <https://sauvc.org/rulebook/#tasks>
 
 - Exporting from Blender to Gazebo: <https://gazebosim.org/api/sim/8/tutorials.html#autotoc_md427>
+- Moment of Inertia Calculator: <https://amesweb.info/inertia/mass-moment-of-inertia-calculator.aspx>
+  - Recommended inside the beginner Gazebo tutorial series.
