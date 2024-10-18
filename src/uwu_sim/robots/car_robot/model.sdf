@@ -1,0 +1,170 @@
+<?xml version="1.0"?>
+<sdf version="1.11">
+  <model name="ros_urdf_export_vehicle_v1">
+    <link name="base_link">
+      <inertial>
+        <mass>0.0001</mass>
+        <inertia>
+          <ixx>1e-09</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>1e-09</iyy>
+          <iyz>0</iyz>
+          <izz>1e-09</izz>
+        </inertia>
+      </inertial>
+    </link>
+    <link name="castor_wheel_1">
+      <inertial>
+        <pose>0.0 0.0 0.025 0.0 -0.0 0.0</pose>
+        <mass>0.5137812985558307</mass>
+        <inertia>
+          <ixx>0.00012844532463895768</ixx>
+          <ixy>-4.4622083805734286e-20</ixy>
+          <ixz>0.0</ixz>
+          <iyy>0.00012844532463895768</iyy>
+          <iyz>0.0</iyz>
+          <izz>0.00012844532463895784</izz>
+        </inertia>
+      </inertial>
+      <visual name="castor_wheel_1__castor_wheel_visual">
+        <geometry>
+          <mesh>
+            <scale>0.01 0.01 0.01</scale>
+            <uri>meshes/castor_wheel_1/castor_wheel_visual.obj</uri>
+          </mesh>
+        </geometry>
+      </visual>
+      <collision name="castor_wheel_1__castor_wheel_collision">
+        <pose relative_to="__model__">0.0 0.0 0.025 -0.0 -1.5707963267948966 0</pose>
+        <geometry>
+          <sphere>
+            <radius>0.025</radius>
+          </sphere>
+        </geometry>
+      </collision>
+    </link>
+    <link name="chassis_1">
+      <pose relative_to="__model__">0.0 -0.005 0.0 0.0 -0.0 0.0</pose>
+      <inertial>
+        <pose>0.0 0.07993539581979103 0.0348433727739177 0.0 -0.0 0.0</pose>
+        <mass>3.8173230046613593</mass>
+        <inertia>
+          <ixx>0.02867180756842933</ixx>
+          <ixy>-2.8558133635669943e-18</ixy>
+          <ixz>0.0</ixz>
+          <iyy>0.0021687458581609777</iyy>
+          <iyz>-2.9508569393942724e-06</iyz>
+          <izz>0.03057487291524046</izz>
+        </inertia>
+      </inertial>
+      <visual name="chassis_1__chassis_visual">
+        <geometry>
+          <mesh>
+            <scale>0.01 0.01 0.01</scale>
+            <uri>meshes/chassis_1/chassis_visual.obj</uri>
+          </mesh>
+        </geometry>
+      </visual>
+      <collision name="chassis_1__chassis_collision">
+        <pose relative_to="__model__">0.0 0.07499999999999943 0.0325 -0.0 -1.5707963267948966 0</pose>
+        <geometry>
+          <box>
+            <size>0.025 0.3 0.08</size>
+          </box>
+        </geometry>
+      </collision>
+    </link>
+    <link name="r_wheel_1">
+      <pose relative_to="__model__">0.0 -0.005 0.0 0.0 -0.0 0.0</pose>
+      <inertial>
+        <pose>-0.045 0.15000000000000002 0.025 0.0 -0.0 0.0</pose>
+        <mass>3</mass>
+        <inertia>
+          <ixx>4.8166996739608045e-05</ixx>
+          <ixy>0.0</ixy>
+          <ixz>2.710505431213761e-20</ixz>
+          <iyy>2.536795161619317e-05</iyy>
+          <iyz>1.0842021724855044e-19</iyz>
+          <izz>2.5367951616194363e-05</izz>
+        </inertia>
+      </inertial>
+      <visual name="r_wheel_1__r_wheel_visual">
+        <geometry>
+          <mesh>
+            <scale>0.01 0.01 0.01</scale>
+            <uri>meshes/r_wheel_1/r_wheel_visual.obj</uri>
+          </mesh>
+        </geometry>
+      </visual>
+      <collision name="r_wheel_1__r_wheel_collision">
+        <pose relative_to="__model__">-0.045 0.145 0.025 -0.0 -1.5707963267948966 0</pose>
+        <geometry>
+          <cylinder>
+            <radius>0.025</radius>
+            <length>0.01</length>
+          </cylinder>
+        </geometry>
+      </collision>
+    </link>
+    <link name="l_wheel_1">
+      <pose relative_to="__model__">0.0 -0.005 0.0 0.0 -0.0 0.0</pose>
+      <inertial>
+        <pose>0.04500000000000001 0.15000000000000002 0.025 0.0 -0.0 0.0</pose>
+        <mass>3</mass>
+        <inertia>
+          <ixx>4.8166996739608045e-05</ixx>
+          <ixy>6.505213034913027e-19</ixy>
+          <ixz>2.710505431213761e-20</ixz>
+          <iyy>2.53679516161929e-05</iyy>
+          <iyz>1.0842021724855044e-19</iyz>
+          <izz>2.536795161619393e-05</izz>
+        </inertia>
+      </inertial>
+      <visual name="l_wheel_1__l_wheel_visual">
+        <geometry>
+          <mesh>
+            <scale>0.01 0.01 0.01</scale>
+            <uri>meshes/l_wheel_1/l_wheel_visual.obj</uri>
+          </mesh>
+        </geometry>
+      </visual>
+      <collision name="l_wheel_1__l_wheel_collision">
+        <pose relative_to="__model__">0.045 0.145 0.025 -0.0 -1.5707963267948966 0</pose>
+        <geometry>
+          <cylinder>
+            <radius>0.025</radius>
+            <length>0.01</length>
+          </cylinder>
+        </geometry>
+      </collision>
+    </link>
+    <joint name="revolute_1" type="revolute">
+      <pose relative_to="__model__">0.04 0.145 0.025 0.0 -0.0 0.0</pose>
+      <parent>chassis_1</parent>
+      <child>l_wheel_1</child>
+      <axis>
+        <xyz expressed_in="__model__">-1.0 0.0 0.0</xyz>
+      </axis>
+    </joint>
+    <joint name="revolute_2" type="revolute">
+      <pose relative_to="__model__">-0.04 0.145 0.025 0.0 -0.0 0.0</pose>
+      <parent>chassis_1</parent>
+      <child>r_wheel_1</child>
+      <axis>
+        <xyz expressed_in="__model__">1.0 0.0 0.0</xyz>
+      </axis>
+    </joint>
+    <joint name="ball_3" type="ball">
+      <pose relative_to="__model__">0.0 0.0 0.025 0.0 -0.0 0.0</pose>
+      <parent>chassis_1</parent>
+      <child>castor_wheel_1</child>
+      <axis />
+    </joint>
+    <joint name="base_link_joint" type="fixed">
+      <parent>base_link</parent>
+      <child>chassis_1</child>
+      <axis />
+    </joint>
+  </model>
+</sdf>

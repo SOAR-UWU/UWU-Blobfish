@@ -25,7 +25,8 @@ We are using Gazebo Harmonic (v8.6.0), the latest version that supports ROS2 Hum
   - Harmonic supports up to v1.11. Tested by running `gz sim` with increasingly higher `<sdf version="1.XX">` till it complained.
 - Gazebo API References Index Page: <https://gazebosim.org/docs/harmonic/library_reference_nav/>
   - Of particular interest below:
-  - sim: https://gazebosim.org/api/sim/8/index.html
+  - sim: <https://gazebosim.org/api/sim/8/index.html>
+  - gui (writing frontend plugins): <https://gazebosim.org/api/gui/8/index.html>
   - The rest of the API references are incomplete since they were refactored out of the original monolithic documentation by Gazebo.
 
 ## Gazebo Commands
