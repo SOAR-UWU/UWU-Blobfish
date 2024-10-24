@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <sdf version="1.11">
   <world name="test_sea">
-    <physics name="my_physics_cfg" type="ignored">
+    <physics name="1ms" type="ode">
       <max_step_size>0.001</max_step_size>
       <real_time_factor>1.0</real_time_factor>
     </physics>
@@ -13,27 +13,25 @@
     See: https://gazebosim.org/docs/fortress/sdf_worlds
     -->
     <plugin
-      filename="ignition-gazebo-physics-system"
-      name="ignition::gazebo::systems::Physics">
+      filename="gz-sim-physics-system"
+      name="gz::sim::systems::Physics">
     </plugin>
     <plugin
-      filename="ignition-gazebo-user-commands-system"
-      name="ignition::gazebo::systems::UserCommands">
+      filename="gz-sim-user-commands-system"
+      name="gz::sim::systems::UserCommands">
     </plugin>
     <plugin
-      filename="ignition-gazebo-scene-broadcaster-system"
-      name="ignition::gazebo::systems::SceneBroadcaster">
+      filename="gz-sim-scene-broadcaster-system"
+      name="gz::sim::systems::SceneBroadcaster">
     </plugin>
     <plugin
-      filename="ignition-gazebo-buoyancy-system"
-      name="ignition::gazebo::systems::Buoyancy">
-      <graded_buoyancy>
-        <default_density>1000</default_density>
-        <density_change>
-          <above_depth>0</above_depth>
-          <density>1</density>
-        </density_change>
-      </graded_buoyancy>
+      filename="gz-sim-contact-system"
+      name="gz::sim::systems::Contact">
+    </plugin>
+    <plugin
+      filename="gz-sim-buoyancy-system"
+      name="gz::sim::systems::Buoyancy">
+      <uniform_fluid_density>1000</uniform_fluid_density>
     </plugin>
 
     <light type="directional" name="sun">
@@ -49,12 +47,6 @@
       </attenuation>
       <direction>-0.5 0.1 -0.9</direction>
     </light>
-
-    <include>
-      <name>target_area</name>
-      <uri>model://target_acquisition_area</uri>
-      <pose>0 0 0 0 0 0</pose>
-    </include>
 
     <include>
       <name>pool</name>

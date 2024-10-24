@@ -2,30 +2,11 @@
 <sdf version="1.11">
   <model name="chassis_v4">
     <link name="base_link">
-      <inertial>
-        <mass>0.0001</mass>
-        <inertia>
-          <ixx>1e-09</ixx>
-          <ixy>0</ixy>
-          <ixz>0</ixz>
-          <iyy>1e-09</iyy>
-          <iyz>0</iyz>
-          <izz>1e-09</izz>
-        </inertia>
-      </inertial>
-    </link>
-    <link name="tube_1">
-      <inertial>
-        <mass>1.5335451479447566</mass>
-        <inertia>
-          <ixx>0.019802726380172254</ixx>
-          <ixy>6.926711648702622e-18</ixy>
-          <ixz>6.9267116487026234e-18</ixz>
-          <iyy>0.008583876789606064</iyy>
-          <iyz>6.926711648702622e-18</iyz>
-          <izz>0.0198027263801725</izz>
-        </inertia>
-      </inertial>
+      <inertial auto="true" />
+      <velocity_decay>
+        <linear>1000</linear>
+        <angular>1000</angular>
+      </velocity_decay>
       <visual name="tube_1__body1_visual">
         <geometry>
           <mesh>
@@ -36,6 +17,7 @@
       </visual>
       <collision name="tube_1__body1_collision">
         <pose relative_to="__model__">0.0 0.0 0.0 -0.0 -1.5707963267948966 0</pose>
+        <density>1000</density>
         <geometry>
           <box>
             <size>0.16510000000000002 0.29845 0.16510000000000002</size>
@@ -44,18 +26,11 @@
       </collision>
     </link>
     <link name="internal_1">
-      <inertial>
-        <pose>2.5914483182497398e-18 0.009079667198541143 0.0 0.0 -0.0 0.0</pose>
-        <mass>0.2325109999999999</mass>
-        <inertia>
-          <ixx>0.00041110129316798157</ixx>
-          <ixy>1.0187730324017457e-19</ixy>
-          <ixz>1.2050804798491299e-20</ixz>
-          <iyy>5.891063243333328e-05</iyy>
-          <iyz>4.8203219193965195e-20</iyz>
-          <izz>0.00041110129316798146</izz>
-        </inertia>
-      </inertial>
+      <inertial auto="true" />
+      <velocity_decay>
+        <linear>1000</linear>
+        <angular>1000</angular>
+      </velocity_decay>
       <visual name="internal_1__body1_visual">
         <geometry>
           <mesh>
@@ -66,6 +41,7 @@
       </visual>
       <collision name="internal_1__body1_collision">
         <pose relative_to="__model__">0.0 0.025 0.0 -0.0 -1.5707963267948966 0</pose>
+        <density>1000</density>
         <geometry>
           <box>
             <size>0.04 0.17 0.039999999999999994</size>
@@ -74,18 +50,11 @@
       </collision>
     </link>
     <link name="battery_box_1">
-      <inertial>
-        <pose>1.10175009300173e-17 -0.19922500000000004 -0.01000000000000002 0.0 -0.0 0.0</pose>
-        <mass>3.5001200000000003</mass>
-        <inertia>
-          <ixx>0.014583833333333268</ixx>
-          <ixy>4.657395038520915e-18</ixy>
-          <ixz>1.1954398360103367e-17</ixz>
-          <iyy>0.019617592163433346</iyy>
-          <iyz>6.071532165918825e-18</iyz>
-          <izz>0.010867292163433268</izz>
-        </inertia>
-      </inertial>
+      <inertial auto="true" />
+      <velocity_decay>
+        <linear>1000</linear>
+        <angular>1000</angular>
+      </velocity_decay>
       <visual name="battery_box_1__body1_visual">
         <geometry>
           <mesh>
@@ -96,6 +65,7 @@
       </visual>
       <collision name="battery_box_1__body1_collision">
         <pose relative_to="__model__">0.0 -0.19922499999999999 -0.01 -0.0 -1.5707963267948966 0</pose>
+        <density>1000</density>
         <geometry>
           <box>
             <size>0.2 0.1 0.16510000000000002</size>
@@ -103,20 +73,13 @@
         </geometry>
       </collision>
     </link>
-    <joint name="base_link_joint" type="fixed">
-      <parent>base_link</parent>
-      <child>tube_1</child>
-      <axis />
-    </joint>
     <joint name="battery_box_joint" type="fixed">
-      <parent>tube_1</parent>
+      <parent>base_link</parent>
       <child>battery_box_1</child>
-      <axis />
     </joint>
     <joint name="internal_joint" type="fixed">
-      <parent>tube_1</parent>
+      <parent>base_link</parent>
       <child>internal_1</child>
-      <axis />
     </joint>
   </model>
 </sdf>
