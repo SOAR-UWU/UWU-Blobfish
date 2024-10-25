@@ -39,6 +39,11 @@ install(
   DESTINATION share/${PROJECT_NAME}/robots
 )
 
+install(
+  DIRECTORY launch/
+  DESTINATION share/${PROJECT_NAME}/launch
+)
+
 # Hook sets env vars to allow Gazebo to find above models/ & worlds/ dirs.
 ament_environment_hooks("${CMAKE_CURRENT_SOURCE_DIR}/hooks/gazebo.dsv.in")
 ament_environment_hooks("${CMAKE_CURRENT_SOURCE_DIR}/hooks/gazebo.sh.in")
