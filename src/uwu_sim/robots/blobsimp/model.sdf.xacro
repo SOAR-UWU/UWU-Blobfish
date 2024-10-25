@@ -5,7 +5,6 @@
       <joint name="${child}_joint" type="fixed">
         <parent>${parent}</parent>
         <child>${child}</child>
-        <axis />
       </joint>
     </xacro:macro>
     <xacro:macro name="thruster" params="name pose">
@@ -32,33 +31,32 @@
       <name>chassis</name>
       <pose relative_to="__model__">0 0 0 0 0 0</pose>
       <uri>model://blobfish_chassis</uri>
-      <!-- <plugin
+      <plugin
         filename="gz-sim-hydrodynamics-system"
         name="gz::sim::systems::Hydrodynamics">
-        <link_name>chassis</link_name>
-        <xDotU>-4.876161</xDotU>
-        <yDotV>-126.324739</yDotV>
-        <zDotW>-126.324739</zDotW>
+        <link_name>base_link</link_name>
+        <xDotU>-0.04876161</xDotU>
+        <yDotV>-1.26324739</yDotV>
+        <zDotW>-1.26324739</zDotW>
         <kDotP>0</kDotP>
-        <mDotQ>-33.46</mDotQ>
-        <nDotR>-33.46</nDotR>
-        <xUabsU>-6.2282</xUabsU>
-        <xU>0</xU>
-        <yVabsV>-601.27</yVabsV>
-        <yV>0</yV>
-        <zWabsW>-601.27</zWabsW>
-        <zW>0</zW>
-        <kPabsP>-0.1916</kPabsP>
-        <kP>0</kP>
-        <mQabsQ>-632.698957</mQabsQ>
-        <mQ>0</mQ>
-        <nRabsR>-632.698957</nRabsR>
-        <nR>0</nR>
-      </plugin> -->
+        <mDotQ>-0.3346</mDotQ>
+        <nDotR>-0.3346</nDotR>
+        <xUabsU>-0.62282</xUabsU>
+        <xU>-5</xU>
+        <yVabsV>-60.127</yVabsV>
+        <yV>-5</yV>
+        <zWabsW>-6.0127</zWabsW>
+        <zW>-100</zW>
+        <kPabsP>-0.001916</kPabsP>
+        <kP>-1</kP>
+        <mQabsQ>-6.32698957</mQabsQ>
+        <mQ>-1</mQ>
+        <nRabsR>-6.32698957</nRabsR>
+        <nR>-1</nR>
+      </plugin>
     </include>
 
-    <xacro:thruster
-      name="FL" pose="-0.15 0.18 0 0 0 0" />
+    <xacro:thruster name="FL" pose="-0.15 0.18 0 0 0 0" />
     <xacro:thruster name="ML" pose="-0.15 -0.045 -0.02 -1.5707963267948988 0 0" />
     <xacro:thruster name="BL" pose="-0.15 -0.27 0 -3.141592653589773 0 0" />
     <xacro:thruster name="FR" pose="0.15 0.18 0 0 0 0" />

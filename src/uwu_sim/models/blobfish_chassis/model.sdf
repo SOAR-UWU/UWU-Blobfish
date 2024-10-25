@@ -2,11 +2,25 @@
 <sdf version="1.11">
   <model name="chassis_v4">
     <link name="base_link">
-      <inertial auto="true" />
-      <velocity_decay>
-        <linear>1000</linear>
-        <angular>1000</angular>
-      </velocity_decay>
+      <inertial>
+        <mass>8.135</mass>
+        <inertia>
+          <ixx>0.35032999999999995</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>0.35032999999999995</iyy>
+          <iyz>0</iyz>
+          <izz>0.61250000000000006</izz>
+        </inertia>
+      </inertial>
+      <collision name="tube_1__body1_collision">
+        <pose relative_to="__model__">0.0 0.0 0.0 -0.0 -1.5707963267948966 0</pose>
+        <geometry>
+          <box>
+            <size>0.1651 0.29845 0.1651</size>
+          </box>
+        </geometry>
+      </collision>
       <visual name="tube_1__body1_visual">
         <geometry>
           <mesh>
@@ -15,46 +29,6 @@
           </mesh>
         </geometry>
       </visual>
-      <collision name="tube_1__body1_collision">
-        <pose relative_to="__model__">0.0 0.0 0.0 -0.0 -1.5707963267948966 0</pose>
-        <density>1000</density>
-        <geometry>
-          <box>
-            <size>0.16510000000000002 0.29845 0.16510000000000002</size>
-          </box>
-        </geometry>
-      </collision>
-    </link>
-    <link name="internal_1">
-      <inertial auto="true" />
-      <velocity_decay>
-        <linear>1000</linear>
-        <angular>1000</angular>
-      </velocity_decay>
-      <visual name="internal_1__body1_visual">
-        <geometry>
-          <mesh>
-            <scale>0.01 0.01 0.01</scale>
-            <uri>meshes/internal_1/body1_visual.obj</uri>
-          </mesh>
-        </geometry>
-      </visual>
-      <collision name="internal_1__body1_collision">
-        <pose relative_to="__model__">0.0 0.025 0.0 -0.0 -1.5707963267948966 0</pose>
-        <density>1000</density>
-        <geometry>
-          <box>
-            <size>0.04 0.17 0.039999999999999994</size>
-          </box>
-        </geometry>
-      </collision>
-    </link>
-    <link name="battery_box_1">
-      <inertial auto="true" />
-      <velocity_decay>
-        <linear>1000</linear>
-        <angular>1000</angular>
-      </velocity_decay>
       <visual name="battery_box_1__body1_visual">
         <geometry>
           <mesh>
@@ -63,23 +37,6 @@
           </mesh>
         </geometry>
       </visual>
-      <collision name="battery_box_1__body1_collision">
-        <pose relative_to="__model__">0.0 -0.19922499999999999 -0.01 -0.0 -1.5707963267948966 0</pose>
-        <density>1000</density>
-        <geometry>
-          <box>
-            <size>0.2 0.1 0.16510000000000002</size>
-          </box>
-        </geometry>
-      </collision>
     </link>
-    <joint name="battery_box_joint" type="fixed">
-      <parent>base_link</parent>
-      <child>battery_box_1</child>
-    </joint>
-    <joint name="internal_joint" type="fixed">
-      <parent>base_link</parent>
-      <child>internal_1</child>
-    </joint>
   </model>
 </sdf>

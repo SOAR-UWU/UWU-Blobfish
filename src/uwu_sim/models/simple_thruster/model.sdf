@@ -2,12 +2,19 @@
 <sdf version="1.11">
   <model name="thruster_v5">
     <link name="base_link">
-      <pose relative_to="__model__">-2.066487310909798e-19 -0.001999999999999984 0.0 0.0 -0.0 0.0</pose>
-      <inertial auto="true" />
-      <velocity_decay>
-        <linear>1000</linear>
-        <angular>1000</angular>
-      </velocity_decay>
+      <pose relative_to="__model__">0 -0.002 0 0 0 0</pose>
+      <inertial>
+        <mass>0.5</mass>
+      </inertial>
+      <collision
+        name="shroud_1__body1_collision">
+        <pose relative_to="__model__">0.0 -0.025 0.0 -0.0 -1.5707963267948966 0</pose>
+        <geometry>
+          <box>
+            <size>0.1 0.05 0.1</size>
+          </box>
+        </geometry>
+      </collision>
       <visual name="motor_1__body2_visual">
         <geometry>
           <mesh>
@@ -16,22 +23,6 @@
           </mesh>
         </geometry>
       </visual>
-      <collision name="motor_1__body2_collision">
-        <pose relative_to="__model__">0.0 -0.05 0.0 -0.0 -1.5707963267948966 0</pose>
-        <density>1000</density>
-        <geometry>
-          <box>
-            <size>0.04 0.06999999999999999 0.04</size>
-          </box>
-        </geometry>
-      </collision>
-    </link>
-    <link name="shroud_1">
-      <inertial auto="true" />
-      <velocity_decay>
-        <linear>1000</linear>
-        <angular>1000</angular>
-      </velocity_decay>
       <visual name="shroud_1__body1_visual">
         <geometry>
           <mesh>
@@ -40,23 +31,12 @@
           </mesh>
         </geometry>
       </visual>
-      <collision name="shroud_1__body1_collision">
-        <pose relative_to="__model__">0.0 -0.025 0.0 -0.0 -1.5707963267948966 0</pose>
-        <density>1000</density>
-        <geometry>
-          <box>
-            <size>0.1 0.05 0.1</size>
-          </box>
-        </geometry>
-      </collision>
     </link>
     <link name="propeller_1">
-      <pose relative_to="__model__">-2.066487310909798e-19 -0.001999999999999984 0.0 0.0 -0.0 0.0</pose>
-      <inertial auto="true" />
-      <velocity_decay>
-        <linear>1000</linear>
-        <angular>1000</angular>
-      </velocity_decay>
+      <pose>0 0.002 0 0 0 0</pose>
+      <inertial>
+        <mass>0.1704706233479022</mass>
+      </inertial>
       <visual name="propeller_1__body1_visual">
         <geometry>
           <mesh>
@@ -66,9 +46,8 @@
         </geometry>
       </visual>
       <collision name="propeller_1__body1_collision">
-        <pose relative_to="__model__">-0.0018324607678429628 -0.0069999999708849295
+        <pose relative_to="__model__">-0.0018324607678429628 -0.007
           -0.002522165869243227 -2.405643226650295 -0.6550374602052562 0.9786802413017112</pose>
-        <density>1000</density>
         <geometry>
           <box>
             <size>0.053586265073481736 0.04860707199220788 0.06544803327351506</size>
@@ -77,17 +56,18 @@
       </collision>
     </link>
     <joint name="prop_joint" type="revolute">
-      <pose relative_to="__model__">-2.066487310909798e-19 -0.015000000000000008 0.0 0.0 -0.0 0.0</pose>
+      <pose relative_to="__model__">0 -0.015 0 0 0 0</pose>
       <parent>base_link</parent>
       <child>propeller_1</child>
       <axis>
-        <xyz expressed_in="__model__">0.0 1.0 0.0</xyz>
+        <xyz expressed_in="__model__">0 1 0</xyz>
+        <limit>
+          <lower>-1e+12</lower>
+          <upper>1e+12</upper>
+          <effort>-1</effort>
+          <velocity>-1</velocity>
+        </limit>
       </axis>
-    </joint>
-    <joint name="fixed_joint" type="fixed">
-      <pose relative_to="__model__">-5.1662182772745594e-18 -0.05 0.0 0.0 -0.0 0.0</pose>
-      <parent>base_link</parent>
-      <child>shroud_1</child>
     </joint>
   </model>
 </sdf>
