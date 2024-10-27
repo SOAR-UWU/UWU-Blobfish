@@ -35,7 +35,7 @@
     <link name="propeller_1">
       <pose>0 0.002 0 0 0 0</pose>
       <inertial>
-        <mass>0.1704706233479022</mass>
+        <mass>0.01</mass>
       </inertial>
       <visual name="propeller_1__body1_visual">
         <geometry>
