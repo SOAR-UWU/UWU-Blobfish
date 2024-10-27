@@ -27,12 +27,6 @@ Key sim params easily adjustable from single config file with hot reload
 
   - i.e., bouyancy, inertia, thruster directions, thrust range
 
-### Physical Accuracy
-
-Find reasonable mass, size, moment of inertia & drag values
-
-  - Add to Easy Config but ofc back up the most accurate values
-
 ### 3D Environment
 
 Pool with size-accurate tile textures, size-accurate task models
@@ -61,6 +55,12 @@ Test control code across range of sim parameters
 
   - Can code still cope with slight changes?
   - i.e., different slightly off thruster directions & max/min thrust, different bouyancy & inertia
+
+### Physical Accuracy
+
+Find reasonable mass, size, moment of inertia & drag values
+
+  - Add to Easy Config but ofc back up the most accurate values
 
 ### Prettify Sim
 
