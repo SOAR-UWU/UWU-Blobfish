@@ -11,7 +11,7 @@
       <include>
         <uri>model://simple_thruster</uri>
         <name>${name}</name>
-        <pose relative_to="__model__">${pose}</pose>
+        <pose relative_to="__model__" degrees="true">${pose}</pose>
         <plugin
           filename="gz-sim-thruster-system"
           name="gz::sim::systems::Thruster">
@@ -29,7 +29,7 @@
 
     <include>
       <name>chassis</name>
-      <pose relative_to="__model__">0 0 0 0 0 0</pose>
+      <pose relative_to="__model__" degrees="true">0 0 0 0 0 -90</pose>
       <uri>model://blobfish_chassis</uri>
       <plugin
         filename="gz-sim-hydrodynamics-system"
@@ -56,12 +56,12 @@
       </plugin>
     </include>
 
-    <xacro:thruster name="FL" pose="-0.15 0.18 0 0 0 0" />
-    <xacro:thruster name="ML" pose="-0.15 -0.045 -0.02 -1.5707963267948988 0 0" />
-    <xacro:thruster name="BL" pose="-0.15 -0.27 0 -3.141592653589773 0 0" />
-    <xacro:thruster name="FR" pose="0.15 0.18 0 0 0 0" />
-    <xacro:thruster name="MR" pose="0.15 -0.045 -0.02 -1.5707963267948988 0 0" />
-    <xacro:thruster name="BR" pose="0.15 -0.27 0 -3.141592653589773 0 0" />
-    <xacro:thruster name="BT" pose="0 -0.325 0.1 -1.57079632679491 0 0" />
+    <xacro:thruster name="FL" pose="0.18 -0.15 0 0 0 -90" />
+    <xacro:thruster name="ML" pose="-0.045 -0.15 -0.02 -90 0 0" />
+    <xacro:thruster name="BL" pose="-0.27 -0.15 0 0 0 90" />
+    <xacro:thruster name="FR" pose="0.18 0.15 0 0 0 -90" />
+    <xacro:thruster name="MR" pose="-0.045 0.15 -0.02 -90 0 0" />
+    <xacro:thruster name="BR" pose="-0.27 0.15 0 0 0 90" />
+    <xacro:thruster name="BT" pose="-0.325 0 0.1 -90 0 0" />
   </model>
 </sdf>
