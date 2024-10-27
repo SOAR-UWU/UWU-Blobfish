@@ -1,4 +1,4 @@
-<?xml version="1.0" ?>
+<?xml version="1.0"?>
 
 <sdf version="1.5">
   <model name="swimming_pool">
@@ -33,8 +33,41 @@
           </box>
         </geometry>
       </collision>
+      <collision name="north">
+        <pose>25 0 -1 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>.1 25 2</size>
+          </box>
+        </geometry>
+      </collision>
+      <collision name="south">
+        <pose>-25 0 -1 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>.1 25 2</size>
+          </box>
+        </geometry>
+      </collision>
+      <collision name="east">
+        <pose>0 -12.5 -1 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>50 .1 2</size>
+          </box>
+        </geometry>
+      </collision>
+      <collision name="west">
+        <pose>0 12.5 -1 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>50 .1 2</size>
+          </box>
+        </geometry>
+      </collision>
 
-      <visual name="surface">
+      <!--<visual
+      name="surface">
         <cast_shadows>false</cast_shadows>
         <pose>0 0 0 0 0 0</pose>
         <geometry>
@@ -53,7 +86,7 @@
             </metal>
           </pbr>
         </material>
-      </visual>
+      </visual>-->
 
       <visual name="north">
         <cast_shadows>false</cast_shadows>
