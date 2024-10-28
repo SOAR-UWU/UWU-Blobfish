@@ -1,10 +1,16 @@
+"""Launch file for pool world.
+
+Refer to https://docs.ros.org/en/humble/p/launch/user_docs/source/architecture.html
+for list of available launch functions.
+"""
+
 from ament_index_python.packages import get_package_share_path
 from launch import LaunchDescription
 from launch.actions import (
     DeclareLaunchArgument,
     ExecuteProcess,
     IncludeLaunchDescription,
-    LogInfo,
+    # LogInfo,
 )
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import (
@@ -12,11 +18,6 @@ from launch.substitutions import (
     LaunchConfiguration,
     PathJoinSubstitution,
 )
-from launch_ros.actions import Node
-from launch_ros.descriptions import ParameterValue
-
-# Refer to https://docs.ros.org/en/rolling/p/launch/user_docs/source/architecture.html
-# for list of available launch functions.
 
 WORLD_SDF = "pool_world.sdf"
 ROBOT_TYPE = "blobsimp"
@@ -72,8 +73,8 @@ def generate_launch_description():
     return LaunchDescription(
         [
             *declare_launch_arguments(),
-            gazebo,
-            # LogInfo(msg=xacro_cmd),
             write_xacro,
+            # LogInfo(msg=xacro_cmd),
+            gazebo,
         ]
     )
