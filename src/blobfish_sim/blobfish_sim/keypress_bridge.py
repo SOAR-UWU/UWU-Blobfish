@@ -38,21 +38,26 @@ class KeypressBridgeNode(Node):
     def keypress_callback(self, msg: Int32):
         """Parse qt keycode to char and publish."""
         qtcode = msg.data
+        typed = None
         try:
             qtkeyseq = python_qt_binding.QtGui.QKeySequence(qtcode)
             typed = qtkeyseq.toString()
             self._logger.debug(f"Received qt keycode: {typed}")
-
-            # Handling only alphanumerics, discard others
-            if len(typed) > 1:
-                return
-
-            char_msg = Char()
-            char_msg.data = ord(typed[0].lower())
-            self.pub_keypress.publish(char_msg)
         except Exception as e:
             self._logger.debug(f"Failed to parse qt keycode ({qtcode}): {e}")
             return
+
+        if len(typed) == 1:
+            typed = ord(typed[0].lower())
+        # Shift + Space works.
+        elif typed.lower() == "space":
+            typed = ord(" ")
+        # Handling only alphanumerics, discard others.
+        elif len(typed) > 1:
+            typed = None
+
+        if typed is not None:
+            self.pub_keypress.publish(Char(data=typed))
 
 
 def main():

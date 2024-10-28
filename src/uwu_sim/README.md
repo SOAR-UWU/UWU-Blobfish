@@ -74,6 +74,10 @@ Things to model: <https://sauvc.org/rulebook/#tasks>
   - Have to fix all joint types.
   - Haven't tested if inertial & mass estimation is correct, but should definitely adjust mass at least.
 
+## Teleop
+
+Due to limitations with Gazebo key publisher, uppercase letters are not supported. Assume only lowercase alphanumerics work. Additionally, Shift+Space is treated as space since space on its own gets intercepted by Gazebo as sim pause.
+
 ## Gazebo Customization
 
 In both cases, specifying even a single plugin disables the defaults \*facepalm\*.
