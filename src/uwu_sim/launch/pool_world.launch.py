@@ -15,7 +15,10 @@ from launch.substitutions import (
 from launch_ros.actions import Node
 from launch_ros.descriptions import ParameterValue
 
-WORLD_SDF = "test_sea.sdf"
+# Refer to https://docs.ros.org/en/rolling/p/launch/user_docs/source/architecture.html
+# for list of available launch functions.
+
+WORLD_SDF = "pool_world.sdf"
 ROBOT_TYPE = "blobsimp"
 ROBOT_XACRO_NAME = "model.sdf.xacro"
 ROBOT_SDF_NAME = "model.sdf"

@@ -4,7 +4,7 @@ Start small, prioritize & scale up. Forget the old code tech debt unless it happ
 
 ## Steps
 
-### Basic Model
+### (DONE) Basic Model
 
 Cuboid + 7 Thruster Cubes
   - Slight positive bouyancy

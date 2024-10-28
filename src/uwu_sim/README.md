@@ -40,6 +40,20 @@ ros2 run ros_gz_bridge parameter_bridge /TOPIC@ROS_MSG@GZ_MSG
 
 After `colcon build` and `source install/setup.bash`, all `.sdf` worlds under `worlds/` will be visible to Gazebo, meaning you can directly `gz sim world_name.sdf` to load the world.
 
+Listen to topic from CLI:
+
+```sh
+gz topic -e -t <topic_path>
+```
+
+If your GUI scale feels off:
+
+```sh
+# Add below to ~/.bashrc
+export QT_SCALE_FACTOR=<insert scale>
+export QT_AUTO_SCREEN_SCALE_FACTOR=0
+```
+
 ## Modelling
 
 Things to model: <https://sauvc.org/rulebook/#tasks>
