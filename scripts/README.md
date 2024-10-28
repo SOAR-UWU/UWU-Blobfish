@@ -10,5 +10,6 @@
   - Specify package names to build only those packages.
 - `activate.sh`: Sources the project ROS overlay in a new subshell.
   - `deactivate`/`exit` to exit the subshell.
+  - `launch` is shortcut for `ros2 launch`.
   - `reload` to reload the overlay after changes.
   - `build` to run `build.sh` and `reload` in one command. Package names can be specified.

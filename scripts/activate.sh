@@ -23,6 +23,7 @@ exec bash --init-file <(echo "\
   source ~/.bashrc;\
   cd \"$WS_DIR\";\
   alias deactivate='exit';\
+  alias launch='ros2 launch';\
   reload() { echo Reloading UWU! && exec \"$WS_DIR\"/scripts/activate.sh --force; };\
   build() { \"$WS_DIR\"/scripts/build.sh \$@; reload; };\
   source install/local_setup.bash;\
