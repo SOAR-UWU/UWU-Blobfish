@@ -1,0 +1,65 @@
+<?xml version="1.0" ?>
+
+<sdf version="1.5">
+  <model name="yellow_flare">
+    <static>false</static>
+    <link name="link">
+
+      <collision name="flare">
+        <pose>0 0 0.4 0 0 0</pose>
+        <geometry>
+          <cylinder>
+            <radius>0.02</radius>
+            <length>0.8</length>
+          </cylinder>
+        </geometry>
+      </collision>
+
+
+      <visual name="flare">
+        <cast_shadows>false</cast_shadows>
+        <pose>0 0 0.4 0 0 0</pose>
+        <geometry>
+          <cylinder>
+            <radius>0.02</radius>
+            <length>0.8</length>
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>1.0 1.0 0.0 1.0</ambient>
+          <diffuse>1.0 1.0 0.0 1.0</diffuse>
+        </material>
+      </visual>
+
+      <visual name="ball">
+        <cast_shadows>false</cast_shadows>
+        <pose>0 0 0.82 0 0 0</pose>
+        <geometry>
+          <sphere>
+            <radius>0.03</radius>
+          </sphere>
+        </geometry>
+        <material>
+          <ambient>1.0 1.0 1.0 1.0</ambient>
+          <diffuse>1.0 1.0 1.0 1.0</diffuse>
+        </material>
+      </visual>
+
+      <visual name="stand">
+        <cast_shadows>false</cast_shadows>
+        <pose>0 0 0.01 0 0 0</pose>
+        <geometry>
+          <cylinder>
+            <radius>0.1</radius>
+            <length>0.02</length>
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>1.0 1.0 0.0 1.0</ambient>
+          <diffuse>1.0 1.0 0.0 1.0</diffuse>
+        </material>
+      </visual>
+
+    </link>
+  </model>
+</sdf>

@@ -1,0 +1,5 @@
+# See: https://github.com/gazebosim/ros_gz/tree/ros2/ros_gz_bridge#example-5-configuring-the-bridge-via-yaml
+- ros_topic_name: /gz/keyboard/keypress
+  gz_topic_name: /keyboard/keypress
+  ros_type_name: std_msgs/msg/Int32
+  gz_type_name: gz.msgs.Int32

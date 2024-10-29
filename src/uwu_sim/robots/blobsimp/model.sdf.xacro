@@ -1,0 +1,67 @@
+<?xml version="1.0"?>
+<sdf version="1.11" xmlns:xacro="http://www.ros.org/wiki/xacro">
+  <model name="blobfish">
+    <xacro:macro name="fixed_joint" params="parent child">
+      <joint name="${child}_joint" type="fixed">
+        <parent>${parent}</parent>
+        <child>${child}</child>
+      </joint>
+    </xacro:macro>
+    <xacro:macro name="thruster" params="name pose">
+      <include>
+        <uri>model://simple_thruster</uri>
+        <name>${name}</name>
+        <pose relative_to="__model__" degrees="true">${pose}</pose>
+        <plugin
+          filename="gz-sim-thruster-system"
+          name="gz::sim::systems::Thruster">
+          <namespace>blobfish</namespace>
+          <topic>${name}</topic>
+          <use_angvel_cmd>0</use_angvel_cmd>
+          <joint_name>prop_joint</joint_name>
+          <thrust_coefficient>0.004422</thrust_coefficient>
+          <fluid_density>1000</fluid_density>
+          <propeller_diameter>0.07</propeller_diameter>
+        </plugin>
+      </include>
+      <xacro:fixed_joint parent="chassis" child="${name}" />
+    </xacro:macro>
+
+    <include>
+      <name>chassis</name>
+      <pose relative_to="__model__" degrees="true">0 0 0 0 0 -90</pose>
+      <uri>model://blobfish_chassis</uri>
+      <plugin
+        filename="gz-sim-hydrodynamics-system"
+        name="gz::sim::systems::Hydrodynamics">
+        <link_name>base_link</link_name>
+        <xDotU>-0.04876161</xDotU>
+        <yDotV>-1.26324739</yDotV>
+        <zDotW>-1.26324739</zDotW>
+        <kDotP>0</kDotP>
+        <mDotQ>-0.3346</mDotQ>
+        <nDotR>-0.3346</nDotR>
+        <xUabsU>-0.62282</xUabsU>
+        <xU>-5</xU>
+        <yVabsV>-60.127</yVabsV>
+        <yV>-5</yV>
+        <zWabsW>-6.0127</zWabsW>
+        <zW>-100</zW>
+        <kPabsP>-0.001916</kPabsP>
+        <kP>-1</kP>
+        <mQabsQ>-6.32698957</mQabsQ>
+        <mQ>-1</mQ>
+        <nRabsR>-6.32698957</nRabsR>
+        <nR>-1</nR>
+      </plugin>
+    </include>
+
+    <xacro:thruster name="FL" pose="0.18 -0.15 0 0 0 -90" />
+    <xacro:thruster name="ML" pose="-0.045 -0.15 -0.02 -90 0 0" />
+    <xacro:thruster name="BL" pose="-0.27 -0.15 0 0 0 90" />
+    <xacro:thruster name="FR" pose="0.18 0.15 0 0 0 -90" />
+    <xacro:thruster name="MR" pose="-0.045 0.15 -0.02 -90 0 0" />
+    <xacro:thruster name="BR" pose="-0.27 0.15 0 0 0 90" />
+    <xacro:thruster name="BT" pose="-0.325 0 0.1 -90 0 0" />
+  </model>
+</sdf>

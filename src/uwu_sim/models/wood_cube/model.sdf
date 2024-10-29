@@ -1,0 +1,64 @@
+<?xml version="1.0"?>
+<sdf version="1.11">
+  <model name="wood_block">
+    <pose>0 0 0.5 0 0 0</pose>
+    <link name="link">
+      <inertial>
+        <mass>529</mass>
+        <inertia>
+          <!-- inertias are tricky to compute -->
+          <!-- http://gazebosim.org/tutorials?tut=inertia&cat=build_robot -->
+          <ixx>44</ixx>     <!-- for a box: ixx = 0.083 * mass * (y*y + z*z) -->
+          <ixy>0.0</ixy>    <!-- for a box: ixy = 0 -->
+          <ixz>0.0</ixz>    <!-- for a box: ixz = 0 -->
+          <iyy>44</iyy>     <!-- for a box: iyy = 0.083 * mass * (x*x + z*z) -->
+          <iyz>0.0</iyz>    <!-- for a box: iyz = 0 -->
+          <izz>44</izz>     <!-- for a box: izz = 0.083 * mass * (x*x + y*y) -->
+        </inertia>
+      </inertial>
+      <collision name="collision">
+        <geometry>
+          <box>
+            <size>1 1 1</size>
+          </box>
+        </geometry>
+      </collision>
+      <visual name="visual">
+        <geometry>
+          <box>
+            <size>1 1 1</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.545 0.412 0.078 1.0</ambient>
+          <diffuse>0.545 0.412 0.078 1.0</diffuse>
+        </material>
+      </visual>
+    </link>
+    <!--
+    <plugin
+      filename="ignition-gazebo-hydrodynamics-system"
+      name="ignition::gazebo::systems::Hydrodynamics">
+      <link_name>link</link_name>
+      <xDotU>-4.876161</xDotU>
+      <yDotV>-126.324739</yDotV>
+      <zDotW>-126.324739</zDotW>
+      <kDotP>0</kDotP>
+      <mDotQ>-33.46</mDotQ>
+      <nDotR>-33.46</nDotR>
+      <xUU>-6.2282</xUU>
+      <xU>0</xU>
+      <yVV>-601.27</yVV>
+      <yV>0</yV>
+      <zWW>-601.27</zWW>
+      <zW>0</zW>
+      <kPP>-0.1916</kPP>
+      <kP>0</kP>
+      <mQQ>-632.698957</mQQ>
+      <mQ>0</mQ>
+      <nRR>-632.698957</nRR>
+      <nR>0</nR>
+    </plugin>
+    -->
+  </model>
+</sdf>
