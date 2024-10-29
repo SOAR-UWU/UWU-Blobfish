@@ -10,14 +10,19 @@ from launch.actions import IncludeLaunchDescription
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch_ros.actions import Node
 
+WORLD_LAUNCH_FILE = "pool_world.launch.py"
+ROBOT_TYPE = "blobsimp"
+
 
 def generate_launch_description():
     pkg_uwu_sim = get_package_share_path("uwu_sim")
 
-    pool_world = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource(
-            str(pkg_uwu_sim / "launch" / "pool_world.launch.py")
-        )
+    robot = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(str(pkg_uwu_sim / "launch" / "robot.launch.py")),
+        launch_arguments={"robot": ROBOT_TYPE}.items(),
+    )
+    world = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(str(pkg_uwu_sim / "launch" / WORLD_LAUNCH_FILE))
     )
     gz_bridge = Node(
         package="ros_gz_bridge",
@@ -29,4 +34,4 @@ def generate_launch_description():
         executable="keypress_bridge",
     )
 
-    return LaunchDescription([pool_world, gz_bridge, keypress_converter])
+    return LaunchDescription([robot, world, gz_bridge, keypress_converter])

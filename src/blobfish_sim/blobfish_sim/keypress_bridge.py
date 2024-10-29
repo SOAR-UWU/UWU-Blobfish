@@ -68,7 +68,6 @@ def main():
     except KeyboardInterrupt:
         pass
     finally:
-        node.close()
         node.destroy_node()
 
 
