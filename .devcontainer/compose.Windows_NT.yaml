@@ -6,8 +6,8 @@ services:
       # WSL workarounds.
       # See: https://stackoverflow.com/questions/73092750/how-to-show-gui-apps-from-docker-desktop-container-on-windows-11/73901260
       - /usr/lib/wsl:/usr/lib/wsl
-      - /run/desktop/mnt/host/wslg/.X11-unix:/tmp/.X11-unix
-      - /run/desktop/mnt/host/wslg:/mnt/wslg
+      - /mnt/wslg:/mnt/wslg
+      - /mnt/wslg/.X11-unix:/tmp/.X11-unix
 
     environment:
       XDG_RUNTIME_DIR: /mnt/wslg/runtime-dir

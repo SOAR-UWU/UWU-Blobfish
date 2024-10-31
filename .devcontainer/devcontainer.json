@@ -33,8 +33,7 @@
   },
 
   // See: https://containers.dev/implementors/json_reference/#lifecycle-scripts
-  // initializeCommand doesn't work on WSL properly. Currently used to run `xhost` for Linux users.
-  // "initializeCommand": ".devcontainer/hooks/initialize.sh",
+  "initializeCommand": ".devcontainer/hooks/initialize.sh",
   "postCreateCommand": ".devcontainer/hooks/postCreate.sh",
   "postStartCommand": ".devcontainer/hooks/postStart.sh"
   // "shutdownAction": "none",
