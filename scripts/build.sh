@@ -14,7 +14,11 @@ export PYTHONWARNINGS=ignore:::setuptools.command.install,ignore:::setuptools.co
 # Quick version that only builds specific packages and their dependencies.
 if [[ "$#" -ge 1 ]]; then
   env -iC "$WS_DIR" bash \
-    -c "$(echo ". /opt/ros/humble/setup.bash; colcon build --symlink-install --packages-up-to $@")"
+    -c "$(echo " \
+      . /opt/ros/humble/setup.bash; \
+      PYTHONWARNINGS=ignore:::setuptools.command.install,ignore:::setuptools.command.easy_install,ignore:::pkg_resources \
+      colcon build --symlink-install --packages-up-to $@ \
+    ")"
   exit 0
 fi
 
@@ -23,4 +27,8 @@ rosdep update
 (cd "$WS_DIR" && rosdep install --from-paths . --ignore-src -y)
 # Build in login shell to avoid underlay override warning.
 env -iC "$WS_DIR" bash \
-  -c ". /opt/ros/humble/setup.bash; colcon build --symlink-install"
+  -c "$(echo " \
+    . /opt/ros/humble/setup.bash; \
+    PYTHONWARNINGS=ignore:::setuptools.command.install,ignore:::setuptools.command.easy_install,ignore:::pkg_resources \
+    colcon build --symlink-install \
+  ")"
