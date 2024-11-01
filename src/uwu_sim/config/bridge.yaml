@@ -3,3 +3,7 @@
   gz_topic_name: /keyboard/keypress
   ros_type_name: std_msgs/msg/Int32
   gz_type_name: gz.msgs.Int32
+- ros_topic_name: /gz/blobfish/imu
+  gz_topic_name: /blobfish/imu
+  ros_type_name: sensor_msgs/msg/Imu
+  gz_type_name: gz.msgs.IMU

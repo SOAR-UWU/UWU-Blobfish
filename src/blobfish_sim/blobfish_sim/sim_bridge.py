@@ -6,19 +6,23 @@ from rclpy.node import Node
 from std_msgs.msg import Char, Int32
 
 NODE_NAME = "blobfish_sim_bridge"
-GZ_TOPIC = "/gz/keyboard/keypress"
-KEYPRESS_TOPIC = "/keypress"
+G_KEYPRESS_TOPIC = "/gz/keyboard/keypress"
+R_KEYPRESS_TOPIC = "/keypress"
+G_IMU_TOPIC = "/gz/blobfish/imu"
+R_IMU_TOPIC = "/blobfish/imu_measurements"
 
 
 class SimBridgeNode(Node):
     def __init__(self):
         super(SimBridgeNode, self).__init__(NODE_NAME)
 
-        self.create_subscription(Int32, GZ_TOPIC, self.keypress_callback, 10)
-        self.pub_keypress = self.create_publisher(Char, KEYPRESS_TOPIC, 10)
+        self.create_subscription(Int32, G_KEYPRESS_TOPIC, self.keypress_callback, 10)
+        self.pub_keypress = self.create_publisher(Char, R_KEYPRESS_TOPIC, 10)
 
     def keypress_callback(self, msg: Int32):
         """Parse qt keycode to char and publish."""
+        # TODO: Gazebo triggers keypress twice since their plugin doesn't filter key up vs key down.
+        # I am seriously considering copying their keypress plugin and fixing it myself.
         qtcode = msg.data
         typed = None
         try:

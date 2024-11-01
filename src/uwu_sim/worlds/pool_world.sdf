@@ -93,7 +93,7 @@
 
         <play_pause>true</play_pause>
         <step>true</step>
-        <start_paused>false</start_paused>
+        <start_paused>true</start_paused>
         <service>/world/test_sea/control</service>
         <stats_topic>/world/test_sea/stats</stats_topic>
       </plugin>

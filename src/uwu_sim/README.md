@@ -6,6 +6,8 @@ Package for UWU Simulator.
 
 We are using Gazebo Harmonic (v8.6.0), the latest version that supports ROS2 Humble.
 
+If Gazebo is acting weird (blank render screen, loading old worlds only), make sure all processes are killed using `htop` (typically the gz sim server might still linger).
+
 ### Tutorials
 
 - Gazebo Beginner Tutorial Series: <https://gazebosim.org/docs/harmonic/tutorials>
