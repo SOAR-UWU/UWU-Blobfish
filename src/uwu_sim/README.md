@@ -27,6 +27,7 @@ We are using Gazebo Harmonic (v8.6.0), the latest version that supports ROS2 Hum
   - Of particular interest below:
   - sim: <https://gazebosim.org/api/sim/8/index.html>
   - gui (writing frontend plugins): <https://gazebosim.org/api/gui/8/index.html>
+  - sensors (& custom sensors): <https://gazebosim.org/api/sensors/8/index.html>
   - The rest of the API references are incomplete since they were refactored out of the original monolithic documentation by Gazebo.
 
 ## Gazebo Commands
@@ -84,34 +85,59 @@ In both cases, specifying even a single plugin disables the defaults \*facepalm\
 
 I swear are we overlapping RViz functionality here? But since RViz doesn't support SDF, maybe we can use the sim as the visualization tool too.
 
-### Physics
+### System
 
-- List of all physics plugins: <https://gazebosim.org/api/sim/8/namespacegz_1_1sim_1_1systems.html>
+List of all system plugins: <https://gazebosim.org/api/sim/8/namespacegz_1_1sim_1_1systems.html>
+
+### Sensors
+
+List of all sensors: <http://sdformat.org/spec?ver=1.11&elem=sensor>
+- Also refer to: <https://gazebosim.org/api/sensors/8/namespacegz_1_1sensors.html>
+
+Notable sensors below:
+- RGBD Camera: <https://gazebosim.org/api/sensors/8/classgz_1_1sensors_1_1RgbdCameraSensor.html>
+- Arbitrary environment fields: <https://gazebosim.org/api/sensors/8/structgz_1_1sensors_1_1GZ__SENSORS__VERSION__NAMESPACE_1_1EnvironmentalData.html>
+- Altimeter: <https://gazebosim.org/api/sensors/8/classgz_1_1sensors_1_1AltimeterSensor.html>
+  - There is no barometer, just an [AirPressure sensor](https://gazebosim.org/api/sensors/8/classgz_1_1sensors_1_1AirPressureSensor.html), but till get we the Bar02, I can't map the pressure range properly anyways.
+- IMU Sensor: <https://gazebosim.org/api/sensors/8/classgz_1_1sensors_1_1ImuSensor.html>
+  - Note: The vectornav affords higher-level sensor data like dead reckon-based position, while this IMU doesn't.
+- Bbox/Seg Camera Tutorial: <https://gazebosim.org/api/sensors/8/segmentationcamera_igngazebo.html>
+  - Useful only if our CV pipeline can't generalize to the simulated images (which it should).
+
+#### Systems needed
+
+- IMU: <https://gazebosim.org/api/sim/8/classgz_1_1sim_1_1systems_1_1Imu.html>
+- Altimeter: <https://gazebosim.org/api/sim/8/classgz_1_1sim_1_1systems_1_1Altimeter.html>
+- Cameras: <https://gazebosim.org/api/sim/8/classgz_1_1sim_1_1systems_1_1Sensors.html>
+  - They haven't fully refactored this yet, so camera is under generic sensors although there are systems dedicated to specific sensors.
 
 ### UI
 
-- List of all UI plugins: <https://gazebosim.org/api/gui/8/namespaceplugins.html>
-  - Notable plugins below:
-  - Display FPS: <https://gazebosim.org/api/gui/8/classplugins_1_1CameraFps.html>
-  - Move to & follow object: <https://gazebosim.org/api/gui/8/classplugins_1_1CameraTracking.html>
-  - Display image topic (i.e., camera feed): <https://gazebosim.org/api/gui/8/classplugins_1_1ImageDisplay.html>
-  - Allow mouse to control camera: <https://gazebosim.org/api/gui/8/classplugins_1_1InteractiveViewControl.html>
-  - Allow add & remove markers (i.e., waypoint tester): <https://gazebosim.org/api/gui/8/classplugins_1_1MarkerManager.html>
-  - Receive all keyboard events: <https://gazebosim.org/api/gui/8/classgz_1_1gui_1_1KeyPublisher.html>
-    - There is also an opinionated teleop plugin but its not suitable for our use case: <https://gazebosim.org/api/gui/8/classplugins_1_1Teleop.html>
-  - Tape measure: <https://gazebosim.org/api/gui/8/classgz_1_1gui_1_1TapeMeasure.html>
-  - Renderer: <https://gazebosim.org/api/gui/8/classplugins_1_1MinimalScene.html>
-    - <https://gazebosim.org/api/sim/8/classgz_1_1sim_1_1GzSceneManager.html>
-  - Sim start/stop: <https://gazebosim.org/api/gui/8/classplugins_1_1WorldControl.html>
-  - Sim time stats: <https://gazebosim.org/api/gui/8/classplugins_1_1WorldStats.html>
-  - Graph numeric topics: <https://gazebosim.org/api/gui/8/classplugins_1_1TransportPlotting.html>
-  - View topic types (but not echo): <https://gazebosim.org/api/gui/8/classplugins_1_1TopicViewer.html>
-  - Echo topic: <https://gazebosim.org/api/gui/8/classplugins_1_1TopicEcho.html>
-    - tbh why isn't this part of view topic.
-  - Entity tree: <https://gazebosim.org/api/sim/8/classgz_1_1sim_1_1EntityTree.html>
-  - Apply force & torque by dragging (intuitive): <https://gazebosim.org/api/sim/8/classgz_1_1sim_1_1MouseDrag.html>
-  - Apply arbitrary forces & torques (exact): <https://gazebosim.org/api/sim/8/classgz_1_1sim_1_1ApplyForceTorque.html>
-  - View cube: <https://gazebosim.org/api/sim/8/classgz_1_1sim_1_1ViewAngle.html>
-  - Transform tools: <https://gazebosim.org/api/sim/8/classgz_1_1sim_1_1TransformControl.html>
-- Auto-generated default: `$HOME/.gz/sim/<#>/gui.config`
-  - See: <https://gazebosim.org/api/sim/8/gui_config.html>
+List of all UI plugins: <https://gazebosim.org/api/gui/8/namespaceplugins.html>
+- Note, some are still in <https://gazebosim.org/api/sim/8> as they haven't been refactored by Gazebo yet.
+
+Notable plugins below:
+- Display FPS: <https://gazebosim.org/api/gui/8/classplugins_1_1CameraFps.html>
+- Move to & follow object: <https://gazebosim.org/api/gui/8/classplugins_1_1CameraTracking.html>
+- Display image topic (i.e., camera feed): <https://gazebosim.org/api/gui/8/classplugins_1_1ImageDisplay.html>
+- Allow mouse to control camera: <https://gazebosim.org/api/gui/8/classplugins_1_1InteractiveViewControl.html>
+- Allow add & remove markers (i.e., waypoint tester): <https://gazebosim.org/api/gui/8/classplugins_1_1MarkerManager.html>
+- Receive all keyboard events: <https://gazebosim.org/api/gui/8/classgz_1_1gui_1_1KeyPublisher.html>
+  - There is also an opinionated teleop plugin but its not suitable for our use case: <https://gazebosim.org/api/gui/8/classplugins_1_1Teleop.html>
+- Tape measure: <https://gazebosim.org/api/gui/8/classgz_1_1gui_1_1TapeMeasure.html>
+- Renderer: <https://gazebosim.org/api/gui/8/classplugins_1_1MinimalScene.html>
+  - <https://gazebosim.org/api/sim/8/classgz_1_1sim_1_1GzSceneManager.html>
+- Sim start/stop: <https://gazebosim.org/api/gui/8/classplugins_1_1WorldControl.html>
+- Sim time stats: <https://gazebosim.org/api/gui/8/classplugins_1_1WorldStats.html>
+- Graph numeric topics: <https://gazebosim.org/api/gui/8/classplugins_1_1TransportPlotting.html>
+- View topic types (but not echo): <https://gazebosim.org/api/gui/8/classplugins_1_1TopicViewer.html>
+- Echo topic: <https://gazebosim.org/api/gui/8/classplugins_1_1TopicEcho.html>
+  - tbh why isn't this part of view topic.
+- Entity tree: <https://gazebosim.org/api/sim/8/classgz_1_1sim_1_1EntityTree.html>
+- Apply force & torque by dragging (intuitive): <https://gazebosim.org/api/sim/8/classgz_1_1sim_1_1MouseDrag.html>
+- Apply arbitrary forces & torques (exact): <https://gazebosim.org/api/sim/8/classgz_1_1sim_1_1ApplyForceTorque.html>
+- View cube: <https://gazebosim.org/api/sim/8/classgz_1_1sim_1_1ViewAngle.html>
+- Transform tools: <https://gazebosim.org/api/sim/8/classgz_1_1sim_1_1TransformControl.html>
+
+Auto-generated default: `$HOME/.gz/sim/<#>/gui.config`
+- See: <https://gazebosim.org/api/sim/8/gui_config.html>

@@ -37,6 +37,16 @@
         </density_change>
       </graded_buoyancy>
     </plugin>
+    <plugin filename="gz-sim-imu-system"
+      name="gz::sim::systems::Imu" />
+    <plugin filename="gz-sim-altimeter-system"
+      name="gz::sim::systems::Altimeter" />
+    <plugin
+      filename="gz-sim-sensors-system"
+      name="gz::sim::systems::Sensors">
+      <render_engine>ogre2</render_engine>
+    </plugin>
+
     <gui>
       <!-- 
       See: https://gazebosim.org/api/gui/8/tutorials.html
@@ -257,6 +267,42 @@
         <rotation_stiffness>500</rotation_stiffness>
         <position_stiffness>250</position_stiffness>
       </plugin>
+
+      <!-- Only valid for Blobfish -->
+      <plugin filename="ImageDisplay" name="RGB Cam">
+        <gz-gui>
+          <property key="resizable" type="bool">false</property>
+          <property key="state" type="string">floating</property>
+          <property key="height" type="double">240</property>
+          <property key="width" type="double">320</property>
+          <property key="y" type="double">100</property>
+          <property key="showTitleBar" type="bool">false</property>
+
+          <anchors target="3D View">
+            <line own="left" target="left" />
+          </anchors>
+        </gz-gui>
+
+        <topic>/blobfish/rgbd/image</topic>
+        <topic_picker>false</topic_picker>
+      </plugin>
+      <plugin filename="ImageDisplay" name="Depth Cam">
+        <gz-gui>
+          <property key="resizable" type="bool">false</property>
+          <property key="state" type="string">floating</property>
+          <property key="height" type="double">240</property>
+          <property key="width" type="double">320</property>
+          <property key="y" type="double">340</property>
+          <property key="showTitleBar" type="bool">false</property>
+
+          <anchors target="3D View">
+            <line own="left" target="left" />
+          </anchors>
+        </gz-gui>
+
+        <topic>/blobfish/rgbd/depth_image</topic>
+        <topic_picker>false</topic_picker>
+      </plugin>
     </gui>
 
     <light type="directional" name="sun">
@@ -301,6 +347,12 @@
       <name>robot</name>
       <pose>0 0 0 0 0 0</pose>
       <uri>model://blobsimp</uri>
+    </include>
+
+    <include>
+      <name>cube</name>
+      <pose>3 0 0 0 0 0</pose>
+      <uri>model://wood_cube</uri>
     </include>
   </world>
 </sdf>
