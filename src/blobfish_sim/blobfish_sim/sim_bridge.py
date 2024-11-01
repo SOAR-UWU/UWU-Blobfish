@@ -10,9 +10,9 @@ GZ_TOPIC = "/gz/keyboard/keypress"
 KEYPRESS_TOPIC = "/keypress"
 
 
-class KeypressBridgeNode(Node):
+class SimBridgeNode(Node):
     def __init__(self):
-        super(KeypressBridgeNode, self).__init__(NODE_NAME)
+        super(SimBridgeNode, self).__init__(NODE_NAME)
 
         self.create_subscription(Int32, GZ_TOPIC, self.keypress_callback, 10)
         self.pub_keypress = self.create_publisher(Char, KEYPRESS_TOPIC, 10)
@@ -44,7 +44,7 @@ class KeypressBridgeNode(Node):
 
 def main():
     rclpy.init()
-    node = KeypressBridgeNode()
+    node = SimBridgeNode()
     try:
         rclpy.spin(node)
     except KeyboardInterrupt:

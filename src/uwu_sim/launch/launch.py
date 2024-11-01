@@ -18,7 +18,7 @@ def generate_launch_description():
     pkg_uwu_sim = get_package_share_path("uwu_sim")
 
     robot = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource(str(pkg_uwu_sim / "launch" / "robot.launch.py")),
+        PythonLaunchDescriptionSource(str(pkg_uwu_sim / "launch" / "xacro.launch.py")),
         launch_arguments={"robot": ROBOT_TYPE}.items(),
     )
     world = IncludeLaunchDescription(
