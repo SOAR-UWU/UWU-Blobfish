@@ -31,7 +31,7 @@ def generate_launch_description():
     )
     keypress_converter = Node(
         package="blobfish_sim",
-        executable="keypress_bridge",
+        executable="sim_bridge",
     )
 
     return LaunchDescription([robot, world, gz_bridge, keypress_converter])

@@ -1,29 +1,11 @@
-"""Node that converts Gazebo's keypress topic to ours.
-
-`blobfish_control/publish_key.py` uses Python's `chr()` & `ord()` for keypresses.
-This notably doesn't support arrow keys as a single character. Lowercase, uppercase,
-and some key combos (ctrl + key) are supported.
-
-In contrast, Gazebo's keypress publisher uses Qt::Key event codes. See:
-- Implementation: https://github.com/gazebosim/gz-gui/blob/gz-gui9/src/plugins/key_publisher/KeyPublisher.cc
-- Qt docs for function: https://doc.qt.io/qt-6/qkeyevent.html#key
-- Qt key codes: https://doc.qt.io/qt-6/qt.html#Key-enum
-Unfortunately, the function used in KeyPublisher.cc doesn't support uppercase & defaults to uppercase.
-
-Below, I aim to support `chr()` primarily for ease of all other ROS2 nodes. However,
-that means arrow keys aren't supported.
-
-Also, I give up, and we only support lowercase alphanumeric keys in simulation now.
-
-Oh this is cursed ROS created its own Python bindings for Qt: https://wiki.ros.org/python_qt_binding
-"""
+"""Node that converts Gazebo's sensor topics to ours, remapping & transforming values to IRL ranges if needed."""
 
 import python_qt_binding
 import rclpy
 from rclpy.node import Node
 from std_msgs.msg import Char, Int32
 
-NODE_NAME = "gz_keypress_bridge"
+NODE_NAME = "blobfish_sim_bridge"
 GZ_TOPIC = "/gz/keyboard/keypress"
 KEYPRESS_TOPIC = "/keypress"
 
