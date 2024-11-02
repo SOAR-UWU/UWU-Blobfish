@@ -22,7 +22,7 @@ setup(
     tests_require=["pytest"],
     entry_points={
         "console_scripts": [
-            "sim_bridge = blobfish_sim.sim_bridge:main",
+            "keypress_bridge = blobfish_sim.keypress_bridge:main",
         ],
     },
 )

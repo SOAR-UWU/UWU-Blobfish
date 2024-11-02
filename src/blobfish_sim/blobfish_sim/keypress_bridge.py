@@ -5,16 +5,16 @@ import rclpy
 from rclpy.node import Node
 from std_msgs.msg import Char, Int32
 
-NODE_NAME = "blobfish_sim_bridge"
+NODE_NAME = "blobfish_keypress_bridge"
 G_KEYPRESS_TOPIC = "/gz/keyboard/keypress"
 R_KEYPRESS_TOPIC = "/keypress"
 G_IMU_TOPIC = "/gz/blobfish/imu"
 R_IMU_TOPIC = "/blobfish/imu_measurements"
 
 
-class SimBridgeNode(Node):
+class SimKeypressBridgeNode(Node):
     def __init__(self):
-        super(SimBridgeNode, self).__init__(NODE_NAME)
+        super(SimKeypressBridgeNode, self).__init__(NODE_NAME)
 
         self.create_subscription(Int32, G_KEYPRESS_TOPIC, self.keypress_callback, 10)
         self.pub_keypress = self.create_publisher(Char, R_KEYPRESS_TOPIC, 10)
@@ -48,7 +48,7 @@ class SimBridgeNode(Node):
 
 def main():
     rclpy.init()
-    node = SimBridgeNode()
+    node = SimKeypressBridgeNode()
     try:
         rclpy.spin(node)
     except KeyboardInterrupt:
