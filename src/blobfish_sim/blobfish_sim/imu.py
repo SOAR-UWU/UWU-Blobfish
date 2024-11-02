@@ -4,6 +4,7 @@ from typing import Optional
 
 import rclpy
 from geometry_msgs.msg import Twist
+from scipy.spatial.transform import Rotation
 from sensor_msgs.msg import Imu
 
 from .base_bridge import create_bridge
@@ -13,14 +14,21 @@ ROS_TOPIC = "/blobfish/imu_measurements"
 
 # TODO: IMU_Publisher_Node (kebab-case monstrosity) has a parameter `imu_num_cal_samples`,
 # emulate that? There's now a separate list of tasks for the original imu_publisher.py...
+# That said, starting with local-frame (rather than global-frame) IMU is basically
+# the same thing.
 
 
 def map_imu(msg: Imu, _) -> Optional[Twist]:
     """Map IMU."""
     out = Twist()
-    out.angular.x = msg.orientation.x
-    out.angular.y = msg.orientation.y
-    out.angular.z = msg.orientation.z
+    rot = Rotation.from_quat(
+        (msg.orientation.x, msg.orientation.y, msg.orientation.z, msg.orientation.w)
+    )
+    # xyz is extrinsic, XYZ is intrinsic. Probably is intrinsic?
+    rot_x, rot_y, rot_z = rot.as_euler("XYZ", degrees=True)
+    out.angular.x = rot_x
+    out.angular.y = rot_y
+    out.angular.z = rot_z
     # Yes the original node gave up on acceleration values.
     return out
 
