@@ -8,13 +8,13 @@ from typing import Callable, Optional, TypeVar, Union
 
 from rclpy.node import Node, QoSProfile
 
-__all__ = ["create_bridge_node"]
+__all__ = ["create_bridge"]
 
 GZ_MSG_TYPE = TypeVar("GZ_MSG_TYPE")
 ROS_MSG_TYPE = TypeVar("ROS_MSG_TYPE")
 
 
-def create_bridge_node(
+def create_bridge(
     func: Callable[[GZ_MSG_TYPE, Node], Optional[ROS_MSG_TYPE]],
     gz_topic: str,
     gz_type: GZ_MSG_TYPE,

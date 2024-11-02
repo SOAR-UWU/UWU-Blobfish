@@ -1,4 +1,4 @@
-"""Node that converts Gazebo's sensor topics to ours, remapping & transforming values to IRL ranges if needed."""
+"""Replicate `blobfish_control/publish_key.py`."""
 
 from typing import Optional
 
@@ -7,10 +7,10 @@ import rclpy
 from rclpy.node import Node
 from std_msgs.msg import Char, Int32
 
-from .base_bridge import create_bridge_node
+from .base_bridge import create_bridge
 
-G_KEYPRESS_TOPIC = "/gz/keyboard/keypress"
-R_KEYPRESS_TOPIC = "/keypress"
+GZ_TOPIC = "/gz/keyboard/keypress"
+ROS_TOPIC = "/keypress"
 
 
 def map_keypress(msg: Int32, node: Node) -> Optional[Char]:
@@ -46,10 +46,7 @@ def map_keypress(msg: Int32, node: Node) -> Optional[Char]:
 def main(args=None):
     try:
         rclpy.init(args=args)
-        node = create_bridge_node(
-            map_keypress, G_KEYPRESS_TOPIC, Int32, R_KEYPRESS_TOPIC, Char
-        )
-        rclpy.spin(node)
+        rclpy.spin(create_bridge(map_keypress, GZ_TOPIC, Int32, ROS_TOPIC, Char))
     except KeyboardInterrupt:
         pass
 
