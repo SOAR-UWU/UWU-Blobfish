@@ -20,7 +20,7 @@ __all__ = [
     "postprocess_noise",
 ]
 
-sfilter = cv2.saliency.MotionSaliencyBinWangApr2014.create()
+sfilter = cv2.saliency.MotionSaliencyBinWangApr2014_create()
 sfilter.setImagesize(640, 480)
 sfilter.init()
 
