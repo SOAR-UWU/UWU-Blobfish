@@ -11,11 +11,11 @@ Cuboid + 7 Thruster Cubes
 - Slight positive bouyancy
 - Thrusters are functional
 
-### Teleop
+### (DONE) Teleop
 
 Gazebo Teleop -> ROS Teleop Bridge -> Motion Stack -> Simulated Arduino Bridge -> Gazebo Thrusters
 
-### Basic Sensors
+### (DONE) Basic Sensors
 
 Accelerometer, Gyroscope, Compass & Barometer -> ROS Bridge
 

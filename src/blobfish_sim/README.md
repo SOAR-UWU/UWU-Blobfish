@@ -32,3 +32,5 @@ Oh this is cursed ROS created its own Python bindings for Qt: https://wiki.ros.o
 
 Instead of emulating `/vectornav/raw/common`, emulating `/blobfish/imu_measurements`
 is easier.
+
+### Arduino: `/blobfish/motor_values`@[`arduino_bridge/arduino_listener.py`](../arduino_bridge/arduino_bridge/arduino_listener.py)

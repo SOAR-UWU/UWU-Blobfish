@@ -10,3 +10,47 @@
   gz_type_name: gz.msgs.IMU
   direction: GZ_TO_ROS
   publisher_queue: 0
+
+# For all the thrusters
+- ros_topic_name: /gz/blobfish/thruster/FL
+  gz_topic_name: /blobfish/thruster/FL
+  ros_type_name: std_msgs/msg/Float64
+  gz_type_name: gz.msgs.Double
+  direction: ROS_TO_GZ
+  subscriber_queue: 0
+- ros_topic_name: /gz/blobfish/thruster/FR
+  gz_topic_name: /blobfish/thruster/FR
+  ros_type_name: std_msgs/msg/Float64
+  gz_type_name: gz.msgs.Double
+  direction: ROS_TO_GZ
+  subscriber_queue: 0
+- ros_topic_name: /gz/blobfish/thruster/ML
+  gz_topic_name: /blobfish/thruster/ML
+  ros_type_name: std_msgs/msg/Float64
+  gz_type_name: gz.msgs.Double
+  direction: ROS_TO_GZ
+  subscriber_queue: 0
+- ros_topic_name: /gz/blobfish/thruster/MR
+  gz_topic_name: /blobfish/thruster/MR
+  ros_type_name: std_msgs/msg/Float64
+  gz_type_name: gz.msgs.Double
+  direction: ROS_TO_GZ
+  subscriber_queue: 0
+- ros_topic_name: /gz/blobfish/thruster/BL
+  gz_topic_name: /blobfish/thruster/BL
+  ros_type_name: std_msgs/msg/Float64
+  gz_type_name: gz.msgs.Double
+  direction: ROS_TO_GZ
+  subscriber_queue: 0
+- ros_topic_name: /gz/blobfish/thruster/BR
+  gz_topic_name: /blobfish/thruster/BR
+  ros_type_name: std_msgs/msg/Float64
+  gz_type_name: gz.msgs.Double
+  direction: ROS_TO_GZ
+  subscriber_queue: 0
+- ros_topic_name: /gz/blobfish/thruster/BM
+  gz_topic_name: /blobfish/thruster/BM
+  ros_type_name: std_msgs/msg/Float64
+  gz_type_name: gz.msgs.Double
+  direction: ROS_TO_GZ
+  subscriber_queue: 0

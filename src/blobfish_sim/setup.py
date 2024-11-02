@@ -24,6 +24,7 @@ setup(
         "console_scripts": [
             "sim_keypress = blobfish_sim.keypress:main",
             "sim_imu = blobfish_sim.imu:main",
+            "sim_arduino = blobfish_sim.arduino:main",
         ],
     },
 )

@@ -15,7 +15,7 @@
         <plugin
           filename="gz-sim-thruster-system"
           name="gz::sim::systems::Thruster">
-          <namespace>blobfish</namespace>
+          <namespace>blobfish/thruster</namespace>
           <topic>${name}</topic>
           <joint_name>prop_joint</joint_name>
           <thrust_coefficient>0.01</thrust_coefficient>
