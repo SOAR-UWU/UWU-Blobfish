@@ -28,6 +28,7 @@ def generate_launch_description():
     )
     keypress_bridge = Node(package="blobfish_sim", executable="sim_keypress")
     imu_bridge = Node(package="blobfish_sim", executable="sim_imu")
+    depth_bridge = Node(package="blobfish_sim", executable="sim_depth")
     arduino_bridge = Node(package="blobfish_sim", executable="sim_arduino")
     robot = IncludeLaunchDescription(str(pkg_uwu_sim / "launch" / "robot.launch.py"))
 
@@ -38,6 +39,7 @@ def generate_launch_description():
             gz_topic_bridge,
             keypress_bridge,
             imu_bridge,
+            depth_bridge,
             arduino_bridge,
             robot,
         ]
