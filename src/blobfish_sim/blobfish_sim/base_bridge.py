@@ -7,6 +7,7 @@ from attempting to create another ROS2 micro-framework or smth.
 from typing import Callable, Optional, TypeVar, Union
 
 from rclpy.node import Node, QoSProfile
+from rclpy.qos import qos_profile_sensor_data
 
 __all__ = ["create_bridge"]
 
@@ -21,7 +22,8 @@ def create_bridge(
     to_topic: str,
     to_type: TO_MSG_TYPE,
     name: Optional[str] = None,
-    qos_profile: Union[QoSProfile, int] = 10,
+    from_profile: Union[QoSProfile, int] = qos_profile_sensor_data,
+    to_profile: Union[QoSProfile, int] = 10,
 ) -> Node:
     """Creates bridge node to process msg from one topic to another, i.e., from
     Gazebo-mapped topic to our used ROS2 topic.
@@ -32,12 +34,12 @@ def create_bridge(
     """
     name = name or f"sim_bridge_{to_topic.split('/')[-1]}"
     node = Node(name)
-    pub = node.create_publisher(to_type, to_topic, qos_profile)
+    pub = node.create_publisher(to_type, to_topic, to_profile)
 
     def _callback(msg: FROM_MSG_TYPE):
         val = func(msg, node)
         if val is not None:
             pub.publish(val)
 
-    node.create_subscription(from_type, from_topic, _callback, qos_profile)
+    node.create_subscription(from_type, from_topic, _callback, from_profile)
     return node

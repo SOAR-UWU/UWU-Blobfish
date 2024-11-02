@@ -26,9 +26,10 @@ def map_imu(msg: Imu, _) -> Optional[Twist]:
 
 
 def main(args=None):
+    rclpy.init(args=args)
+    node = create_bridge(map_imu, GZ_TOPIC, Imu, ROS_TOPIC, Twist, to_profile=0)
     try:
-        rclpy.init(args=args)
-        rclpy.spin(create_bridge(map_imu, GZ_TOPIC, Imu, ROS_TOPIC, Twist))
+        rclpy.spin(node)
     except KeyboardInterrupt:
         pass
 

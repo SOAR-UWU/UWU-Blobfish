@@ -44,9 +44,12 @@ def map_keypress(msg: Int32, node: Node) -> Optional[Char]:
 
 
 def main(args=None):
+    rclpy.init(args=args)
+    node = create_bridge(
+        map_keypress, GZ_TOPIC, Int32, ROS_TOPIC, Char, from_profile=10
+    )
     try:
-        rclpy.init(args=args)
-        rclpy.spin(create_bridge(map_keypress, GZ_TOPIC, Int32, ROS_TOPIC, Char))
+        rclpy.spin(node)
     except KeyboardInterrupt:
         pass
 

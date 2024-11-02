@@ -2,8 +2,11 @@
 - ros_topic_name: /gz/keyboard/keypress
   gz_topic_name: /keyboard/keypress
   ros_type_name: std_msgs/msg/Int32
+  direction: GZ_TO_ROS
   gz_type_name: gz.msgs.Int32
 - ros_topic_name: /gz/blobfish/imu
   gz_topic_name: /blobfish/imu
   ros_type_name: sensor_msgs/msg/Imu
   gz_type_name: gz.msgs.IMU
+  direction: GZ_TO_ROS
+  publisher_queue: 0
