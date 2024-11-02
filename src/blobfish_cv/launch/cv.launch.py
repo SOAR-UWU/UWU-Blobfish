@@ -41,7 +41,7 @@ def generate_launch_description():
     )
 
     ld = LaunchDescription()
-    ld.add_action(cam_node)
+    # ld.add_action(cam_node)
     ld.add_action(record_node)
     ld.add_action(cv_node1)
     ld.add_action(cv_node2)

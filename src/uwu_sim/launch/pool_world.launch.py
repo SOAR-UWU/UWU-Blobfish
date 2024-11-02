@@ -7,7 +7,6 @@ for list of available launch functions.
 from ament_index_python.packages import get_package_share_path
 from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription
-from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import LaunchConfiguration
 
 WORLD_SDF = "pool_world.sdf"
@@ -24,10 +23,8 @@ def generate_launch_description():
     arg_world_sdf = LaunchConfiguration("world_sdf")
 
     gazebo = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource(
-            str(pkg_ros_gz_sim / "launch" / "gz_sim.launch.py")
-        ),
-        launch_arguments={"gz_args": ["-r ", arg_world_sdf]}.items(),
+        str(pkg_ros_gz_sim / "launch" / "gz_sim.launch.py"),
+        launch_arguments={"gz_args": [arg_world_sdf, " -v 0"]}.items(),
     )
 
     return LaunchDescription([*declare_launch_arguments(), gazebo])

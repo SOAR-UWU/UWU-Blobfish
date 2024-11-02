@@ -15,6 +15,7 @@ find_package(geometry_msgs REQUIRED)
 
 rosidl_generate_interfaces(${PROJECT_NAME}
   "msg/Motors.msg"
+  "msg/MotorsFloat.msg"
   "msg/MotorOffset.msg"
   "msg/RotDepthVelocity.msg"
   DEPENDENCIES geometry_msgs

@@ -35,7 +35,7 @@
     <link name="propeller_1">
       <pose>0 0.002 0 0 0 0</pose>
       <inertial>
-        <mass>0.01</mass>
+        <mass>0.0001</mass>
       </inertial>
       <visual name="propeller_1__body1_visual">
         <geometry>
@@ -46,11 +46,10 @@
         </geometry>
       </visual>
       <collision name="propeller_1__body1_collision">
-        <pose relative_to="__model__">-0.0018324607678429628 -0.007
-          -0.002522165869243227 -2.405643226650295 -0.6550374602052562 0.9786802413017112</pose>
+        <pose relative_to="__model__">0 -0.007 0 0 0 0</pose>
         <geometry>
           <box>
-            <size>0.053586265073481736 0.04860707199220788 0.06544803327351506</size>
+            <size>0.05 0.007 0.05</size>
           </box>
         </geometry>
       </collision>
