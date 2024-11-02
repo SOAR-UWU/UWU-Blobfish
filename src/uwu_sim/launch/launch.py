@@ -27,6 +27,7 @@ def generate_launch_description():
         parameters=[{"config_file": str(pkg_uwu_sim / "config" / "bridge.yaml")}],
     )
     keypress_bridge = Node(package="blobfish_sim", executable="sim_keypress")
+    imu_bridge = Node(package="blobfish_sim", executable="sim_imu")
     robot = IncludeLaunchDescription(str(pkg_uwu_sim / "launch" / "robot.launch.py"))
 
     return LaunchDescription(
@@ -35,6 +36,7 @@ def generate_launch_description():
             world,
             gz_topic_bridge,
             keypress_bridge,
+            imu_bridge,
             robot,
         ]
     )
