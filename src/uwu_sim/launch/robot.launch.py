@@ -18,7 +18,7 @@ def generate_launch_description():
 
     return LaunchDescription(
         [
-            # cv,
+            cv,
             pid,
             thruster,
         ]

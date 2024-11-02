@@ -34,3 +34,11 @@ Instead of emulating `/vectornav/raw/common`, emulating `/blobfish/imu_measureme
 is easier.
 
 ### Arduino: `/blobfish/motor_values`@[`arduino_bridge/arduino_listener.py`](../arduino_bridge/arduino_bridge/arduino_listener.py)
+
+### Others
+
+- `GZ:/blobfish/depth` -> `ROS:/gz/blobfish/depth` -> `ROS:/blobfish/depth`: Depth
+  control code was never finished.
+- `GZ:/blobfish/rgbd/image` -> `ROS:/image_raw`: Doesn't need any special bridge.
+- `GZ:/blobfish/rgbd/depth_image` -> `ROS:/image_depth`: Doesn't need any special bridge.
+  Also currently unused and hence commented out in `bridge.yaml`.

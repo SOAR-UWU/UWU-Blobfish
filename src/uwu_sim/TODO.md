@@ -38,7 +38,7 @@ Pool with size-accurate tile textures, size-accurate task models
 
 ### Visual Sensors
 
-Front-facing 3D cam cube & bottom-facing 2D can cube
+Front-facing 3D cam cube (DONE) & bottom-facing 2D cam cube
 
 - Allows sanity check of CV & optical flow code
 

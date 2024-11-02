@@ -16,6 +16,21 @@
   gz_type_name: gz.msgs.Altimeter
   direction: GZ_TO_ROS
   publisher_queue: 0
+- ros_topic_name: /image_raw
+  gz_topic_name: /blobfish/rgbd/image
+  ros_type_name: sensor_msgs/msg/Image
+  gz_type_name: gz.msgs.Image
+  direction: GZ_TO_ROS
+  publisher_queue: 0
+# - ros_topic_name: /image_depth
+#   gz_topic_name: /blobfish/rgbd/depth_image
+#   ros_type_name: sensor_msgs/msg/Image
+#   gz_type_name: gz.msgs.Image
+#   direction: GZ_TO_ROS
+#   publisher_queue: 0
+# TODO: We can send images from CV pipeline back to Gazebo to render on Gazebo's
+# GUI instead of using RQT. Though we should probably be using RViz instead anyways.
+
 
 # For all the thrusters
 - ros_topic_name: /gz/blobfish/thruster/FL
