@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<!--
+  Common world system plugins included into most world sdf files.
+  Note: Gazebo is very modular. Without any plugins, it will insert some
+  default plugins. However, specifying even one plugin will disable that.
+  Hence the default plugins are specified here.
+  See: https://gazebosim.org/docs/harmonic/sdf_worlds
+  Also see list: https://gazebosim.org/api/sim/8/namespacegz_1_1sim_1_1systems.html
+  -->
+<sdf version="1.11">
+  <physics name="1ms" type="ode">
+    <max_step_size>0.001</max_step_size>
+    <real_time_factor>1.0</real_time_factor>
+  </physics>
+
+  <plugin filename="gz-sim-physics-system" name="gz::sim::systems::Physics" />
+  <plugin filename="gz-sim-user-commands-system" name="gz::sim::systems::UserCommands" />
+  <plugin filename="gz-sim-scene-broadcaster-system" name="gz::sim::systems::SceneBroadcaster" />
+</sdf>

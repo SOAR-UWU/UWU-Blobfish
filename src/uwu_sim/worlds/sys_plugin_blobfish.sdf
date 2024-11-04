@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<!-- World system plugins specific to blobfish. -->
+<sdf version="1.11">
+  <plugin filename="gz-sim-imu-system" name="gz::sim::systems::Imu" />
+  <plugin filename="gz-sim-altimeter-system" name="gz::sim::systems::Altimeter" />
+  <plugin filename="gz-sim-sensors-system" name="gz::sim::systems::Sensors">
+    <render_engine>ogre2</render_engine>
+  </plugin>
+</sdf>

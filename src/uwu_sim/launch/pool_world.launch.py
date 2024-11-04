@@ -9,7 +9,7 @@ from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription
 from launch.substitutions import LaunchConfiguration
 
-WORLD_SDF = "pool_world.sdf"
+WORLD_SDF = "world_pool.sdf"
 
 
 def declare_launch_arguments():

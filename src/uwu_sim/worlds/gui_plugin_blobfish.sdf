@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<!-- World gui plugins specific to blobfish. -->
+<sdf version="1.11">
+  <plugin filename="ImageDisplay" name="RGB Cam">
+    <gz-gui>
+      <property key="resizable" type="bool">false</property>
+      <property key="state" type="string">floating</property>
+      <property key="height" type="double">240</property>
+      <property key="width" type="double">320</property>
+      <property key="y" type="double">100</property>
+      <property key="showTitleBar" type="bool">false</property>
+
+      <anchors target="3D View">
+        <line own="left" target="left" />
+      </anchors>
+    </gz-gui>
+
+    <topic>/blobfish/rgbd/image</topic>
+    <topic_picker>false</topic_picker>
+  </plugin>
+  <plugin filename="ImageDisplay" name="Depth Cam">
+    <gz-gui>
+      <property key="resizable" type="bool">false</property>
+      <property key="state" type="string">floating</property>
+      <property key="height" type="double">240</property>
+      <property key="width" type="double">320</property>
+      <property key="y" type="double">340</property>
+      <property key="showTitleBar" type="bool">false</property>
+
+      <anchors target="3D View">
+        <line own="left" target="left" />
+      </anchors>
+    </gz-gui>
+
+    <topic>/blobfish/rgbd/depth_image</topic>
+    <topic_picker>false</topic_picker>
+  </plugin>
+</sdf>
