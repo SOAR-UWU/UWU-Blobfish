@@ -16,6 +16,7 @@ if [[ "$#" -ge 1 ]]; then
   env -iC "$WS_DIR" bash \
     -c "$(echo " \
       . /opt/ros/humble/setup.bash; \
+      (cd install/ && rm -rf $@); \
       PYTHONWARNINGS=ignore:::setuptools.command.install,ignore:::setuptools.command.easy_install,ignore:::pkg_resources \
       colcon build --symlink-install --packages-up-to $@ \
     ")"
@@ -29,6 +30,7 @@ rosdep update
 env -iC "$WS_DIR" bash \
   -c "$(echo " \
     . /opt/ros/humble/setup.bash; \
+    rm -rf install/ build/; \
     PYTHONWARNINGS=ignore:::setuptools.command.install,ignore:::setuptools.command.easy_install,ignore:::pkg_resources \
     colcon build --symlink-install \
   ")"
