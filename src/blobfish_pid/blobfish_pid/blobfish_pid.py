@@ -1,9 +1,15 @@
 #!/usr/bin/env python3
-from simple_pid import PID
 import rclpy
+from geometry_msgs.msg import Twist
 from rclpy.node import Node
-from std_msgs.msg import Float64, Float32, Char
-from geometry_msgs.msg import Twist, Vector3
+from simple_pid import PID
+from std_msgs.msg import Char, Float32, Float64
+
+# TODO:
+# PID-ing off acceleration to get it to 0 DOESNT KEEP US ON THE SPOT
+# Even water drag can eventually reduce acceleration to 0.
+# We have to accumulate acceleration to get drift (in distance/meters) from origin.
+# Then PID to move the robot back to origin using the drift as the error.
 
 
 class PID_Node(Node):
@@ -23,32 +29,32 @@ class PID_Node(Node):
         self.declare_parameter("kd_yaw", 0.0)
 
         # Not running PID for X direction (forward/backward)
-        # self.declare_parameter("kp_x", 0.03)
-        # self.declare_parameter("ki_x", 0.0)
-        # self.declare_parameter("kd_x", 0.0)
+        self.declare_parameter("kp_x", 0.03)
+        self.declare_parameter("ki_x", 0.0)
+        self.declare_parameter("kd_x", 0.0)
 
         # Not running PID for y direction (sideways)
-        # self.declare_parameter("kp_y", 0.03)
-        # self.declare_parameter("ki_y", 0.0)
-        # self.declare_parameter("kd_y", 0.0)
-        
+        self.declare_parameter("kp_y", 0.03)
+        self.declare_parameter("ki_y", 0.0)
+        self.declare_parameter("kd_y", 0.0)
+
         self.declare_parameter("kp_z", 0.03)
         self.declare_parameter("ki_z", 0.0)
         self.declare_parameter("kd_z", 0.0)
 
         # Just something to reduce the speed since it's not being put through PID
         self.declare_parameter("speed_coeff", 0.03)
-        
+
         self.setpoint_roll = 0.0
         self.setpoint_pitch = 0.0
         self.setpoint_yaw = 0.0
         self.setpoint_depth = 0.0
-        # self.setpoint_x = 0.0
-        # self.setpoint_y = 0.0
+        self.setpoint_x = 0.0
+        self.setpoint_y = 0.0
         self.setpoint_z = 0.0
 
         self.speed = 0.0
-        
+
         # Variable to buffer depth to publish it together with the other values
         self.current_depth = 0.0
 
@@ -64,36 +70,70 @@ class PID_Node(Node):
         ki_yaw = self.get_parameter("ki_yaw").value
         kd_yaw = self.get_parameter("kd_yaw").value
 
-        # kp_x = self.get_parameter("kp_x").value
-        # ki_x = self.get_parameter("ki_x").value
-        # kd_x = self.get_parameter("kd_x").value
+        kp_x = self.get_parameter("kp_x").value
+        ki_x = self.get_parameter("ki_x").value
+        kd_x = self.get_parameter("kd_x").value
 
-        # kp_y = self.get_parameter("kp_y").value
-        # ki_y = self.get_parameter("ki_y").value
-        # kd_y = self.get_parameter("kd_y").value
+        kp_y = self.get_parameter("kp_y").value
+        ki_y = self.get_parameter("ki_y").value
+        kd_y = self.get_parameter("kd_y").value
 
         kp_z = self.get_parameter("kp_z").value
         ki_z = self.get_parameter("ki_z").value
         kd_z = self.get_parameter("kd_z").value
 
-        self.speed_coeff  = self.get_parameter("speed_coeff").value
+        self.speed_coeff = self.get_parameter("speed_coeff").value
 
-        self.pid_r = PID(kp_roll, ki_roll, kd_roll, output_limits=(-1.0, 1.0), sample_time=0.005, setpoint=0)
-        self.pid_p = PID(kp_pitch, ki_pitch, kd_pitch, output_limits=(-1.0, 1.0), sample_time=0.005, setpoint=0)
-        self.pid_h = PID(kp_yaw, ki_yaw, kd_yaw, output_limits=(-1.0, 1.0), sample_time=0.005, setpoint=0)
-        # self.pid_x = PID(kp_x, ki_x, kd_x, output_limits=(-1.0, 1.0), sample_time=0.005, setpoint=0)
-        # self.pid_y = PID(kp_y, ki_y, kd_y, output_limits=(-1.0, 1.0), sample_time=0.005, setpoint=0)
-        self.pid_z = PID(kp_z, ki_z, kd_z, output_limits=(-1.0, 1.0), sample_time=0.005, setpoint=0)
-        
+        self.pid_r = PID(
+            kp_roll,
+            ki_roll,
+            kd_roll,
+            output_limits=(-1.0, 1.0),
+            sample_time=0.005,
+            setpoint=0,
+        )
+        self.pid_p = PID(
+            kp_pitch,
+            ki_pitch,
+            kd_pitch,
+            output_limits=(-1.0, 1.0),
+            sample_time=0.005,
+            setpoint=0,
+        )
+        self.pid_h = PID(
+            kp_yaw,
+            ki_yaw,
+            kd_yaw,
+            output_limits=(-1.0, 1.0),
+            sample_time=0.005,
+            setpoint=0,
+        )
+        self.pid_x = PID(
+            kp_x, ki_x, kd_x, output_limits=(-1.0, 1.0), sample_time=0.005, setpoint=0
+        )
+        self.pid_y = PID(
+            kp_y, ki_y, kd_y, output_limits=(-1.0, 1.0), sample_time=0.005, setpoint=0
+        )
+        self.pid_z = PID(
+            kp_z, ki_z, kd_z, output_limits=(-1.0, 1.0), sample_time=0.005, setpoint=0
+        )
+
         qos_profile = rclpy.qos.qos_profile_sensor_data
 
-        self.output_pid = self.create_publisher(Twist, 'blobfish/control_effort', 10)
-        self.create_subscription(Twist, 'blobfish/imu_measurements', self.calculate_control_effort, qos_profile)
-        self.create_subscription(Twist, 'blobfish/state_setpoints', self.set_setpoints, 10)
-        self.create_subscription(Float64, 'blobfish/speed_setpoint', self.set_speed, 10)
-        self.create_subscription(Char, 'keypress', self.proc_keypress, 10)
-        self.create_subscription(Float32, 'depth', self.read_depth, 10)
-        
+        self.output_pid = self.create_publisher(Twist, "blobfish/control_effort", 10)
+        self.create_subscription(
+            Twist,
+            "blobfish/imu_measurements",
+            self.calculate_control_effort,
+            qos_profile,
+        )
+        self.create_subscription(
+            Twist, "blobfish/state_setpoints", self.set_setpoints, 10
+        )
+        self.create_subscription(Float64, "blobfish/speed_setpoint", self.set_speed, 10)
+        self.create_subscription(Char, "keypress", self.proc_keypress, 10)
+        self.create_subscription(Float32, "depth", self.read_depth, 10)
+
         self.current_depth = 0
         self.current_axis = None
         self.current_variable = None
@@ -114,30 +154,30 @@ class PID_Node(Node):
         ki_yaw = self.get_parameter("ki_yaw").value
         kd_yaw = self.get_parameter("kd_yaw").value
 
-        # kp_x = self.get_parameter("kp_x").value
-        # ki_x = self.get_parameter("ki_x").value
-        # kd_x = self.get_parameter("kd_x").value
+        kp_x = self.get_parameter("kp_x").value
+        ki_x = self.get_parameter("ki_x").value
+        kd_x = self.get_parameter("kd_x").value
 
-        # kp_y = self.get_parameter("kp_y").value
-        # ki_y = self.get_parameter("ki_y").value
-        # kd_y = self.get_parameter("kd_y").value
+        kp_y = self.get_parameter("kp_y").value
+        ki_y = self.get_parameter("ki_y").value
+        kd_y = self.get_parameter("kd_y").value
 
         kp_z = self.get_parameter("kp_z").value
         ki_z = self.get_parameter("ki_z").value
         kd_z = self.get_parameter("kd_z").value
-        
+
         self.pid_r.tunings = (kp_roll, ki_roll, kd_roll)
         self.pid_p.tunings = (kp_pitch, ki_pitch, kd_pitch)
         self.pid_h.tunings = (kp_yaw, ki_yaw, kd_yaw)
-        # self.pid_x.tunings = (kp_x, ki_x, kd_x)
-        # self.pid_y.tunings = (kp_y, ki_y, kd_y)
+        self.pid_x.tunings = (kp_x, ki_x, kd_x)
+        self.pid_y.tunings = (kp_y, ki_y, kd_y)
         self.pid_z.tunings = (kp_z, ki_z, kd_z)
 
         current_r = msg.angular.x
         current_p = msg.angular.y
         current_h = msg.angular.z
-        # current_x = msg.linear.x
-        # current_y = msg.linear.y
+        current_x = msg.linear.x
+        current_y = msg.linear.y
         current_z = self.current_depth
 
         error_r = current_r - self.setpoint_roll
@@ -156,17 +196,20 @@ class PID_Node(Node):
         elif error_h > 180:
             error_h -= 360
 
-        # error_x = current_x - setpoint_x
-        # error_y = current_y - setpoint_y
+        error_x = current_x - self.setpoint_x
+        error_y = current_y - self.setpoint_y
         error_z = current_z - self.setpoint_depth
-            
+
         pid_vals = Twist()
         pid_vals.angular.x = self.pid_r(error_r)
         pid_vals.angular.y = self.pid_p(error_p)
         pid_vals.angular.z = self.pid_h(error_h)
-        pid_vals.linear.x = self.speed * self.speed_coeff
-        pid_vals.linear.y = 0.0   # not correcting for y axis (sideways movement)
+        # pid_vals.linear.x = self.speed * self.speed_coeff
+        # pid_vals.linear.y = 0.0   # not correcting for y axis (sideways movement)
         pid_vals.linear.z = self.pid_z(error_z)
+
+        pid_vals.linear.x = self.pid_x(error_x)
+        pid_vals.linear.y = self.pid_y(error_y)
 
         self.output_pid.publish(pid_vals)
 
@@ -180,7 +223,9 @@ class PID_Node(Node):
         self.setpoint_roll = setpoints.angular.x
         self.setpoint_pitch = setpoints.angular.y
         self.setpoint_yaw = setpoints.angular.z
-        self.get_logger().info(f"Setpoints set: {self.setpoint_depth}, {self.setpoint_roll}, {self.setpoint_pitch}, {self.setpoint_yaw}")
+        self.get_logger().info(
+            f"Setpoints set: {self.setpoint_depth}, {self.setpoint_roll}, {self.setpoint_pitch}, {self.setpoint_yaw}"
+        )
 
     def set_speed(self, msg):
         self.speed = msg.data
@@ -189,29 +234,37 @@ class PID_Node(Node):
         keypress = chr(msg.data)
 
         # Disable the use of the depth sensor (current depth always reads 0)
-        if keypress == 'q':
+        if keypress == "q":
             self.using_depth = not self.using_depth
-            self.get_logger().info(f"Using depth sensor for control: {self.using_depth}")
+            self.get_logger().info(
+                f"Using depth sensor for control: {self.using_depth}"
+            )
             if not self.using_depth:
                 self.current_depth = 0
 
         if not self.tuning:
-            if keypress == 'h':
+            if keypress == "h":
                 self.get_logger().info("Press 'c' to tune PID parameters")
                 if self.using_depth:
-                    self.get_logger().info("Press 'q' to disable depth reading from sensor")
+                    self.get_logger().info(
+                        "Press 'q' to disable depth reading from sensor"
+                    )
                 else:
-                    self.get_logger().info("Press 'q' to enable depth reading from sensor")
-            elif keypress == 'c':
+                    self.get_logger().info(
+                        "Press 'q' to enable depth reading from sensor"
+                    )
+            elif keypress == "c":
                 self.get_logger().info("Tuning PID parameters, press 'c' again to stop")
                 self.tuning = True
             return
 
         if keypress == "c":
-            self.get_logger().info("Tuning for PID parameters stopped, press 'c' again to start")
+            self.get_logger().info(
+                "Tuning for PID parameters stopped, press 'c' again to start"
+            )
             self.tuning = False
             return
-            
+
         if keypress in "pP":
             self.current_variable = "p"
             self.get_logger().info("Tuning P")
@@ -237,7 +290,6 @@ class PID_Node(Node):
             self.current_axis = "y"
             self.get_logger().info("Tuning y")
 
-
         if keypress in "hH":
             self.get_logger().info("Help:")
             self.get_logger().info("P - Tune P")
@@ -256,8 +308,8 @@ class PID_Node(Node):
                 self.get_logger().info("Press 'q' to disable depth reading from sensor")
             else:
                 self.get_logger().info("Press 'q' to enable depth reading from sensor")
-        
-        if self.current_axis != None and self.current_variable != None:
+
+        if self.current_axis is not None and self.current_variable is not None:
             if keypress in ",.":
                 param_name = f"k{self.current_variable}_{self.current_axis}"
                 param_val = self.get_parameter(param_name).value
@@ -265,17 +317,13 @@ class PID_Node(Node):
                 if keypress == ",":
                     param_val -= self.unit
                     new_param = rclpy.parameter.Parameter(
-                        param_name,
-                        rclpy.Parameter.Type.DOUBLE,
-                        param_val
+                        param_name, rclpy.Parameter.Type.DOUBLE, param_val
                     )
                     self.get_logger().info(f"Decreasing {param_name} to {param_val}")
                 if keypress == ".":
                     param_val += self.unit
                     new_param = rclpy.parameter.Parameter(
-                        param_name,
-                        rclpy.Parameter.Type.DOUBLE,
-                        param_val
+                        param_name, rclpy.Parameter.Type.DOUBLE, param_val
                     )
                     self.get_logger().info(f"Increasing {param_name} to {param_val}")
 
@@ -290,6 +338,7 @@ def main(args=None):
 
     pid.destroy_node()
     rclpy.shutdown()
-    
+
+
 if __name__ == "__main__":
     main()

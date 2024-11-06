@@ -69,6 +69,7 @@ class IMU_Publisher_Node(Node):
       # quat_msg = msg.orientation
       # Calibrate the IMU data to remove gravity
 
+      # TODO: NOTE: Steal how gravity correction is done here if its correct.
       # quat = [quat_msg.w, quat_msg.x, quat_msg.y, quat_msg.z]
       # raw_accel_vec = [raw_accel_x, raw_accel_y, raw_accel_z]
       # gravity_vec = [0, 0, -self.gravity]
