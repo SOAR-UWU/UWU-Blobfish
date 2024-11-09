@@ -1,5 +1,8 @@
-#!/usr/bin/env python3
+import os
+
 import rclpy
+import rclpy.parameter
+import yaml
 from geometry_msgs.msg import Twist
 from rclpy.node import Node
 from simple_pid import PID
@@ -11,10 +14,28 @@ from std_msgs.msg import Char, Float32, Float64
 # We have to accumulate acceleration to get drift (in distance/meters) from origin.
 # Then PID to move the robot back to origin using the drift as the error.
 
+# TODO: Below code needs to have 2 modes, one where the accumulation is done by
+# the node, and the other where it relies on the IMU's dead reckoning.
+
 
 class PID_Node(Node):
+    # fmt: off
+    pid_params = [
+        "kp_roll", "ki_roll", "kd_roll",
+        "kp_pitch", "ki_pitch", "kd_pitch",
+        "kp_yaw", "ki_yaw", "kd_yaw",
+        "kp_x", "ki_x", "kd_x",
+        "kp_y", "ki_y", "kd_y",
+        "kp_z", "ki_z", "kd_z",
+        "speed_coeff",
+    ] # list used instead of set to specify key order when saving to config
+    # fmt: on
+
     def __init__(self):
         super().__init__("pid_node")
+
+        self.declare_parameter("config_path", "")
+
         # Declare pid coefficients
         self.declare_parameter("kp_roll", 0.03)
         self.declare_parameter("ki_roll", 0.0)
@@ -58,65 +79,15 @@ class PID_Node(Node):
         # Variable to buffer depth to publish it together with the other values
         self.current_depth = 0.0
 
-        kp_roll = self.get_parameter("kp_roll").value
-        ki_roll = self.get_parameter("ki_roll").value
-        kd_roll = self.get_parameter("kd_roll").value
-
-        kp_pitch = self.get_parameter("kp_pitch").value
-        ki_pitch = self.get_parameter("ki_pitch").value
-        kd_pitch = self.get_parameter("kd_pitch").value
-
-        kp_yaw = self.get_parameter("kp_yaw").value
-        ki_yaw = self.get_parameter("ki_yaw").value
-        kd_yaw = self.get_parameter("kd_yaw").value
-
-        kp_x = self.get_parameter("kp_x").value
-        ki_x = self.get_parameter("ki_x").value
-        kd_x = self.get_parameter("kd_x").value
-
-        kp_y = self.get_parameter("kp_y").value
-        ki_y = self.get_parameter("ki_y").value
-        kd_y = self.get_parameter("kd_y").value
-
-        kp_z = self.get_parameter("kp_z").value
-        ki_z = self.get_parameter("ki_z").value
-        kd_z = self.get_parameter("kd_z").value
-
         self.speed_coeff = self.get_parameter("speed_coeff").value
 
-        self.pid_r = PID(
-            kp_roll,
-            ki_roll,
-            kd_roll,
-            output_limits=(-1.0, 1.0),
-            sample_time=0.005,
-            setpoint=0,
-        )
-        self.pid_p = PID(
-            kp_pitch,
-            ki_pitch,
-            kd_pitch,
-            output_limits=(-1.0, 1.0),
-            sample_time=0.005,
-            setpoint=0,
-        )
-        self.pid_h = PID(
-            kp_yaw,
-            ki_yaw,
-            kd_yaw,
-            output_limits=(-1.0, 1.0),
-            sample_time=0.005,
-            setpoint=0,
-        )
-        self.pid_x = PID(
-            kp_x, ki_x, kd_x, output_limits=(-1.0, 1.0), sample_time=0.005, setpoint=0
-        )
-        self.pid_y = PID(
-            kp_y, ki_y, kd_y, output_limits=(-1.0, 1.0), sample_time=0.005, setpoint=0
-        )
-        self.pid_z = PID(
-            kp_z, ki_z, kd_z, output_limits=(-1.0, 1.0), sample_time=0.005, setpoint=0
-        )
+        self.pid_r = PID(output_limits=(-1.0, 1.0), sample_time=0.005, setpoint=0)
+        self.pid_p = PID(output_limits=(-1.0, 1.0), sample_time=0.005, setpoint=0)
+        self.pid_h = PID(output_limits=(-1.0, 1.0), sample_time=0.005, setpoint=0)
+        self.pid_x = PID(output_limits=(-1.0, 1.0), sample_time=0.005, setpoint=0)
+        self.pid_y = PID(output_limits=(-1.0, 1.0), sample_time=0.005, setpoint=0)
+        self.pid_z = PID(output_limits=(-1.0, 1.0), sample_time=0.005, setpoint=0)
+        self.update_pid_from_params()
 
         qos_profile = rclpy.qos.qos_profile_sensor_data
 
@@ -141,7 +112,61 @@ class PID_Node(Node):
         self.unit = 0.003
         self.using_depth = True
 
-    def calculate_control_effort(self, msg):
+    # NOTE: Updating params wont update the config file. This is to prevent infinite
+    # loops. Changes to params via other means are only temporary until the config
+    # file is reloaded.
+    def update_params_from_config(self):
+        """Update node parameters from config file (specified by parameter) if
+        config file has changed."""
+        cfg_path = self.get_parameter("config_path").value
+        if cfg_path == "":
+            self.__last_config_mtime = -1
+            return
+
+        try:
+            mtime = self.__last_config_mtime
+        except AttributeError:
+            mtime = -1
+
+        new_mtime = os.path.getmtime(cfg_path)
+        if new_mtime == mtime:
+            return
+        self.__last_config_mtime = new_mtime
+
+        new_params = []
+        with open(cfg_path, "r") as f:
+            cfg = yaml.safe_load(f)
+            assert isinstance(cfg, dict), "Config file must be a param map"
+
+            for k, v in cfg.items():
+                if k not in self.pid_params:
+                    self.get_logger().warn(f"Unknown parameter in config: {k}")
+                    continue
+
+                param = rclpy.parameter.Parameter(k, rclpy.Parameter.Type.DOUBLE, v)
+                new_params.append(param)
+
+        self.set_parameters(new_params)
+        self.get_logger().info(f"Updating parameters from config: {cfg_path}")
+
+    def save_params_to_config(self):
+        """Save node parameters to config file (specified by parameter), overwriting
+        the file if it exists."""
+        cfg_path = self.get_parameter("config_path").value
+        if cfg_path == "":
+            self.get_logger().warn("No config file specified, can't save")
+            return
+
+        new_params = {k: self.get_parameter(k).value for k in self.pid_params}
+        with open(cfg_path, "w") as f:
+            yaml.safe_dump(new_params, f, sort_keys=False)
+
+        self.get_logger().info(f"Saving parameters to config: {cfg_path}")
+
+    def update_pid_from_params(self):
+        """Update PID coefficients from node parameters."""
+        self.update_params_from_config()
+
         kp_roll = self.get_parameter("kp_roll").value
         ki_roll = self.get_parameter("ki_roll").value
         kd_roll = self.get_parameter("kd_roll").value
@@ -172,6 +197,9 @@ class PID_Node(Node):
         self.pid_x.tunings = (kp_x, ki_x, kd_x)
         self.pid_y.tunings = (kp_y, ki_y, kd_y)
         self.pid_z.tunings = (kp_z, ki_z, kd_z)
+
+    def calculate_control_effort(self, msg):
+        self.update_pid_from_params()
 
         current_r = msg.angular.x
         current_p = msg.angular.y
@@ -230,6 +258,8 @@ class PID_Node(Node):
     def set_speed(self, msg):
         self.speed = msg.data
 
+    # TODO: Remove most tuning keypresses. Tuning from pid.yaml is easier, and this
+    # reduces the amount of reserved keypresses.
     def proc_keypress(self, msg):
         keypress = chr(msg.data)
 
@@ -289,9 +319,12 @@ class PID_Node(Node):
         if keypress in "uU":
             self.current_axis = "y"
             self.get_logger().info("Tuning y")
+        if keypress in "`":
+            self.save_params_to_config()
 
         if keypress in "hH":
             self.get_logger().info("Help:")
+            self.get_logger().info("` - Save current parameters")
             self.get_logger().info("P - Tune P")
             self.get_logger().info("I - Tune I")
             self.get_logger().info("D - Tune D")
@@ -334,10 +367,10 @@ def main(args=None):
     rclpy.init(args=args)
 
     pid = PID_Node()
-    rclpy.spin(pid)
-
-    pid.destroy_node()
-    rclpy.shutdown()
+    try:
+        rclpy.spin(pid)
+    except KeyboardInterrupt:
+        pass
 
 
 if __name__ == "__main__":
