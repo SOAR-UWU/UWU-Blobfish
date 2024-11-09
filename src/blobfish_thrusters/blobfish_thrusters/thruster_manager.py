@@ -6,6 +6,11 @@ from blobfish_msgs.msg import Motors, MotorOffset
 import numpy as np
 from rclpy.parameter import Parameter
 
+# ESCs use Arduino Servo, values taken from BlueRobotics Basic ESCs specs:
+SERVO_NEUTRAL = 1500
+SERVO_FULL_REV = 1100
+SERVO_FULL_FWD = 1900
+
 class Thruster_Manager(Node):
     def __init__(self):
         super().__init__("thruster_manager")
@@ -16,29 +21,28 @@ class Thruster_Manager(Node):
         # the number of that motor based on the motor_msg.
         motor_vector_collection = {
             # r p h x y z 
-            "br": [0,   0,  -1,  1,     -1,   0],
-            "bm": [0,   1,  0,  0,     0,    0],
-            "fl": [0,   0,  -1,  -1,    1,    0],
-            "fr": [0,    0, 1,  -1,    -1,    0],
-            "ml": [-1,  0,  0,  0,     0,    1],
-            "bl": [0,   0,  1,  1,     1,    0],
-            "mr": [1,   0,  0,  0,     0,    1]
+            "fl": [   0,   0,  -1,  -1,   0,   0],
+            "fr": [   0,   0,   1,  -1,   0,   0],
+            "ml": [  -1,   0,   0,   0,   0,   1],
+            "mr": [   1,   0,   0,   0,   0,   1],
+            "bl": [   0,   0,   1,   1,   0,   0],
+            "br": [   0,   0,  -1,   1,   0,   0],
+            "bm": [   0,   1,   0,   0,   0,   0],
         }
 
         # Check the config file for the actual values of these parameters
         
         # Order, meaning the mapping from motor position to motor number on Arduino.
-        self.declare_parameter("br_order", Parameter.Type.INTEGER)
-        self.declare_parameter("bm_order", Parameter.Type.INTEGER)
         self.declare_parameter("fl_order", Parameter.Type.INTEGER)
         self.declare_parameter("fr_order", Parameter.Type.INTEGER)
         self.declare_parameter("ml_order", Parameter.Type.INTEGER)
-        self.declare_parameter("bl_order", Parameter.Type.INTEGER)
         self.declare_parameter("mr_order", Parameter.Type.INTEGER)
+        self.declare_parameter("bl_order", Parameter.Type.INTEGER)
+        self.declare_parameter("br_order", Parameter.Type.INTEGER)
+        self.declare_parameter("bm_order", Parameter.Type.INTEGER)
 
         # Get the values of the declared parameters
         self.motor_names = [f"motor_{num}" for num in range(1, 8)]
-        self.motors = ["br", "bm", "fl", "fr", "ml", "bl", "mr"]
         
         motor_orders = []
         for motor_name, motor_vector in motor_vector_collection.items():
@@ -71,7 +75,7 @@ class Thruster_Manager(Node):
         if self.stopped:
             motor_vals = Motors()
             for i, name in enumerate(self.motor_names):
-                setattr(motor_vals, name, 1500)
+                setattr(motor_vals, name, SERVO_NEUTRAL)
             self.motor_publisher.publish(motor_vals)
             return
             
@@ -80,13 +84,13 @@ class Thruster_Manager(Node):
             [pid_msg.angular.y],    # pitch
             [pid_msg.angular.z],    # yaw
             [pid_msg.linear.x],     # forward
-            [pid_msg.linear.y],     # sideways (unused)
+            [pid_msg.linear.y],     # sideways (unused; none of the thrusters have y-axis component)
             [pid_msg.linear.z]      # depth
         ])
         pid_vec = (self.motor_matrix @ pid_weights).flatten()
         scaled_pid_vec = np.multiply(self.scale, pid_vec)
 
-        out_vec = (scaled_pid_vec + 1500).clip(1200, 1800)
+        out_vec = (scaled_pid_vec + SERVO_NEUTRAL).clip(SERVO_FULL_REV, SERVO_FULL_FWD)
         
         motor_vals = Motors()
         for i, name in enumerate(self.motor_names):
