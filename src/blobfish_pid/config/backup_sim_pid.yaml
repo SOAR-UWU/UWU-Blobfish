@@ -1,0 +1,8 @@
+kp_roll: 1.0
+kd_roll: 1.0
+kp_pitch: 1.0
+kd_pitch: 0.6
+kp_yaw: 1.0
+kd_yaw: 0.6
+kp_x: 10.0
+kd_x: 5.0

@@ -101,10 +101,10 @@ def main(args=None):
     rclpy.init(args=args)
 
     manager = Thruster_Manager()
-    rclpy.spin(manager)
-
-    manager.destroy_node()
-    rclpy.shutdown()
+    try:
+        rclpy.spin(manager)
+    except KeyboardInterrupt:
+        pass
 
 if __name__ == "__main__":
     main()
