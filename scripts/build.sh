@@ -24,8 +24,8 @@ if [[ "$#" -ge 1 ]]; then
 fi
 
 # Full build.
-rosdep update
 source /opt/ros/humble/setup.bash
+rosdep update
 (cd "$WS_DIR" && rosdep install --from-paths . --ignore-src -y)
 # Build in login shell to avoid underlay override warning.
 env -iC "$WS_DIR" bash \
