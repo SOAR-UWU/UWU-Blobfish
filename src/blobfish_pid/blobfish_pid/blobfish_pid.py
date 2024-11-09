@@ -151,8 +151,11 @@ class PID_Node(Node):
             if k not in self.pid_params:
                 self.get_logger().warn(f"Unknown parameter in config: {k}")
                 continue
+            if not isinstance(v, type(self.get_parameter(k).value)):
+                self.get_logger().warn(f"Invalid type for parameter in config: {k}")
+                continue
 
-            param = rclpy.parameter.Parameter(k, rclpy.Parameter.Type.DOUBLE, v)
+            param = rclpy.parameter.Parameter(k, value=v)
             new_params.append(param)
 
         self.set_parameters(new_params)
