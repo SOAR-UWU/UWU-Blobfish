@@ -91,6 +91,14 @@ I swear are we overlapping RViz functionality here? But since RViz doesn't suppo
 
 List of all system plugins: <https://gazebosim.org/api/sim/8/namespacegz_1_1sim_1_1systems.html>
 
+- Buoyancy System: <https://gazebosim.org/api/sim/8/classgz_1_1sim_1_1systems_1_1Buoyancy.html>
+
+#### Model Plugins
+
+- Water Drag: <https://gazebosim.org/api/sim/8/classgz_1_1sim_1_1systems_1_1Hydrodynamics.html>
+- Water Thruster: <https://gazebosim.org/api/sim/8/classgz_1_1sim_1_1systems_1_1Thruster.html>
+- Pose Publisher (if exact position is wanted for some reason): <https://gazebosim.org/api/sim/8/classgz_1_1sim_1_1systems_1_1PosePublisher.html>
+
 ### Sensors
 
 List of all sensors: <http://sdformat.org/spec?ver=1.11&elem=sensor>
