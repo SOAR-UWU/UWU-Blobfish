@@ -2,8 +2,8 @@
 - ros_topic_name: /gz/keyboard/keypress
   gz_topic_name: /keyboard/keypress
   ros_type_name: std_msgs/msg/Int32
-  direction: GZ_TO_ROS
   gz_type_name: gz.msgs.Int32
+  direction: GZ_TO_ROS
 - ros_topic_name: /gz/blobfish/imu
   gz_topic_name: /blobfish/imu
   ros_type_name: sensor_msgs/msg/Imu
@@ -14,6 +14,12 @@
   gz_topic_name: /blobfish/depth
   ros_type_name: ros_gz_interfaces/msg/Altimeter
   gz_type_name: gz.msgs.Altimeter
+  direction: GZ_TO_ROS
+  publisher_queue: 0
+- ros_topic_name: /gz/blobfish/pose
+  gz_topic_name: /model/blobfish/pose
+  ros_type_name: tf2_msgs/msg/TFMessage
+  gz_type_name: gz.msgs.Pose_V
   direction: GZ_TO_ROS
   publisher_queue: 0
 - ros_topic_name: /image_raw

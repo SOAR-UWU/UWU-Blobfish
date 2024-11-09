@@ -32,7 +32,6 @@ def map_imu(msg: Imu, _) -> Optional[Twist]:
     out.linear.x = msg.linear_acceleration.x
     out.linear.y = msg.linear_acceleration.y
     out.linear.z = msg.linear_acceleration.z
-    # Yes the original node gave up on acceleration values.
     return out
 
 
