@@ -133,18 +133,27 @@ class PID_Node(Node):
             return
         self.__last_config_mtime = new_mtime
 
+        cfg_dict = None
+        try:
+            with open(cfg_path, "r") as f:
+                cfg = yaml.safe_load(f)
+                assert isinstance(cfg, dict)
+                cfg_dict = cfg
+        except AssertionError:
+            self.get_logger().warn(f"Config file must be a param map: {cfg_path}")
+        except Exception:
+            self.get_logger().warn(f"Failed to read config file: {cfg_path}")
+        if cfg_dict is None:
+            return
+
         new_params = []
-        with open(cfg_path, "r") as f:
-            cfg = yaml.safe_load(f)
-            assert isinstance(cfg, dict), "Config file must be a param map"
+        for k, v in cfg_dict.items():
+            if k not in self.pid_params:
+                self.get_logger().warn(f"Unknown parameter in config: {k}")
+                continue
 
-            for k, v in cfg.items():
-                if k not in self.pid_params:
-                    self.get_logger().warn(f"Unknown parameter in config: {k}")
-                    continue
-
-                param = rclpy.parameter.Parameter(k, rclpy.Parameter.Type.DOUBLE, v)
-                new_params.append(param)
+            param = rclpy.parameter.Parameter(k, rclpy.Parameter.Type.DOUBLE, v)
+            new_params.append(param)
 
         self.set_parameters(new_params)
         self.get_logger().info(f"Updating parameters from config: {cfg_path}")
