@@ -1,41 +1,56 @@
 import os
 
+import numpy as np
 import rclpy
 import rclpy.parameter
 import yaml
 from geometry_msgs.msg import Twist
 from rclpy.node import Node
-from rclpy.qos import qos_profile_sensor_data
+from rclpy.qos import qos_profile_sensor_data as QOS
 from simple_pid import PID
 from std_msgs.msg import Char, Float32, Float64
-
-# TODO:
-# PID-ing off acceleration to get it to 0 DOESNT KEEP US ON THE SPOT
-# Even water drag can eventually reduce acceleration to 0.
-# We have to accumulate acceleration to get drift (in distance/meters) from origin.
-# Then PID to move the robot back to origin using the drift as the error.
 
 # TODO: Below code needs to have 2 modes, one where the accumulation is done by
 # the node, and the other where it relies on the IMU's dead reckoning.
 
+# NOTE: Below code assumes neutral pitch, and neutral row except when tilt strafing
+# for lateral movement.
+
 TILT_ANG = 30
 
+PID_TOPIC = "/blobfish/control_effort"
+IMU_TOPIC = "/blobfish/imu_measurements"
+STATE_TOPIC = "/blobfish/state_setpoints"
+DEPTH_TOPIC = "/blobfish/depth"
+KEYPRESS_TOPIC = "/keypress"
 
-class PID_Node(Node):
+NODE_NAME = "pid_node"
+
+
+def get_ang_delta(a: float, b: float):
+    d = a - b
+    if d < -180:
+        d += 360
+    if d > 180:
+        d -= 360
+    return d
+
+
+class PIDNode(Node):
     # fmt: off
     pid_params = [
         "kp_roll", "ki_roll", "kd_roll",
         "kp_pitch", "ki_pitch", "kd_pitch",
         "kp_yaw", "ki_yaw", "kd_yaw",
-        "kp_x", "ki_x", "kd_x",
-        "kp_y", "ki_y", "kd_y",
+        "kp_fwd", "ki_fwd", "kd_fwd",
+        "kp_lat", "ki_lat", "kd_lat",
         "kp_z", "ki_z", "kd_z",
         "speed_coeff",
     ] # list used instead of set to specify key order when saving to config
     # fmt: on
 
     def __init__(self):
-        super().__init__("pid_node")
+        super(PIDNode, self).__init__(NODE_NAME)
 
         self.declare_parameter("config_path", "")
 
@@ -52,15 +67,13 @@ class PID_Node(Node):
         self.declare_parameter("ki_yaw", 0.0)
         self.declare_parameter("kd_yaw", 0.0)
 
-        # Not running PID for X direction (forward/backward)
-        self.declare_parameter("kp_x", 0.03)
-        self.declare_parameter("ki_x", 0.0)
-        self.declare_parameter("kd_x", 0.0)
+        self.declare_parameter("kp_fwd", 0.03)
+        self.declare_parameter("ki_fwd", 0.0)
+        self.declare_parameter("kd_fwd", 0.0)
 
-        # Not running PID for y direction (sideways)
-        self.declare_parameter("kp_y", 0.03)
-        self.declare_parameter("ki_y", 0.0)
-        self.declare_parameter("kd_y", 0.0)
+        self.declare_parameter("kp_lat", 0.03)
+        self.declare_parameter("ki_lat", 0.0)
+        self.declare_parameter("kd_lat", 0.0)
 
         self.declare_parameter("kp_z", 0.03)
         self.declare_parameter("ki_z", 0.0)
@@ -72,45 +85,31 @@ class PID_Node(Node):
         self.setpoint_roll = 0.0
         self.setpoint_pitch = 0.0
         self.setpoint_yaw = 0.0
-        self.setpoint_depth = 0.0
         self.setpoint_x = 0.0
         self.setpoint_y = 0.0
-        self.setpoint_z = 0.0
+        self.setpoint_depth = 0.0
 
         self.speed = 0.0
-
-        # Variable to buffer depth to publish it together with the other values
-        self.current_depth = 0.0
-
         self.speed_coeff = self.get_parameter("speed_coeff").value
 
         self.pid_r = PID(output_limits=(-1.0, 1.0), sample_time=0.005, setpoint=0)
         self.pid_p = PID(output_limits=(-1.0, 1.0), sample_time=0.005, setpoint=0)
         self.pid_h = PID(output_limits=(-1.0, 1.0), sample_time=0.005, setpoint=0)
-        self.pid_x = PID(output_limits=(-1.0, 1.0), sample_time=0.005, setpoint=0)
-        self.pid_y = PID(output_limits=(-1.0, 1.0), sample_time=0.005, setpoint=0)
+        self.pid_f = PID(output_limits=(-1.0, 1.0), sample_time=0.005, setpoint=0)
+        self.pid_l = PID(output_limits=(-1.0, 1.0), sample_time=0.005, setpoint=0)
         self.pid_z = PID(output_limits=(-1.0, 1.0), sample_time=0.005, setpoint=0)
         self.update_pid_from_params()
 
-        self.output_pid = self.create_publisher(
-            Twist, "blobfish/control_effort", qos_profile_sensor_data
-        )
-        self.create_subscription(
-            Twist,
-            "blobfish/imu_measurements",
-            self.calculate_control_effort,
-            qos_profile_sensor_data,
-        )
-        self.create_subscription(
-            Twist, "blobfish/state_setpoints", self.set_setpoints, 10
-        )
+        self.output_pid = self.create_publisher(Twist, PID_TOPIC, 0)
+        self.create_subscription(Twist, IMU_TOPIC, self.calculate_control_effort, QOS)
+        self.create_subscription(Twist, STATE_TOPIC, self.set_setpoints, 10)
+        self.create_subscription(Char, KEYPRESS_TOPIC, self.proc_keypress, 10)
+        self.create_subscription(Float32, DEPTH_TOPIC, self.read_depth, QOS)
+        # Deprecated, use set_setpoints instead to move.
         self.create_subscription(Float64, "blobfish/speed_setpoint", self.set_speed, 10)
-        self.create_subscription(Char, "keypress", self.proc_keypress, 10)
-        self.create_subscription(
-            Float32, "blobfish/depth", self.read_depth, qos_profile_sensor_data
-        )
 
-        self.current_depth = 0
+        # Variable to buffer depth to publish it together with the other values
+        self.current_depth = 0.0
         self.current_axis = None
         self.current_variable = None
         self.tuning = False
@@ -156,13 +155,11 @@ class PID_Node(Node):
             if k not in self.pid_params:
                 self.get_logger().warn(f"Unknown parameter in config: {k}")
                 continue
-            val = type(self.get_parameter(k).value)
-            if not isinstance(v, val):
-                try:
-                    v = val(v)
-                except ValueError:
-                    self.get_logger().warn(f"Invalid type for parameter in config: {k}")
-                    continue
+            try:
+                v = type(self.get_parameter(k).value)(v)
+            except Exception:
+                self.get_logger().warn(f"Invalid type for parameter in config: {k}")
+                continue
 
             param = rclpy.parameter.Parameter(k, value=v)
             new_params.append(param)
@@ -200,13 +197,13 @@ class PID_Node(Node):
         ki_yaw = self.get_parameter("ki_yaw").value
         kd_yaw = self.get_parameter("kd_yaw").value
 
-        kp_x = self.get_parameter("kp_x").value
-        ki_x = self.get_parameter("ki_x").value
-        kd_x = self.get_parameter("kd_x").value
+        kp_fwd = self.get_parameter("kp_fwd").value
+        ki_fwd = self.get_parameter("ki_fwd").value
+        kd_fwd = self.get_parameter("kd_fwd").value
 
-        kp_y = self.get_parameter("kp_y").value
-        ki_y = self.get_parameter("ki_y").value
-        kd_y = self.get_parameter("kd_y").value
+        kp_lat = self.get_parameter("kp_lat").value
+        ki_lat = self.get_parameter("ki_lat").value
+        kd_lat = self.get_parameter("kd_lat").value
 
         kp_z = self.get_parameter("kp_z").value
         ki_z = self.get_parameter("ki_z").value
@@ -215,67 +212,50 @@ class PID_Node(Node):
         self.pid_r.tunings = (kp_roll, ki_roll, kd_roll)
         self.pid_p.tunings = (kp_pitch, ki_pitch, kd_pitch)
         self.pid_h.tunings = (kp_yaw, ki_yaw, kd_yaw)
-        self.pid_x.tunings = (kp_x, ki_x, kd_x)
-        self.pid_y.tunings = (kp_y, ki_y, kd_y)
+        self.pid_f.tunings = (kp_fwd, ki_fwd, kd_fwd)
+        self.pid_l.tunings = (kp_lat, ki_lat, kd_lat)
         self.pid_z.tunings = (kp_z, ki_z, kd_z)
 
     def calculate_control_effort(self, msg: Twist):
         self.update_pid_from_params()
         val = Twist()
 
-        current_r = msg.angular.x
-        current_p = msg.angular.y
-        current_h = msg.angular.z
-        current_x = msg.linear.x
-        current_y = msg.linear.y
-        current_z = self.current_depth
+        cur_r, cur_p, cur_h = msg.angular.x, msg.angular.y, msg.angular.z
+        cur_x, cur_y = msg.linear.x, msg.linear.y
+        cur_z = self.current_depth if self.using_depth else msg.linear.z
 
-        error_x = current_x - self.setpoint_x
-        error_y = current_y - self.setpoint_y
-        error_z = current_z - self.setpoint_depth
+        # Convert position error to local frame
+        cos_h, sin_h = np.cos(np.radians(cur_h)), np.sin(np.radians(cur_h))
+        rot = np.array([[cos_h, sin_h], [-sin_h, cos_h]])
+        err_xy = np.array([cur_x - self.setpoint_x, cur_y - self.setpoint_y])
+        err_fwd, err_lat = rot @ err_xy
+        err_z = cur_z - self.setpoint_depth
 
-        val.linear.x = self.pid_x(error_x)
-        val.linear.y = self.pid_y(error_y)
-        val.linear.z = self.pid_z(error_z)
+        # local x is forward, local y is lateral
+        val.linear.x = self.pid_f(err_fwd)
+        val.linear.y = self.pid_l(err_lat)
+        val.linear.z = self.pid_z(err_z)
 
-        # NOTE: The lateral axis changes depending on the yaw angle. The below logic
-        # doesn't account for pitch/upside down however. This takes advantage of the
-        # coupling between rotation and lateral movement.
-        if 45 < abs(current_h) < 135:
-            current_r += TILT_ANG * val.linear.x * (1 if current_h >= 0 else -1)
-        else:
-            current_r += TILT_ANG * val.linear.y * (1 if abs(current_h) > 134 else -1)
+        # Perform tilt strafing for lateral movement
+        cur_r -= TILT_ANG * val.linear.y
 
-        error_r = current_r - self.setpoint_roll
-        if error_r < -180:
-            error_r += 360
-        elif error_r > 180:
-            error_r -= 360
-        error_p = current_p - self.setpoint_pitch
-        if error_p < -180:
-            error_p += 360
-        elif error_p > 180:
-            error_p -= 360
-        error_h = current_h - self.setpoint_yaw
-        if error_h < -180:
-            error_h += 360
-        elif error_h > 180:
-            error_h -= 360
+        # Calculate orientation error
+        err_r = get_ang_delta(cur_r, self.setpoint_roll)
+        err_p = get_ang_delta(cur_p, self.setpoint_pitch)
+        err_h = get_ang_delta(cur_h, self.setpoint_yaw)
 
-        val.angular.x = self.pid_r(error_r)
-        val.angular.y = self.pid_p(error_p)
-        val.angular.z = self.pid_h(error_h)
+        val.angular.x = self.pid_r(err_r)
+        val.angular.y = self.pid_p(err_p)
+        val.angular.z = self.pid_h(err_h)
         # val.linear.x = self.speed * self.speed_coeff
         # val.linear.y = 0.0   # not correcting for y axis (sideways movement)
 
         self.output_pid.publish(val)
 
-    def read_depth(self, msg):
-        if not self.using_depth:
-            return
+    def read_depth(self, msg: Float32):
         self.current_depth = msg.data
 
-    def set_setpoints(self, setpoints):
+    def set_setpoints(self, setpoints: Twist):
         self.setpoint_roll = setpoints.angular.x
         self.setpoint_pitch = setpoints.angular.y
         self.setpoint_yaw = setpoints.angular.z
@@ -291,7 +271,7 @@ class PID_Node(Node):
 
     # TODO: Remove most tuning keypresses. Tuning from pid.yaml is easier, and this
     # reduces the amount of reserved keypresses.
-    def proc_keypress(self, msg):
+    def proc_keypress(self, msg: Char):
         keypress = chr(msg.data)
 
         # Disable the use of the depth sensor (current depth always reads 0)
@@ -397,9 +377,9 @@ class PID_Node(Node):
 def main(args=None):
     rclpy.init(args=args)
 
-    pid = PID_Node()
+    node = PIDNode()
     try:
-        rclpy.spin(pid)
+        rclpy.spin(node)
     except KeyboardInterrupt:
         pass
 
