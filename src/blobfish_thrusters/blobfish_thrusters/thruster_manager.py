@@ -14,27 +14,27 @@ SERVO_NEUTRAL = 1500
 SERVO_FULL_REV = 1100
 SERVO_FULL_FWD = 1900
 
+# fmt: off
+# The following section reads the motor positions and directions from the
+# parameter server and orders the motors in the correct order in the matrix.
+# The ROS param <motor_name>_order should be a number from 1 to 7, denoting
+# the number of that motor based on the motor_msg.
+MOTOR_VECTOR_MATRIX = {
+    # r p h x y z 
+    "fl": [   0,   0,  -1,   1,   0,   0],
+    "fr": [   0,   0,   1,   1,   0,   0],
+    "ml": [   1,   0,   0,   0,   0,  -1],
+    "mr": [  -1,   0,   0,   0,   0,  -1],
+    "bl": [   0,   0,   1,  -1,   0,   0],
+    "br": [   0,   0,  -1,  -1,   0,   0],
+    "bm": [   0,  -1,   0,   0,   0,   0],
+}
+# fmt: on
+
 
 class Thruster_Manager(Node):
     def __init__(self):
         super().__init__("thruster_manager")
-
-        # fmt: off
-        # The following section reads the motor positions and directions from the
-        # parameter server and orders the motors in the correct order in the matrix.
-        # The ROS param <motor_name>_order should be a number from 1 to 7, denoting
-        # the number of that motor based on the motor_msg.
-        motor_vector_collection = {
-            # r p h x y z 
-            "fl": [   0,   0,  -1,   1,   0,   0],
-            "fr": [   0,   0,   1,   1,   0,   0],
-            "ml": [   1,   0,   0,   0,   0,  -1],
-            "mr": [  -1,   0,   0,   0,   0,  -1],
-            "bl": [   0,   0,   1,  -1,   0,   0],
-            "br": [   0,   0,  -1,  -1,   0,   0],
-            "bm": [   0,  -1,   0,   0,   0,   0],
-        }
-        # fmt: on
 
         # Check the config file for the actual values of these parameters
 
@@ -51,7 +51,7 @@ class Thruster_Manager(Node):
         self.motor_names = [f"motor_{num}" for num in range(1, 8)]
 
         motor_orders = []
-        for motor_name, motor_vector in motor_vector_collection.items():
+        for motor_name, motor_vector in MOTOR_VECTOR_MATRIX.items():
             motor_vector = np.array(motor_vector)
             motor_pos = self.get_parameter(f"{motor_name}_order")
             motor_orders.append((motor_pos.value, motor_vector))
