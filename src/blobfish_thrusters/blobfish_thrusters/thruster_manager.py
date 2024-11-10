@@ -41,13 +41,8 @@ class ThrusterManager(Node):
         super(ThrusterManager, self).__init__(NODE_NAME)
 
         # Order, meaning the mapping from motor position to motor number on Arduino.
-        self.declare_parameter("fl_order", Parameter.Type.INTEGER)
-        self.declare_parameter("fr_order", Parameter.Type.INTEGER)
-        self.declare_parameter("ml_order", Parameter.Type.INTEGER)
-        self.declare_parameter("mr_order", Parameter.Type.INTEGER)
-        self.declare_parameter("bl_order", Parameter.Type.INTEGER)
-        self.declare_parameter("br_order", Parameter.Type.INTEGER)
-        self.declare_parameter("bm_order", Parameter.Type.INTEGER)
+        for name in MOTOR_VECTOR_MATRIX:
+            self.declare_parameter(f"{name}_order", Parameter.Type.INTEGER)
 
         self.create_subscription(Twist, PID_TOPIC, self.calculate_thrusters, QOS)
         self.create_subscription(Char, KEYPRESS_TOPIC, self.toggle_motors, 10)
@@ -77,12 +72,6 @@ class ThrusterManager(Node):
             self.get_logger().info("Press SPACE to turn off/on the motors")
 
     def calculate_thrusters(self, msg: Twist):
-        if self.stopped:
-            for name in MOTOR_MSG_NAMES:
-                setattr(self.motor_vals, name, SERVO_NEUTRAL)
-            self.pub_motors()
-            return
-
         # All pid values are in the range [-1, 1].
         # x is forward, y is lateral, z is depth
         linear_pid = np.array([msg.linear.x, msg.linear.y, msg.linear.z])
@@ -96,6 +85,10 @@ class ThrusterManager(Node):
         out_vals[out_vals > 0] *= abs(SERVO_NEUTRAL - SERVO_FULL_FWD)
         out_vals += SERVO_NEUTRAL
         out_vals = out_vals.clip(SERVO_FULL_REV, SERVO_FULL_FWD)
+
+        # If motors are stopped, set all values to neutral.
+        # Do it this way instead of early return so can debug out_vals.
+        out_vals = np.full_like(out_vals, SERVO_NEUTRAL) if self.stopped else out_vals
 
         for name, val in zip(MOTOR_MSG_NAMES, out_vals):
             setattr(self.motor_vals, name, round(val))
