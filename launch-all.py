@@ -15,17 +15,11 @@ for arg in sys.argv:
 
 def generate_launch_description():
 
-    vn_pkg = get_package_share_directory('vectornav')
     pid_pkg = get_package_share_directory('blobfish_pid')
     thruster_pkg = get_package_share_directory('blobfish_thrusters')
     arduino_pkg = get_package_share_directory('arduino_bridge')
     sensors_pkg = get_package_share_directory('blobfish_sensors')
     cv_pkg = get_package_share_directory('blobfish_cv')
-
-    vn_launch_dir = os.path.join(vn_pkg, 'launch')
-    vn_launch = IncludeLaunchDescription(
-      PythonLaunchDescriptionSource(os.path.join(vn_launch_dir, 'vectornav.launch.py'))
-    )
 
     pid_launch_dir = os.path.join(pid_pkg, 'launch')
     pid_launch = IncludeLaunchDescription(
@@ -56,7 +50,6 @@ def generate_launch_description():
     # if hardware is not available, do not attempt to launch the IMU and Arduino nodes
     ld = LaunchDescription()
     if hardware_available:
-        ld.add_action(vn_launch)
         ld.add_action(arduino_launch)
         ld.add_action(sensors_launch)
         ld.add_action(cv_launch)

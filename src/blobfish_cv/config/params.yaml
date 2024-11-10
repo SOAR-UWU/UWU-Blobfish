@@ -1,5 +1,6 @@
 usb_cam:
   ros__parameters:
+    # TODO: similar to arduino_launch.py, filtering cameras should be possible.
     video_device: /dev/video0
     framerate: 60.0
     image_width: 640
