@@ -1,20 +1,18 @@
-import os
-from sys import executable
-
-from ament_index_python.packages import get_package_share_directory
-
+from ament_index_python.packages import get_package_share_path
 from launch import LaunchDescription
 from launch_ros.actions import Node
 
 
 def generate_launch_description():
-
-    arduino_configs = os.path.join(get_package_share_directory('arduino_bridge'), 'config', "params.yaml")
+    pkg_this = get_package_share_path("arduino_bridge")
 
     motor_bridge = Node(
         package="arduino_bridge",
         executable="bridge",
-        parameters=[arduino_configs]
+        parameters=[
+            pkg_this / "config" / "params.yaml",
+            {"arduino_files": str(pkg_this / "arduino")},
+        ],
     )
 
     ld = LaunchDescription()
