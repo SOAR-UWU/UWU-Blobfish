@@ -3,8 +3,7 @@ import rclpy
 from geometry_msgs.msg import Twist
 from rclpy.node import Node
 from rclpy.parameter import Parameter
-from rclpy.qos import qos_profile_sensor_data
-from scipy.spatial.transform import Rotation
+from rclpy.qos import qos_profile_sensor_data as QOS
 from std_msgs.msg import Char
 
 from blobfish_msgs.msg import Motors
@@ -13,14 +12,11 @@ from blobfish_msgs.msg import Motors
 SERVO_NEUTRAL = 1500
 SERVO_FULL_REV = 1100
 SERVO_FULL_FWD = 1900
+SPD_RATIO = 1.0
 
 # fmt: off
-# The following section reads the motor positions and directions from the
-# parameter server and orders the motors in the correct order in the matrix.
-# The ROS param <motor_name>_order should be a number from 1 to 7, denoting
-# the number of that motor based on the motor_msg.
 MOTOR_VECTOR_MATRIX = {
-    # r p h x y z 
+    # row pitch yaw forward lateral depth 
     "fl": [   0,   0,  -1,   1,   0,   0],
     "fr": [   0,   0,   1,   1,   0,   0],
     "ml": [   1,   0,   0,   0,   0,  -1],
@@ -30,13 +26,19 @@ MOTOR_VECTOR_MATRIX = {
     "bm": [   0,  -1,   0,   0,   0,   0],
 }
 # fmt: on
+# Attribute names of each motor in the blobfish_msgs/Motors message.
+MOTOR_MSG_NAMES = [f"motor_{num}" for num in range(1, 8)]
+
+PID_TOPIC = "/blobfish/control_effort"
+MOTOR_TOPIC = "/blobfish/motor_values"
+KEYPRESS_TOPIC = "/keypress"
+
+NODE_NAME = "thruster_manager"
 
 
-class Thruster_Manager(Node):
+class ThrusterManager(Node):
     def __init__(self):
-        super().__init__("thruster_manager")
-
-        # Check the config file for the actual values of these parameters
+        super(ThrusterManager, self).__init__(NODE_NAME)
 
         # Order, meaning the mapping from motor position to motor number on Arduino.
         self.declare_parameter("fl_order", Parameter.Type.INTEGER)
@@ -47,46 +49,24 @@ class Thruster_Manager(Node):
         self.declare_parameter("br_order", Parameter.Type.INTEGER)
         self.declare_parameter("bm_order", Parameter.Type.INTEGER)
 
-        # Get the values of the declared parameters
-        self.motor_names = [f"motor_{num}" for num in range(1, 8)]
+        self.create_subscription(Twist, PID_TOPIC, self.calculate_thrusters, QOS)
+        self.create_subscription(Char, KEYPRESS_TOPIC, self.toggle_motors, 10)
+        motors_publisher = self.create_publisher(Motors, MOTOR_TOPIC, 0)
 
-        motor_orders = []
-        for motor_name, motor_vector in MOTOR_VECTOR_MATRIX.items():
-            motor_vector = np.array(motor_vector)
-            motor_pos = self.get_parameter(f"{motor_name}_order")
-            motor_orders.append((motor_pos.value, motor_vector))
+        # Reorder the motor vector matrix based on the order of the motors.
+        # Parameter order must be 0-indexed. 7, 6 refers to 7 motors, 6 DoFs.
+        self.motor_matrix = np.zeros((7, 6), dtype=np.float64)
+        for name, vector in MOTOR_VECTOR_MATRIX.items():
+            motor_pos = self.get_parameter(f"{name}_order").value
+            self.motor_matrix[motor_pos] = np.array(vector)
 
-        motor_orders.sort(key=lambda x: x[0])
-
-        arr = [motor[1] for motor in motor_orders]
-
-        self.motor_matrix = np.array(arr, dtype=np.float64)
-
-        self.scale = 300  # how much to scale the pid value
-        self.create_subscription(
-            Twist,
-            "blobfish/control_effort",
-            self.calculate_thrusters,
-            qos_profile_sensor_data,
-        )
-        self.create_subscription(
-            Twist,
-            "blobfish/imu_measurements",
-            self.set_rotation,
-            qos_profile_sensor_data,
-        )
-        self.create_subscription(Char, "keypress", self.toggle_motors, 10)
-        self.motor_publisher = self.create_publisher(
-            Motors, "blobfish/motor_values", 10
-        )
-        self.get_logger().info("Thruster manager started")
+        # Whether all motors should be stopped.
         self.stopped = False
+        # Reused for each message.
+        self.motor_vals = Motors()
+        self.pub_motors = lambda: motors_publisher.publish(self.motor_vals)
 
-    def set_rotation(self, msg: Twist):
-        rot = Rotation.from_euler(
-            "xyz", [msg.angular.x, msg.angular.y, msg.angular.z], degrees=True
-        )
-        self.orientation = rot
+        self.get_logger().info("Thruster manager started")
 
     def toggle_motors(self, msg):
         keypress = chr(msg.data)
@@ -96,37 +76,38 @@ class Thruster_Manager(Node):
         elif keypress == "h":
             self.get_logger().info("Press SPACE to turn off/on the motors")
 
-    def calculate_thrusters(self, pid_msg):
+    def calculate_thrusters(self, msg: Twist):
         if self.stopped:
-            motor_vals = Motors()
-            for i, name in enumerate(self.motor_names):
-                setattr(motor_vals, name, SERVO_NEUTRAL)
-            self.motor_publisher.publish(motor_vals)
+            for name in MOTOR_MSG_NAMES:
+                setattr(self.motor_vals, name, SERVO_NEUTRAL)
+            self.pub_motors()
             return
 
-        angular_pid = np.array(
-            [pid_msg.angular.x, pid_msg.angular.y, pid_msg.angular.z]
-        )
-        linear_pid = np.array([pid_msg.linear.x, pid_msg.linear.y, pid_msg.linear.z])
-        linear_pid = self.orientation.apply(linear_pid, inverse=True)
+        # All pid values are in the range [-1, 1].
+        # x is forward, y is lateral, z is depth
+        linear_pid = np.array([msg.linear.x, msg.linear.y, msg.linear.z])
+        angular_pid = np.array([msg.angular.x, msg.angular.y, msg.angular.z])
         pid_weights = np.concatenate((angular_pid, linear_pid)).reshape(-1, 1)
-        pid_vec = (self.motor_matrix @ pid_weights).flatten()
-        scaled_pid_vec = np.multiply(self.scale, pid_vec)
+        out_vals: np.ndarray = (self.motor_matrix @ pid_weights).flatten()
 
-        out_vec = (scaled_pid_vec + SERVO_NEUTRAL).clip(SERVO_FULL_REV, SERVO_FULL_FWD)
+        # Scale negative values by negative range and positive values by positive range.
+        out_vals *= SPD_RATIO
+        out_vals[out_vals < 0] *= abs(SERVO_NEUTRAL - SERVO_FULL_REV)
+        out_vals[out_vals > 0] *= abs(SERVO_NEUTRAL - SERVO_FULL_FWD)
+        out_vals += SERVO_NEUTRAL
+        out_vals = out_vals.clip(SERVO_FULL_REV, SERVO_FULL_FWD)
 
-        motor_vals = Motors()
-        for i, name in enumerate(self.motor_names):
-            setattr(motor_vals, name, int(out_vec[i]))
-        self.motor_publisher.publish(motor_vals)
+        for name, val in zip(MOTOR_MSG_NAMES, out_vals):
+            setattr(self.motor_vals, name, round(val))
+        self.pub_motors()
 
 
 def main(args=None):
     rclpy.init(args=args)
 
-    manager = Thruster_Manager()
+    node = ThrusterManager()
     try:
-        rclpy.spin(manager)
+        rclpy.spin(node)
     except KeyboardInterrupt:
         pass
 
