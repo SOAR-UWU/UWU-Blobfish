@@ -1,9 +1,11 @@
 import rclpy
+from rclpy.qos import qos_profile_sensor_data
 from rclpy.node import Node
 from geometry_msgs.msg import Twist
 from std_msgs.msg import Char
 from blobfish_msgs.msg import Motors, MotorOffset
 import numpy as np
+from scipy.spatial.transform import Rotation
 from rclpy.parameter import Parameter
 
 # ESCs use Arduino Servo, values taken from BlueRobotics Basic ESCs specs:
@@ -23,11 +25,11 @@ class Thruster_Manager(Node):
             # r p h x y z 
             "fl": [   0,   0,  -1,   1,   0,   0],
             "fr": [   0,   0,   1,   1,   0,   0],
-            "ml": [  -1,   0,   0,   0,   0,  -1],
-            "mr": [   1,   0,   0,   0,   0,  -1],
+            "ml": [   1,   0,   0,   0,   0,  -1],
+            "mr": [  -1,   0,   0,   0,   0,  -1],
             "bl": [   0,   0,   1,  -1,   0,   0],
             "br": [   0,   0,  -1,  -1,   0,   0],
-            "bm": [   0,   1,   0,   0,   0,   0],
+            "bm": [   0,  -1,   0,   0,   0,   0],
         }
 
         # Check the config file for the actual values of these parameters
@@ -57,11 +59,17 @@ class Thruster_Manager(Node):
         self.motor_matrix = np.array(arr, dtype=np.float64)
 
         self.scale = 300    # how much to scale the pid value
-        self.create_subscription(Twist, 'blobfish/control_effort', self.calculate_thrusters, 10)
+        self.create_subscription(Twist, 'blobfish/control_effort', self.calculate_thrusters, qos_profile_sensor_data)
+        self.create_subscription(Twist, "blobfish/imu_measurements", self.set_rotation, qos_profile_sensor_data)
         self.create_subscription(Char, 'keypress', self.toggle_motors, 10)
         self.motor_publisher = self.create_publisher(Motors, 'blobfish/motor_values', 10)
         self.get_logger().info("Thruster manager started")
         self.stopped = False
+
+    def set_rotation(self, msg: Twist):
+        rot = Rotation.from_euler("xyz", [msg.angular.x, msg.angular.y, msg.angular.z], degrees=True)
+        self.orientation = rot
+
 
     def toggle_motors(self, msg):
         keypress = chr(msg.data)
@@ -79,14 +87,10 @@ class Thruster_Manager(Node):
             self.motor_publisher.publish(motor_vals)
             return
             
-        pid_weights = np.array([
-            [pid_msg.angular.x],    # roll
-            [pid_msg.angular.y],    # pitch
-            [pid_msg.angular.z],    # yaw
-            [pid_msg.linear.x],     # forward
-            [pid_msg.linear.y],     # sideways (unused; none of the thrusters have y-axis component)
-            [pid_msg.linear.z]      # depth
-        ])
+        angular_pid = np.array([pid_msg.angular.x, pid_msg.angular.y, pid_msg.angular.z])
+        linear_pid = np.array([pid_msg.linear.x, pid_msg.linear.y, pid_msg.linear.z])
+        linear_pid = self.orientation.apply(linear_pid, inverse=True)
+        pid_weights = np.concatenate((angular_pid, linear_pid)).reshape(-1, 1)
         pid_vec = (self.motor_matrix @ pid_weights).flatten()
         scaled_pid_vec = np.multiply(self.scale, pid_vec)
 

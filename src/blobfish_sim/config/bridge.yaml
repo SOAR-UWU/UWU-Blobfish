@@ -21,6 +21,13 @@
   ros_type_name: tf2_msgs/msg/TFMessage
   gz_type_name: gz.msgs.Pose_V
   direction: GZ_TO_ROS
+# Resetting the simulation causes the topic to change, idk why.
+# TODO: dynamically insert world & model names
+- ros_topic_name: /gz/blobfish/pose
+  gz_topic_name: /world/test_sea/model/blobfish/pose
+  ros_type_name: tf2_msgs/msg/TFMessage
+  gz_type_name: gz.msgs.Pose_V
+  direction: GZ_TO_ROS
   publisher_queue: 0
 - ros_topic_name: /image_raw
   gz_topic_name: /blobfish/rgbd/image

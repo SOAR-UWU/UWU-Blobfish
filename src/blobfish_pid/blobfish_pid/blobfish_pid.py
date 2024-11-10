@@ -5,6 +5,7 @@ import rclpy.parameter
 import yaml
 from geometry_msgs.msg import Twist
 from rclpy.node import Node
+from rclpy.qos import qos_profile_sensor_data
 from simple_pid import PID
 from std_msgs.msg import Char, Float32, Float64
 
@@ -16,6 +17,8 @@ from std_msgs.msg import Char, Float32, Float64
 
 # TODO: Below code needs to have 2 modes, one where the accumulation is done by
 # the node, and the other where it relies on the IMU's dead reckoning.
+
+TILT_ANG = 30
 
 
 class PID_Node(Node):
@@ -89,21 +92,23 @@ class PID_Node(Node):
         self.pid_z = PID(output_limits=(-1.0, 1.0), sample_time=0.005, setpoint=0)
         self.update_pid_from_params()
 
-        qos_profile = rclpy.qos.qos_profile_sensor_data
-
-        self.output_pid = self.create_publisher(Twist, "blobfish/control_effort", 10)
+        self.output_pid = self.create_publisher(
+            Twist, "blobfish/control_effort", qos_profile_sensor_data
+        )
         self.create_subscription(
             Twist,
             "blobfish/imu_measurements",
             self.calculate_control_effort,
-            qos_profile,
+            qos_profile_sensor_data,
         )
         self.create_subscription(
             Twist, "blobfish/state_setpoints", self.set_setpoints, 10
         )
         self.create_subscription(Float64, "blobfish/speed_setpoint", self.set_speed, 10)
         self.create_subscription(Char, "keypress", self.proc_keypress, 10)
-        self.create_subscription(Float32, "depth", self.read_depth, 10)
+        self.create_subscription(
+            Float32, "blobfish/depth", self.read_depth, qos_profile_sensor_data
+        )
 
         self.current_depth = 0
         self.current_axis = None
@@ -151,9 +156,13 @@ class PID_Node(Node):
             if k not in self.pid_params:
                 self.get_logger().warn(f"Unknown parameter in config: {k}")
                 continue
-            if not isinstance(v, type(self.get_parameter(k).value)):
-                self.get_logger().warn(f"Invalid type for parameter in config: {k}")
-                continue
+            val = type(self.get_parameter(k).value)
+            if not isinstance(v, val):
+                try:
+                    v = val(v)
+                except ValueError:
+                    self.get_logger().warn(f"Invalid type for parameter in config: {k}")
+                    continue
 
             param = rclpy.parameter.Parameter(k, value=v)
             new_params.append(param)
@@ -210,8 +219,9 @@ class PID_Node(Node):
         self.pid_y.tunings = (kp_y, ki_y, kd_y)
         self.pid_z.tunings = (kp_z, ki_z, kd_z)
 
-    def calculate_control_effort(self, msg):
+    def calculate_control_effort(self, msg: Twist):
         self.update_pid_from_params()
+        val = Twist()
 
         current_r = msg.angular.x
         current_p = msg.angular.y
@@ -219,6 +229,22 @@ class PID_Node(Node):
         current_x = msg.linear.x
         current_y = msg.linear.y
         current_z = self.current_depth
+
+        error_x = current_x - self.setpoint_x
+        error_y = current_y - self.setpoint_y
+        error_z = current_z - self.setpoint_depth
+
+        val.linear.x = self.pid_x(error_x)
+        val.linear.y = self.pid_y(error_y)
+        val.linear.z = self.pid_z(error_z)
+
+        # NOTE: The lateral axis changes depending on the yaw angle. The below logic
+        # doesn't account for pitch/upside down however. This takes advantage of the
+        # coupling between rotation and lateral movement.
+        if 45 < abs(current_h) < 135:
+            current_r += TILT_ANG * val.linear.x * (1 if current_h >= 0 else -1)
+        else:
+            current_r += TILT_ANG * val.linear.y * (1 if abs(current_h) > 134 else -1)
 
         error_r = current_r - self.setpoint_roll
         if error_r < -180:
@@ -236,22 +262,13 @@ class PID_Node(Node):
         elif error_h > 180:
             error_h -= 360
 
-        error_x = current_x - self.setpoint_x
-        error_y = current_y - self.setpoint_y
-        error_z = current_z - self.setpoint_depth
+        val.angular.x = self.pid_r(error_r)
+        val.angular.y = self.pid_p(error_p)
+        val.angular.z = self.pid_h(error_h)
+        # val.linear.x = self.speed * self.speed_coeff
+        # val.linear.y = 0.0   # not correcting for y axis (sideways movement)
 
-        pid_vals = Twist()
-        pid_vals.angular.x = self.pid_r(error_r)
-        pid_vals.angular.y = self.pid_p(error_p)
-        pid_vals.angular.z = self.pid_h(error_h)
-        # pid_vals.linear.x = self.speed * self.speed_coeff
-        # pid_vals.linear.y = 0.0   # not correcting for y axis (sideways movement)
-        pid_vals.linear.z = self.pid_z(error_z)
-
-        pid_vals.linear.x = self.pid_x(error_x)
-        pid_vals.linear.y = self.pid_y(error_y)
-
-        self.output_pid.publish(pid_vals)
+        self.output_pid.publish(val)
 
     def read_depth(self, msg):
         if not self.using_depth:
@@ -259,13 +276,15 @@ class PID_Node(Node):
         self.current_depth = msg.data
 
     def set_setpoints(self, setpoints):
-        self.setpoint_depth = setpoints.linear.z
         self.setpoint_roll = setpoints.angular.x
         self.setpoint_pitch = setpoints.angular.y
         self.setpoint_yaw = setpoints.angular.z
-        self.get_logger().info(
-            f"Setpoints set: {self.setpoint_depth}, {self.setpoint_roll}, {self.setpoint_pitch}, {self.setpoint_yaw}"
-        )
+        self.setpoint_x = setpoints.linear.x
+        self.setpoint_y = setpoints.linear.y
+        self.setpoint_depth = setpoints.linear.z
+        # self.get_logger().info(
+        #     f"Setpoints set: {self.setpoint_depth}, {self.setpoint_roll}, {self.setpoint_pitch}, {self.setpoint_yaw}"
+        # )
 
     def set_speed(self, msg):
         self.speed = msg.data

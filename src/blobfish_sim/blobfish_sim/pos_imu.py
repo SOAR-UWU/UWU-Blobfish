@@ -31,7 +31,7 @@ def map_imu(msg: TFMessage, _) -> Optional[Twist]:
 
     out = Twist()
     rot = Rotation.from_quat((msg_rot.x, msg_rot.y, msg_rot.z, msg_rot.w))
-    rot_x, rot_y, rot_z = rot.as_euler("XYZ", degrees=True)
+    rot_x, rot_y, rot_z = rot.as_euler("xyz", degrees=True)
     out.angular.x = rot_x
     out.angular.y = rot_y
     out.angular.z = rot_z

@@ -19,11 +19,11 @@
     <xacro:create_chassis name="chassis" />
     <xacro:thruster name="FL" pose="0.18 0.15 0 0 0 0" />
     <xacro:thruster name="FR" pose="0.18 -0.15 0 0 0 0" />
-    <xacro:thruster name="ML" pose="-0.045 0.15 0.02 0 -90 0" />
-    <xacro:thruster name="MR" pose="-0.045 -0.15 0.02 0 -90 0" />
+    <xacro:thruster name="ML" pose="-0.045 0.15 -0.02 0 90 0" />
+    <xacro:thruster name="MR" pose="-0.045 -0.15 -0.02 0 90 0" />
     <xacro:thruster name="BL" pose="-0.27 0.15 0 0 0 180" />
     <xacro:thruster name="BR" pose="-0.27 -0.15 0 0 0 180" />
-    <xacro:thruster name="BM" pose="-0.325 0 0.13 0 -90 0" />
+    <xacro:thruster name="BM" pose="-0.325 0 0.09 0 90 0" />
 
     <!-- Exact Pose -->
     <plugin filename="gz-sim-pose-publisher-system" name="gz::sim::systems::PosePublisher">
