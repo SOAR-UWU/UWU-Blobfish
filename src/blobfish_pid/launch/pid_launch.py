@@ -1,20 +1,15 @@
-import os
-from sys import executable
-
-from ament_index_python.packages import get_package_share_directory
-
+from ament_index_python.packages import get_package_share_path
 from launch import LaunchDescription
 from launch_ros.actions import Node
 
 
 def generate_launch_description():
-
-    pid_configs = os.path.join(get_package_share_directory('blobfish_pid'), 'config', "params.yaml")
+    pkg_blobfish_pid = get_package_share_path("blobfish_pid")
 
     pid_node = Node(
         package="blobfish_pid",
         executable="pid_node",
-        parameters=[pid_configs]
+        parameters=[{"config_path": str(pkg_blobfish_pid / "config" / "pid.yaml")}],
     )
 
     # Create the launch description and populate

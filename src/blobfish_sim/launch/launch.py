@@ -5,6 +5,8 @@ from launch import LaunchDescription
 from launch_ros.actions import Node
 
 THIS_NAME = "blobfish_sim"
+# Position IMU emulates IMUs like VectorNav with built-in position dead reckoning.
+USE_POS_IMU = True
 
 
 def generate_launch_description():
@@ -17,6 +19,7 @@ def generate_launch_description():
     )
     keypress_bridge = Node(package=THIS_NAME, executable="sim_keypress")
     imu_bridge = Node(package=THIS_NAME, executable="sim_imu")
+    pos_imu_bridge = Node(package=THIS_NAME, executable="sim_pos_imu")
     depth_bridge = Node(package=THIS_NAME, executable="sim_depth")
     arduino_bridge = Node(package=THIS_NAME, executable="sim_arduino")
 
@@ -24,7 +27,7 @@ def generate_launch_description():
         [
             gz_topic_bridge,
             keypress_bridge,
-            imu_bridge,
+            pos_imu_bridge if USE_POS_IMU else imu_bridge,
             depth_bridge,
             arduino_bridge,
         ]
