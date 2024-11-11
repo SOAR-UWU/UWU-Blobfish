@@ -5,7 +5,7 @@ from launch_ros.actions import Node
 
 def generate_launch_description():
     pkg_this = get_package_share_path("blobfish_cv")
-    params_cam = pkg_this / "config" / "params.yaml"
+    params_cam = str(pkg_this / "config" / "params.yaml")
 
     cam_node = Node(
         package="usb_cam",

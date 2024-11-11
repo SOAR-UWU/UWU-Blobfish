@@ -9,13 +9,18 @@ from std_msgs.msg import Char
 from blobfish_msgs.msg import Motors, MotorsFloat
 
 # TODO: Put safe, non-max values here.
-# ESCs use Arduino Servo, values taken from BlueRobotics Basic ESCs specs:
+# NOTE: The T200 has 5.25 kgf forward thrust, 4.1 kgf reverse thrust. This disrepency
+# hasn't broken PID yet, but might be a contributing factor to instabilities. Should
+# pick SERVO_FULL_REV and SERVO_FULL_FWD values that would have similar max thrust.
+# This works as our code correctly scales the PID to abs(SERVO_NEUTRAL-SERVO_FULL_FWD)
+# or abs(SERVO_NEUTRAL-SERVO_FULL_REV) depending on sign.
+# BlueRobotics Basic ESC datasheet: neutral=1500, full rev=1100, full fwd=1900.
 SERVO_NEUTRAL = 1500
 SERVO_FULL_REV = 1100
 SERVO_FULL_FWD = 1900
-# Ratio of full speed range to use as the normal max speed when control effort is 1.
-# When final control effort exceeds 1, it can go pass the expected normal max speed,
-# so use SERVO_FULL_REV and SERVO_FULL_FWD as the true max speed.
+# NOTE: Ratio of full speed range to use as the normal max speed when control effort
+# is 1. When final control effort exceeds 1, it can go pass the expected normal
+# max speed, so use SERVO_FULL_REV and SERVO_FULL_FWD as the true max speed.
 SPD_RATIO = 1.0
 
 # fmt: off

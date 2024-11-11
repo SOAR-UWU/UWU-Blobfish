@@ -21,7 +21,7 @@ def generate_launch_description():
         package="arduino_bridge",
         executable="bridge",
         parameters=[
-            pkg_this / "config" / "params.yaml",
+            str(pkg_this / "config" / "params.yaml"),
             {"arduino_files": str(pkg_this / "arduino")},
             {"arduino_port": dev.device},
         ],
