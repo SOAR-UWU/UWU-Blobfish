@@ -8,7 +8,7 @@ from rclpy.node import Node
 from rclpy.qos import qos_profile_sensor_data
 from std_msgs.msg import Float64
 
-from blobfish_msgs.msg import Motors, MotorsFloat
+from blobfish_msgs.msg import Motors
 
 NODE_NAME = "sim_arduino_bridge"
 ROS_TOPIC = "/blobfish/motor_values"
@@ -59,9 +59,6 @@ class SimArduinoBridge(Node):
         self.__pubs = {
             k: self.create_publisher(Float64, v, 0) for k, v in GZ_TOPICS.items()
         }
-        self.__debug_pub = self.create_publisher(
-            MotorsFloat, "/blobfish/motor_floats", 0
-        )
 
     def _map_motor_order(self, msg: Motors):
         vals = {}
@@ -104,9 +101,7 @@ class SimArduinoBridge(Node):
     def callback(self, msg: Motors):
         vals = self._map_motor_order(msg)
         vals = self._map_val_to_float(vals)
-        self.__debug_pub.publish(MotorsFloat(**{k.lower(): v for k, v in vals.items()}))
         vals = self._map_float_to_thrust(vals)
-        # NOTE: Best way to see how motors respond is to comment out below pub loop.
         for motor, pub in self.__pubs.items():
             pub.publish(Float64(data=float(vals[motor])))
 
