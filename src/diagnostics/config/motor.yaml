@@ -1,0 +1,19 @@
+enabled: false
+neutral: 1500
+max_rev: 1100
+max_fwd: 1900
+order:
+  - fl
+  - fr
+  - ml
+  - mr
+  - bl
+  - br
+  - bm
+fl: 1500
+fr: 1500
+ml: 1500
+mr: 1500
+bl: 1500
+br: 1500
+bm: 1500
