@@ -1,10 +1,12 @@
+import json
+
 import numpy as np
 import rclpy
 from geometry_msgs.msg import Twist
 from rclpy.node import Node
 from rclpy.parameter import Parameter
 from rclpy.qos import qos_profile_sensor_data as QOS
-from std_msgs.msg import Char
+from std_msgs.msg import Char, String
 
 from blobfish_msgs.msg import Motors, MotorsFloat
 
@@ -41,6 +43,7 @@ MOTOR_MSG_NAMES = [f"motor_{num}" for num in range(1, 8)]
 PID_TOPIC = "/blobfish/control_effort"
 MOTOR_TOPIC = "/blobfish/motor_values"
 DEBUG_TOPIC = "/blobfish/motor_floats"
+ORDER_TOPIC = "/blobfish/motor_order"
 KEYPRESS_TOPIC = "/keypress"
 
 NODE_NAME = "thruster_manager"
@@ -58,13 +61,15 @@ class ThrusterManager(Node):
         self.create_subscription(Char, KEYPRESS_TOPIC, self.toggle_motors, 10)
         motors_publisher = self.create_publisher(Motors, MOTOR_TOPIC, 0)
         self.pub_floats = self.create_publisher(MotorsFloat, DEBUG_TOPIC, 0)
+        self.pub_order = self.create_publisher(String, ORDER_TOPIC, 10)
+        self.create_timer(0.5, self.publish_debug_order)
 
         # Reorder the motor vector matrix based on the order of the motors.
         # Parameter order must be 0-indexed. 7, 6 refers to 7 motors, 6 DoFs.
         self.motor_matrix = np.zeros((7, 6), dtype=np.float64)
+        order = self.get_motor_order()
         for name, vector in MOTOR_VECTOR_MATRIX.items():
-            motor_pos = self.get_parameter(f"{name}_order").value
-            self.motor_matrix[motor_pos] = np.array(vector)
+            self.motor_matrix[order[name]] = np.array(vector)
 
         # Whether all motors should be stopped.
         self.stopped = False
@@ -73,6 +78,12 @@ class ThrusterManager(Node):
         self.pub_motors = lambda: motors_publisher.publish(self.motor_vals)
 
         self.get_logger().info("Thruster manager started")
+
+    def get_motor_order(self):
+        return {
+            name: self.get_parameter(f"{name}_order").value
+            for name in MOTOR_VECTOR_MATRIX
+        }
 
     def toggle_motors(self, msg: Char):
         keypress = chr(msg.data)
@@ -84,10 +95,13 @@ class ThrusterManager(Node):
 
     def publish_debug_floats(self, vals: np.ndarray):
         out = MotorsFloat()
+        order = self.get_motor_order()
         for name in MOTOR_VECTOR_MATRIX:
-            motor_pos = self.get_parameter(f"{name}_order").value
-            setattr(out, name, vals[motor_pos])
+            setattr(out, name, vals[order[name]])
         self.pub_floats.publish(out)
+
+    def publish_debug_order(self):
+        self.pub_order.publish(String(data=json.dumps(self.get_motor_order())))
 
     def calculate_thrusters(self, msg: Twist):
         # All pid values are in the range [-1, 1].
