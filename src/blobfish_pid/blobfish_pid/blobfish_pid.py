@@ -5,6 +5,7 @@ import rclpy
 import rclpy.parameter
 import yaml
 from geometry_msgs.msg import Twist
+from rcl_interfaces.msg import Log
 from rclpy.node import Node
 from rclpy.qos import qos_profile_sensor_data as QOS
 from simple_pid import PID
@@ -23,6 +24,8 @@ IMU_TOPIC = "/blobfish/imu_measurements"
 STATE_TOPIC = "/blobfish/state_setpoints"
 DEPTH_TOPIC = "/blobfish/depth"
 KEYPRESS_TOPIC = "/keypress"
+KEYPRESS_OUT_TOPIC = "/kpout"
+
 
 NODE_NAME = "pid_node"
 
@@ -101,6 +104,7 @@ class PIDNode(Node):
         self.update_pid_from_params()
 
         self.output_pid = self.create_publisher(Twist, PID_TOPIC, 0)
+        _kp_log_pub = self.create_publisher(Log, KEYPRESS_OUT_TOPIC, 10)
         self.create_subscription(Twist, IMU_TOPIC, self.calculate_control_effort, QOS)
         self.create_subscription(Twist, STATE_TOPIC, self.set_setpoints, 10)
         self.create_subscription(Char, KEYPRESS_TOPIC, self.proc_keypress, 10)
@@ -115,6 +119,7 @@ class PIDNode(Node):
         self.tuning = False
         self.unit = 0.003
         self.using_depth = True
+        self.log_kp = lambda x: _kp_log_pub.publish(Log(name=self.get_name(), msg=x))
 
     # NOTE: Updating params wont update the config file. This is to prevent infinite
     # loops. Changes to params via other means are only temporary until the config
@@ -277,81 +282,75 @@ class PIDNode(Node):
         # Disable the use of the depth sensor (current depth always reads 0)
         if keypress == "q":
             self.using_depth = not self.using_depth
-            self.get_logger().info(
-                f"Using depth sensor for control: {self.using_depth}"
-            )
+            self.log_kp(f"Using depth sensor for control: {self.using_depth}")
             if not self.using_depth:
                 self.current_depth = 0
 
         if not self.tuning:
             if keypress == "h":
-                self.get_logger().info("Press 'c' to tune PID parameters")
+                self.log_kp("Press 'c' to tune PID parameters")
                 if self.using_depth:
-                    self.get_logger().info(
-                        "Press 'q' to disable depth reading from sensor"
-                    )
+                    self.log_kp("Press 'q' to disable depth reading from sensor")
                 else:
-                    self.get_logger().info(
-                        "Press 'q' to enable depth reading from sensor"
-                    )
+                    self.log_kp("Press 'q' to enable depth reading from sensor")
             elif keypress == "c":
-                self.get_logger().info("Tuning PID parameters, press 'c' again to stop")
+                self.log_kp("Tuning PID parameters, press 'c' again to stop")
                 self.tuning = True
             return
 
         if keypress == "c":
-            self.get_logger().info(
-                "Tuning for PID parameters stopped, press 'c' again to start"
-            )
+            self.log_kp("Tuning for PID parameters stopped, press 'c' again to start")
             self.tuning = False
             return
 
         if keypress in "pP":
             self.current_variable = "p"
-            self.get_logger().info("Tuning P")
+            self.log_kp("Tuning P")
         if keypress in "iI":
             self.current_variable = "i"
-            self.get_logger().info("Tuning I")
+            self.log_kp("Tuning I")
         if keypress in "dD":
             self.current_variable = "d"
-            self.get_logger().info("Tuning D")
+            self.log_kp("Tuning D")
         if keypress in "rR":
             self.current_axis = "roll"
-            self.get_logger().info("Tuning roll")
+            self.log_kp("Tuning roll")
         if keypress in "tT":
             self.current_axis = "pitch"
-            self.get_logger().info("Tuning pitch")
+            self.log_kp("Tuning pitch")
         if keypress in "yY":
             self.current_axis = "yaw"
-            self.get_logger().info("Tuning yaw")
+            self.log_kp("Tuning yaw")
         if keypress in "xX":
             self.current_axis = "x"
-            self.get_logger().info("Tuning x")
+            self.log_kp("Tuning x")
         if keypress in "uU":
             self.current_axis = "y"
-            self.get_logger().info("Tuning y")
+            self.log_kp("Tuning y")
         if keypress in "`":
             self.save_params_to_config()
 
         if keypress in "hH":
-            self.get_logger().info("Help:")
-            self.get_logger().info("` - Save current parameters")
-            self.get_logger().info("P - Tune P")
-            self.get_logger().info("I - Tune I")
-            self.get_logger().info("D - Tune D")
-            self.get_logger().info("R - Tune roll")
-            self.get_logger().info("T - Tune pitch")
-            self.get_logger().info("Y - Tune yaw")
-            self.get_logger().info("X - Tune x")
-            self.get_logger().info("U - Tune y")
-            self.get_logger().info(", - Decrease")
-            self.get_logger().info(". - Increase")
-            self.get_logger().info("Current axis: " + str(self.current_axis))
-            self.get_logger().info("Current coefficient: " + str(self.current_variable))
+            self.log_kp(
+                "Help:\n"
+                "` - Save current parameters\n"
+                "P - Tune P\n"
+                "I - Tune I\n"
+                "D - Tune D\n"
+                "R - Tune roll\n"
+                "T - Tune pitch\n"
+                "Y - Tune yaw\n"
+                "X - Tune x\n"
+                "U - Tune y\n"
+                ", - Decrease\n"
+                ". - Increase\n"
+                f"Current axis: {self.current_axis}\n"
+                f"Current coefficient: {self.current_variable}"
+            )
             if self.using_depth:
-                self.get_logger().info("Press 'q' to disable depth reading from sensor")
+                self.log_kp("Press 'q' to disable depth reading from sensor")
             else:
-                self.get_logger().info("Press 'q' to enable depth reading from sensor")
+                self.log_kp("Press 'q' to enable depth reading from sensor")
 
         if self.current_axis is not None and self.current_variable is not None:
             if keypress in ",.":
@@ -363,13 +362,13 @@ class PIDNode(Node):
                     new_param = rclpy.parameter.Parameter(
                         param_name, rclpy.Parameter.Type.DOUBLE, param_val
                     )
-                    self.get_logger().info(f"Decreasing {param_name} to {param_val}")
+                    self.log_kp(f"Decreasing {param_name} to {param_val}")
                 if keypress == ".":
                     param_val += self.unit
                     new_param = rclpy.parameter.Parameter(
                         param_name, rclpy.Parameter.Type.DOUBLE, param_val
                     )
-                    self.get_logger().info(f"Increasing {param_name} to {param_val}")
+                    self.log_kp(f"Increasing {param_name} to {param_val}")
 
                 self.set_parameters([new_param])
 

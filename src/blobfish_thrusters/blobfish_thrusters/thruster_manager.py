@@ -3,6 +3,7 @@ import json
 import numpy as np
 import rclpy
 from geometry_msgs.msg import Twist
+from rcl_interfaces.msg import Log
 from rclpy.node import Node
 from rclpy.parameter import Parameter
 from rclpy.qos import qos_profile_sensor_data as QOS
@@ -45,6 +46,7 @@ MOTOR_TOPIC = "/blobfish/motor_values"
 DEBUG_TOPIC = "/blobfish/motor_floats"
 ORDER_TOPIC = "/blobfish/motor_order"
 KEYPRESS_TOPIC = "/keypress"
+KEYPRESS_OUT_TOPIC = "/kpout"
 
 NODE_NAME = "thruster_manager"
 
@@ -62,6 +64,7 @@ class ThrusterManager(Node):
         motors_publisher = self.create_publisher(Motors, MOTOR_TOPIC, 0)
         self.pub_floats = self.create_publisher(MotorsFloat, DEBUG_TOPIC, 0)
         self.pub_order = self.create_publisher(String, ORDER_TOPIC, 10)
+        _kp_log_pub = self.create_publisher(Log, KEYPRESS_OUT_TOPIC, 10)
         self.create_timer(0.5, self.publish_debug_order)
 
         # Reorder the motor vector matrix based on the order of the motors.
@@ -76,6 +79,7 @@ class ThrusterManager(Node):
         # Reused for each message.
         self.motor_vals = Motors()
         self.pub_motors = lambda: motors_publisher.publish(self.motor_vals)
+        self.log_kp = lambda x: _kp_log_pub.publish(Log(name=self.get_name(), msg=x))
 
         self.get_logger().info("Thruster manager started")
 
@@ -89,9 +93,9 @@ class ThrusterManager(Node):
         keypress = chr(msg.data)
         if keypress == " ":
             self.stopped = not self.stopped
-            self.get_logger().info(f"Motors running: {not self.stopped}")
+            self.log_kp(f"Motors running: {not self.stopped}")
         elif keypress == "h":
-            self.get_logger().info("Press SPACE to turn off/on the motors")
+            self.log_kp("Press SPACE to turn off/on the motors")
 
     def publish_debug_floats(self, vals: np.ndarray):
         out = MotorsFloat()
