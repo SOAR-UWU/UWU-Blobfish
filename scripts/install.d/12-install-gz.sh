@@ -3,6 +3,12 @@
 
 set -eo pipefail
 
+# TODO: Build from source? Look harder? Maybe the stable pair is built for arm64 focal?
+if uname -a | grep -q "tegra"; then
+  echo "Skipping $(basename $BASH_SOURCE) on Jetson."
+  exit 0
+fi
+
 # Setup OSRF Gazebo pkg repository.
 # https://gazebosim.org/docs/harmonic/install_ubuntu
 sudo wget -qO /etc/apt/keyrings/pkgs-osrf-archive-keyring.gpg https://packages.osrfoundation.org/gazebo.gpg
