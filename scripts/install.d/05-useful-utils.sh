@@ -31,7 +31,8 @@ echo "export LESS='-FiJMRW -x4 -z-4 -#5 --use-color'" | sudo tee -a /etc/bash.ba
 # Configure tmux.
 echo 'unbind C-b
 set -g prefix C-a
-set -g mouse on' | sudo tee -a /etc/tmux.conf > /dev/null
+set -g mouse on
+set -g default-terminal "screen-256color"' | sudo tee -a /etc/tmux.conf > /dev/null
 
 # Configure vim a bit.
 echo 'set shiftwidth=4 smarttab
