@@ -3,6 +3,7 @@
 Say why aren't we using RViz?
 """
 
+import itertools
 import logging
 import os
 
@@ -12,7 +13,7 @@ import rclpy.qos
 from geometry_msgs.msg import Twist
 from rcl_interfaces.msg import Log
 from rclpy.node import Node
-from rich.console import Console
+from rich.console import Console, ConsoleOptions
 from rich.layout import Layout
 from rich.live import Live
 from rich.logging import RichHandler
@@ -177,6 +178,7 @@ class MonitorNode(Node):
 
 
 # Taken from https://stackoverflow.com/a/74134595
+# Improved by @Interpause to preserve original formatting.
 class ConsolePanel(Console):
     def __init__(self, *args, **kwargs):
         console_file = open(os.devnull, "w")
@@ -184,10 +186,18 @@ class ConsolePanel(Console):
             record=True, file=console_file, *args, **kwargs
         )
 
-    def __rich_console__(self, console, options):
+    def __rich_console__(self, console: Console, options: ConsoleOptions):
+        # NOTE: on resizing, the linebreaks done by the inner console might
+        # interfere with the outer console but there's no way to make the inner
+        # console reactive so this is the best already.
+        w, h = self.width, self.height = options.max_width, options.height
         texts = self.export_text(clear=False, styles=True).split("\n")
-        for line in texts[-options.height - 1 :]:
-            yield Text.from_ansi(line)
+        texts = (Text.from_ansi(text) for text in texts[-h - 1 :])
+        lines = itertools.chain.from_iterable(
+            text.wrap(console, w, justify="left", tab_size=4) for text in texts
+        )
+        for line in list(lines)[-h - 1 :]:
+            yield line
 
 
 def main(args=None):
