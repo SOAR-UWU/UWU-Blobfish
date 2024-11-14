@@ -7,4 +7,7 @@ sudo apt update
 sudo apt install -y software-properties-common
 
 # Some are superfluous, but just to be sure.
-sudo add-apt-repository -y main restricted universe multiverse
+sudo add-apt-repository -y main
+sudo add-apt-repository -y restricted
+sudo add-apt-repository -y universe
+sudo add-apt-repository -y multiverse
