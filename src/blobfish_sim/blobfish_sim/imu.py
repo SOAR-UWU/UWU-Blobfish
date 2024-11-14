@@ -25,11 +25,13 @@ def map_imu(msg: Imu, _) -> Optional[Twist]:
         (msg.orientation.x, msg.orientation.y, msg.orientation.z, msg.orientation.w)
     )
     # xyz is extrinsic, XYZ is intrinsic. Probably is intrinsic?
-    rot_x, rot_y, rot_z = rot.as_euler("XYZ", degrees=True)
+    rot_x, rot_y, rot_z = rot.as_euler("xyz", degrees=True)
     out.angular.x = rot_x
     out.angular.y = rot_y
     out.angular.z = rot_z
-    # Yes the original node gave up on acceleration values.
+    out.linear.x = msg.linear_acceleration.x
+    out.linear.y = msg.linear_acceleration.y
+    out.linear.z = msg.linear_acceleration.z
     return out
 
 

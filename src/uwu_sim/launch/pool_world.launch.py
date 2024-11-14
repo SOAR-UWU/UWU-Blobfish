@@ -10,6 +10,7 @@ from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription
 from launch.substitutions import LaunchConfiguration
 
 WORLD_SDF = "world_pool.sdf"
+GZ_DEBUG = False
 
 
 def declare_launch_arguments():
@@ -24,7 +25,9 @@ def generate_launch_description():
 
     gazebo = IncludeLaunchDescription(
         str(pkg_ros_gz_sim / "launch" / "gz_sim.launch.py"),
-        launch_arguments={"gz_args": [arg_world_sdf, " -v 0"]}.items(),
+        launch_arguments={
+            "gz_args": [arg_world_sdf, f" -v{'4' if GZ_DEBUG else '0'}"]
+        }.items(),
     )
 
     return LaunchDescription([*declare_launch_arguments(), gazebo])

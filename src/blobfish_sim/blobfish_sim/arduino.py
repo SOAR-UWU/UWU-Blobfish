@@ -104,8 +104,8 @@ class SimArduinoBridge(Node):
     def callback(self, msg: Motors):
         vals = self._map_motor_order(msg)
         vals = self._map_val_to_float(vals)
-        vals = self._map_float_to_thrust(vals)
         self.__debug_pub.publish(MotorsFloat(**{k.lower(): v for k, v in vals.items()}))
+        vals = self._map_float_to_thrust(vals)
         # NOTE: Best way to see how motors respond is to comment out below pub loop.
         for motor, pub in self.__pubs.items():
             pub.publish(Float64(data=float(vals[motor])))
