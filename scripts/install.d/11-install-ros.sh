@@ -5,10 +5,18 @@
 
 set -eo pipefail
 
+# Jetson specific repository override.
+if uname -a | grep -q "tegra"; then
+  wget -qO - https://isaac.download.nvidia.com/isaac-ros/repos.key | sudo apt-key add -
+  # NOTE: The repo url changes for Orin onwards, see: https://forums.developer.nvidia.com/t/isaac-ros-on-jetpack-5/312854.
+  grep -qxF "deb https://isaac.download.nvidia.com/isaac-ros/ubuntu/main $(lsb_release -cs) main" /etc/apt/sources.list || \
+  echo "deb https://isaac.download.nvidia.com/isaac-ros/ubuntu/main $(lsb_release -cs) main" | sudo tee -a /etc/apt/sources.list
+fi
+
 # Setup ROS2 Humble pkg repository.
 # https://docs.ros.org/en/humble/Installation/Ubuntu-Install-Debs.html
 sudo wget -qO /etc/apt/keyrings/ros-archive-keyring.gpg https://raw.githubusercontent.com/ros/rosdistro/master/ros.key
-echo "deb [arch=amd64 signed-by=/etc/apt/keyrings/ros-archive-keyring.gpg] http://packages.ros.org/ros2/ubuntu jammy main" \
+echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/ros-archive-keyring.gpg] http://packages.ros.org/ros2/ubuntu $(lsb_release -cs) main" \
   | sudo tee /etc/apt/sources.list.d/ros2.list > /dev/null
 
 # `ros-humble-desktop` and `ros-dev-tools` are blanket meta packages.
@@ -20,10 +28,10 @@ sudo apt install -y \
   ros-dev-tools \
   ~nros-humble-rqt*
 
-if grep -q "#<<<$(basename "$0")" ~/.bashrc; then
+if grep -q "#<<<$(basename $BASH_SOURCE)" ~/.bashrc; then
   echo 'ROS already sourced in "~/.bashrc".'
 else
-  echo "#<<<$(basename "$0")" >> ~/.bashrc
+  echo "#<<<$(basename $BASH_SOURCE)" >> ~/.bashrc
   echo "source /opt/ros/humble/setup.bash" >> ~/.bashrc
 fi
 

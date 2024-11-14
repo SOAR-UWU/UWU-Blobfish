@@ -224,7 +224,7 @@ class PIDNode(Node):
         cur_x, cur_y = msg.linear.x, msg.linear.y
         cur_z = self.current_depth if self.using_depth else msg.linear.z
 
-        # Convert position error to local frame
+        # Convert position error to local frame, see proof.webp in this pkg folder
         cos_h, sin_h = np.cos(np.radians(cur_h)), np.sin(np.radians(cur_h))
         rot = np.array([[cos_h, sin_h], [-sin_h, cos_h]])
         err_xy = np.array([cur_x - self.setpoint_x, cur_y - self.setpoint_y])
