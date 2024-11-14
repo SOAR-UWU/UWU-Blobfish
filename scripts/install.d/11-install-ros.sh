@@ -8,8 +8,9 @@ set -eo pipefail
 # Jetson specific repository override.
 if uname -a | grep -q "tegra"; then
   wget -qO - https://isaac.download.nvidia.com/isaac-ros/repos.key | sudo apt-key add -
-  grep -qxF "deb https://isaac.download.nvidia.com/isaac-ros/release-3.0 $(lsb_release -cs) release-3.0" /etc/apt/sources.list || \
-  echo "deb https://isaac.download.nvidia.com/isaac-ros/release-3.0 $(lsb_release -cs) release-3.0" | sudo tee -a /etc/apt/sources.list
+  # NOTE: The repo url changes for Orin onwards, see: https://forums.developer.nvidia.com/t/isaac-ros-on-jetpack-5/312854.
+  grep -qxF "deb https://isaac.download.nvidia.com/isaac-ros/ubuntu/main $(lsb_release -cs) main" /etc/apt/sources.list || \
+  echo "deb https://isaac.download.nvidia.com/isaac-ros/ubuntu/main $(lsb_release -cs) main" | sudo tee -a /etc/apt/sources.list
 fi
 
 # Setup ROS2 Humble pkg repository.
