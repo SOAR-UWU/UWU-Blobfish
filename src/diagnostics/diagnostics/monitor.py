@@ -3,6 +3,7 @@
 Say why aren't we using RViz?
 """
 
+import getchlib
 import rclpy
 import rclpy.qos
 import rich
@@ -73,7 +74,8 @@ class MonitorNode(Node):
         rich.print(msg)
 
     def keypress_out_callback(self, msg: Log):
-        rich.print(msg)
+    def get_key(self) -> str:
+        return getchlib.getkey(False, echo=False)
 
 
 def main(args=None):
