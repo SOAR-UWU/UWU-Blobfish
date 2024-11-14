@@ -60,6 +60,7 @@ class MonitorNode(Node):
         )
 
         self.__key_pub = self.create_publisher(Char, KEYPRESS_TOPIC, 10)
+        self.__key_timer = self.create_timer(1 / 60, self.key_timer_callback)
         self.__live = live
         self.__handler = RichHandler(
             rich_tracebacks=True,
@@ -103,8 +104,21 @@ class MonitorNode(Node):
             log.info(msg.msg)
 
     def keypress_out_callback(self, msg: Log):
-    def get_key(self) -> str:
-        return getchlib.getkey(False, echo=False)
+        log = logging.getLogger(f"keypress_out/{msg.name}")
+        log.setLevel(logging.INFO)
+        log.addHandler(self.__handler)
+        log.info(msg.msg)
+
+    def key_timer_callback(self):
+        key = self.get_key()
+        if key is not None:
+            msg = Char()
+            msg.data = ord(key)
+            self.__key_pub.publish(msg)
+
+    def get_key(self):
+        ch: str = getchlib.getkey(False, echo=False)
+        return None if ch == "" else ch
 
 
 def main(args=None):
