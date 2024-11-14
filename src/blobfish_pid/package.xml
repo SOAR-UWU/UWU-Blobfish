@@ -7,7 +7,6 @@
   <maintainer email="javin@todo.todo">javin</maintainer>
   <license>TODO: License declaration</license>
 
-  <depend>eigenpy</depend>
   <depend>rclpy</depend>
   <depend>python3-simple-pid-pip</depend>
   <depend>std_msgs</depend>

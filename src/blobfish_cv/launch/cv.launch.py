@@ -12,11 +12,11 @@ def generate_launch_description():
     det_cfg = os.path.join(
         get_package_share_directory("blobfish_cv"), "config", "params.yaml"
     )
-    cam_node = Node(
-        package="usb_cam",
-        executable="usb_cam_node_exe",
-        parameters=[cam_cfg],
-    )
+    # cam_node = Node(
+    #     package="usb_cam",
+    #     executable="usb_cam_node_exe",
+    #     parameters=[cam_cfg],
+    # )
 
     record_node = Node(package="debug_cv", executable="record_vid")
 
