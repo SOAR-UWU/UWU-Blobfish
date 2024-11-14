@@ -3,6 +3,11 @@
 
 set -eo pipefail
 
+if uname -a | grep -q "tegra"; then
+  echo "Skipping $(basename $BASH_SOURCE) on Jetson."
+  exit 0
+fi
+
 sudo add-apt-repository ppa:oibaf/graphics-drivers -y
 
 sudo apt update

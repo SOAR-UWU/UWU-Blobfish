@@ -7,11 +7,11 @@ def generate_launch_description():
     pkg_this = get_package_share_path("blobfish_cv")
     params_cam = pkg_this / "config" / "params.yaml"
 
-    cam_node = Node(
-        package="usb_cam",
-        executable="usb_cam_node_exe",
-        parameters=[params_cam],
-    )
+    # cam_node = Node(
+    #     package="usb_cam",
+    #     executable="usb_cam_node_exe",
+    #     parameters=[params_cam],
+    # )
 
     record_node = Node(package="debug_cv", executable="record_vid")
 

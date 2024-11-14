@@ -9,9 +9,9 @@
 
   <exec_depend>python3-opencv</exec_depend>
   <exec_depend>python3-imutils-pip</exec_depend>
-  <exec_depend>usb_cam</exec_depend>
+  <!-- <exec_depend>usb_cam</exec_depend> -->
   <exec_depend>cv_bridge</exec_depend>
-  <exec_depend>foxglove_bridge</exec_depend>
+  <!-- <exec_depend>foxglove_bridge</exec_depend> -->
 
   <test_depend>ament_copyright</test_depend>
   <test_depend>ament_flake8</test_depend>

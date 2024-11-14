@@ -8,14 +8,14 @@ sudo apt install -y \
 
 # Add a marker so we know this script has been run before. This is because running
 # this script multiple times will bloat the config with repeats.
-if grep -q "#<<<$(basename "$0")" /etc/bash.bashrc; then
-  echo "$(basename "$0") already ran once."
+if grep -q "#<<<$(basename $BASH_SOURCE)" /etc/bash.bashrc; then
+  echo "$(basename $BASH_SOURCE) already ran once."
   exit 0
 fi
-echo "#<<<$(basename "$0")" | sudo tee -a /etc/bash.bashrc > /dev/null
+echo "#<<<$(basename $BASH_SOURCE)" | sudo tee -a /etc/bash.bashrc > /dev/null
 
 # Install fzf from git to get the latest version.
-wget -qO- https://github.com/junegunn/fzf/releases/download/v0.55.0/fzf-0.55.0-linux_amd64.tar.gz \
+wget -qO- https://github.com/junegunn/fzf/releases/download/v0.56.2/fzf-0.56.2-linux_$(dpkg --print-architecture).tar.gz \
   | tar -xzf - --to-stdout fzf \
   | sudo tee /usr/local/bin/fzf > /dev/null
 sudo chmod +x /usr/local/bin/fzf
@@ -31,7 +31,8 @@ echo "export LESS='-FiJMRW -x4 -z-4 -#5 --use-color'" | sudo tee -a /etc/bash.ba
 # Configure tmux.
 echo 'unbind C-b
 set -g prefix C-a
-set -g mouse on' | sudo tee -a /etc/tmux.conf > /dev/null
+set -g mouse on
+set -g default-terminal "screen-256color"' | sudo tee -a /etc/tmux.conf > /dev/null
 
 # Configure vim a bit.
 echo 'set shiftwidth=4 smarttab
@@ -48,9 +49,11 @@ echo '"\e[3;5~": kill-word
 echo "content_disposition = on" | sudo tee -a /etc/wgetrc > /dev/null
 
 # Always use Nvidia dGPU where available. Should fallback to iGPU if not found.
-echo 'export __NV_PRIME_RENDER_OFFLOAD=1
-export __VK_LAYER_NV_optimus=NVIDIA_only
-export __GLX_VENDOR_LIBRARY_NAME=nvidia' | sudo tee -a /etc/bash.bashrc > /dev/null
+if ! uname -a | grep -q "tegra"; then
+  echo 'export __NV_PRIME_RENDER_OFFLOAD=1
+  export __VK_LAYER_NV_optimus=NVIDIA_only
+  export __GLX_VENDOR_LIBRARY_NAME=nvidia' | sudo tee -a /etc/bash.bashrc > /dev/null
+fi
 
 # Symlink python to python3.
 sudo update-alternatives --install /usr/bin/python python /usr/bin/python3 10
