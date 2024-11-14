@@ -27,10 +27,10 @@ sudo apt install -y \
   ros-dev-tools \
   ~nros-humble-rqt*
 
-if grep -q "#<<<$(basename "$0")" ~/.bashrc; then
+if grep -q "#<<<$(basename $BASH_SOURCE)" ~/.bashrc; then
   echo 'ROS already sourced in "~/.bashrc".'
 else
-  echo "#<<<$(basename "$0")" >> ~/.bashrc
+  echo "#<<<$(basename $BASH_SOURCE)" >> ~/.bashrc
   echo "source /opt/ros/humble/setup.bash" >> ~/.bashrc
 fi
 

@@ -8,11 +8,11 @@ sudo apt install -y \
 
 # Add a marker so we know this script has been run before. This is because running
 # this script multiple times will bloat the config with repeats.
-if grep -q "#<<<$(basename "$0")" /etc/bash.bashrc; then
-  echo "$(basename "$0") already ran once."
+if grep -q "#<<<$(basename $BASH_SOURCE)" /etc/bash.bashrc; then
+  echo "$(basename $BASH_SOURCE) already ran once."
   exit 0
 fi
-echo "#<<<$(basename "$0")" | sudo tee -a /etc/bash.bashrc > /dev/null
+echo "#<<<$(basename $BASH_SOURCE)" | sudo tee -a /etc/bash.bashrc > /dev/null
 
 # Install fzf from git to get the latest version.
 wget -qO- https://github.com/junegunn/fzf/releases/download/v0.56.2/fzf-0.56.2-linux_$(dpkg --print-architecture).tar.gz \

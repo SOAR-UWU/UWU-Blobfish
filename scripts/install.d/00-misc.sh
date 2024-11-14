@@ -4,7 +4,7 @@
 set -eo pipefail
 
 if uname -a | grep -q "tegra"; then
-  echo "Skipping $(basename "$0") on Jetson."
+  echo "Skipping $(basename $BASH_SOURCE) on Jetson."
   exit 0
 fi
 
