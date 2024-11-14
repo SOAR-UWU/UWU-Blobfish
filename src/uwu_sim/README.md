@@ -32,6 +32,12 @@ If Gazebo is acting weird (blank render screen, loading old worlds only), make s
   - sensors (& custom sensors): <https://gazebosim.org/api/sensors/8/index.html>
   - The rest of the API references are incomplete since they were refactored out of the original monolithic documentation by Gazebo.
 
+### Default Keyboard Shortcuts
+
+- `space`: Pause/Play simulation, conflicts with our thruster control keypress lol.
+- `Ctrl+R`: Reset simulation.
+  - Use `tab` to select the reset button, `space` to confirm.
+
 ## Gazebo Commands
 
 - Connecting ROS2 & Ignition topics: <https://gazebosim.org/docs/harmonic/ros2_integration>

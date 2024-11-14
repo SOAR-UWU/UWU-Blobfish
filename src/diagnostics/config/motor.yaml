@@ -1,0 +1,27 @@
+enabled: false
+neutral: 1500
+max_rev: 1100
+max_fwd: 1900
+order:
+  - bm
+  - mr
+  - fl
+  - ml
+  - bl
+  - br
+  - fr
+fl: 1500
+fr: 1500
+ml: 1500
+mr: 1500
+bl: 1500
+br: 1500
+bm: 1500
+
+# Guide:
+# The node will live update from this file, so just press save each time to take effect.
+# 1. Start with fl and set it to 1900.
+# 2. See which motor spins.
+# 3. Use vim to swap the lines under order so its correct.
+# 4. Repeat till fl is correct.
+# 5. Move onto the next motor fr and repeat from step 1.

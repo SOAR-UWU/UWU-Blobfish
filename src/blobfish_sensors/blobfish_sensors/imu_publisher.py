@@ -29,7 +29,7 @@ class IMU_Publisher_Node(Node):
     self.pitch_calib = 0
     self.roll_calib = 0
 
-  def imu_callback(self, msg):
+  def imu_callback(self, msg: CommonGroup):
     # quaternion = msg.orientation
     # roll, pitch, yaw = self.euler_from_quaternion(quaternion)
     roll, pitch, yaw = msg.yawpitchroll.z, msg.yawpitchroll.y, msg.yawpitchroll.x
