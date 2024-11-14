@@ -1,21 +1,16 @@
-import os
-
-from ament_index_python.packages import get_package_share_directory
+from ament_index_python.packages import get_package_share_path
 from launch import LaunchDescription
 from launch_ros.actions import Node
 
 
 def generate_launch_description():
-    cam_cfg = os.path.join(
-        get_package_share_directory("blobfish_cv"), "config", "params.yaml"
-    )
-    det_cfg = os.path.join(
-        get_package_share_directory("blobfish_cv"), "config", "params.yaml"
-    )
+    pkg_this = get_package_share_path("blobfish_cv")
+    params_cam = pkg_this / "config" / "params.yaml"
+
     # cam_node = Node(
     #     package="usb_cam",
     #     executable="usb_cam_node_exe",
-    #     parameters=[cam_cfg],
+    #     parameters=[params_cam],
     # )
 
     record_node = Node(package="debug_cv", executable="record_vid")
@@ -27,7 +22,7 @@ def generate_launch_description():
             ("~/flare_bbox", "/blobfish_cv/flare/pos"),
         ],
         name="detect_flare",
-        parameters=[det_cfg],
+        parameters=[{"config_path": str(pkg_this / "config" / "detect_flare.yaml")}],
     )
 
     cv_node2 = Node(
@@ -37,7 +32,7 @@ def generate_launch_description():
             ("~/gate_bbox", "/blobfish_cv/gate/pos"),
         ],
         name="detect_others",
-        parameters=[det_cfg],
+        parameters=[{"config_path": str(pkg_this / "config" / "detect_others.yaml")}],
     )
 
     ld = LaunchDescription()

@@ -1,5 +1,6 @@
 usb_cam:
   ros__parameters:
+    # TODO: similar to arduino_launch.py, filtering cameras should be possible.
     video_device: /dev/video0
     framerate: 60.0
     image_width: 640
@@ -16,9 +17,3 @@ usb_cam:
     auto_focus: True
     # NOTE: usb cams typically don't have software-controllable focus (ours don't).
     focus: -1
-detect_flare:
-  ros__parameters:
-    config_path: /workspaces/UWU-Blobfish/src/blobfish_cv/config/detect_flare.yaml
-detect_others:
-  ros__parameters:
-    config_path: /workspaces/UWU-Blobfish/src/blobfish_cv/config/detect_others.yaml
