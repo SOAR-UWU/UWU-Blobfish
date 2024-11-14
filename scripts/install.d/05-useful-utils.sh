@@ -15,7 +15,7 @@ fi
 echo "#<<<$(basename "$0")" | sudo tee -a /etc/bash.bashrc > /dev/null
 
 # Install fzf from git to get the latest version.
-wget -qO- https://github.com/junegunn/fzf/releases/download/v0.55.0/fzf-0.55.0-linux_amd64.tar.gz \
+wget -qO- https://github.com/junegunn/fzf/releases/download/v0.56.2/fzf-0.56.2-linux_$(dpkg --print-architecture).tar.gz \
   | tar -xzf - --to-stdout fzf \
   | sudo tee /usr/local/bin/fzf > /dev/null
 sudo chmod +x /usr/local/bin/fzf
@@ -48,9 +48,11 @@ echo '"\e[3;5~": kill-word
 echo "content_disposition = on" | sudo tee -a /etc/wgetrc > /dev/null
 
 # Always use Nvidia dGPU where available. Should fallback to iGPU if not found.
-echo 'export __NV_PRIME_RENDER_OFFLOAD=1
-export __VK_LAYER_NV_optimus=NVIDIA_only
-export __GLX_VENDOR_LIBRARY_NAME=nvidia' | sudo tee -a /etc/bash.bashrc > /dev/null
+if ! uname -a | grep -q "tegra"; then
+  echo 'export __NV_PRIME_RENDER_OFFLOAD=1
+  export __VK_LAYER_NV_optimus=NVIDIA_only
+  export __GLX_VENDOR_LIBRARY_NAME=nvidia' | sudo tee -a /etc/bash.bashrc > /dev/null
+fi
 
 # Symlink python to python3.
 sudo update-alternatives --install /usr/bin/python python /usr/bin/python3 10
