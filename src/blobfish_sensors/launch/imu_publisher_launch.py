@@ -21,6 +21,7 @@ def generate_launch_description():
         executable="vectornav",
         parameters=[
             str(pkg_this / "config" / "vectornav.yaml"),
+            # str(pkg_this / "config" / "vn_100_800hz.yaml"),
             {"port": dev.device},
         ],
     )
