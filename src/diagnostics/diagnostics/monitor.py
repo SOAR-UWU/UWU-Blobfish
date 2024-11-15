@@ -4,8 +4,10 @@ Say why aren't we using RViz?
 """
 
 import itertools
+import json
 import logging
 import os
+from collections import defaultdict, deque
 
 import getchlib
 import rclpy
@@ -18,9 +20,7 @@ from rich.layout import Layout
 from rich.live import Live
 from rich.logging import RichHandler
 from rich.panel import Panel
-from rich.pretty import Pretty
 from rich.text import Text
-from sensor_msgs.msg import Imu
 from std_msgs.msg import Char, String
 from vectornav_msgs.msg import CommonGroup
 
@@ -28,7 +28,7 @@ from blobfish_msgs.msg import Motors, MotorsFloat
 
 NODE_NAME = "monitor"
 
-IMU_RAW_TOPIC = "/vectornav/imu"
+IMU_RAW_TOPIC = "/vectornav/raw/common"
 IMU_CAL_TOPIC = "/blobfish/imu_measurements"
 MOTOR_DEBUG_TOPIC = "/blobfish/motor_floats"
 MOTOR_ACTUAL_TOPIC = "/blobfish/motor_values"
@@ -52,7 +52,7 @@ class MonitorNode(Node):
     def __init__(self, live: Live):
         super(MonitorNode, self).__init__(NODE_NAME)
 
-        self.create_subscription(Imu, IMU_RAW_TOPIC, self.imu_raw_callback, QOS)
+        self.create_subscription(CommonGroup, IMU_RAW_TOPIC, self.imu_raw_callback, QOS)
         self.create_subscription(Twist, IMU_CAL_TOPIC, self.imu_cal_callback, QOS)
         self.create_subscription(
             MotorsFloat, MOTOR_DEBUG_TOPIC, self.motor_debug_callback, QOS
@@ -102,6 +102,10 @@ class MonitorNode(Node):
         self.__panel_imu_raw = imu_raw
         self.__panel_imu_cal = imu_cal
         self.__panel_motors = motors
+        self.__rate_buf = defaultdict(lambda: deque(maxlen=10))
+        self.__rate_last = defaultdict(int)
+        self.__motor_order = None
+        self.__motor_debug_str = ""
         self.__handler = RichHandler(
             rich_tracebacks=True,
             tracebacks_suppress=[rclpy],
@@ -118,22 +122,66 @@ class MonitorNode(Node):
             show_path=False,
         )
 
-    def imu_raw_callback(self, msg: Imu):
-        self.__panel_imu_raw.renderable = Pretty(msg.orientation)
-        pass
+    def imu_raw_callback(self, msg: CommonGroup):
+        ypr = msg.yawpitchroll
+        pos = msg.position  # Depending on how we decide to do the integrator
+        acc = msg.accel
+        self.__panel_imu_raw.renderable = Text(
+            f" r: {ypr.z: 8.1f}\t p: {ypr.y: 8.1f}\t h: {ypr.x: 8.1f}\n"
+            f" x: {pos.x: 8.3f}\t y: {pos.y: 8.3f}\t z: {pos.z: 8.3f}\n"
+            f"ax: {acc.x: 8.3f}\tay: {acc.y: 8.3f}\taz: {acc.z: 8.3f}"
+        )
+        # TODO: Rate measurement can't keep up
+        # last = self.__rate_last["imu_raw"]
+        # now = time.time()
+        # self.__rate_buf["imu_raw"].append(now - last)
+        # self.__rate_last["imu_raw"] = now
+        # fps = 1 / max(1e-8, np.mean(self.__rate_buf["imu_raw"]))
+        # self.__panel_imu_raw.subtitle = f"{fps: 5.1f} Hz"
 
     def imu_cal_callback(self, msg: Twist):
-        self.__panel_imu_cal.renderable = Pretty(msg.angular)
+        pos = msg.linear
+        ang = msg.angular
+        self.__panel_imu_cal.renderable = Text(
+            f" r: {ang.x: 8.1f}\t p: {ang.y: 8.1f}\t h: {ang.z: 8.1f}\n"
+            f" x: {pos.x: 8.3f}\t y: {pos.y: 8.3f}\t z: {pos.z: 8.3f}"
+        )
 
     def motor_debug_callback(self, msg: MotorsFloat):
-        self.__panel_motors.renderable = Pretty(msg)
-        pass
+        fl, fr = msg.fl, msg.fr
+        ml, mr = msg.ml, msg.mr
+        bl, br = msg.bl, msg.br
+        bm = msg.bm
+        self.__motor_debug_str = (
+            f"FL: {fl: 6.3f}\t\tFR: {fr: 6.3f}\t\t"
+            f"ML: {ml: 6.3f}\t\tMR: {mr: 6.3f}\t\t"
+            f"BL: {bl: 6.3f}\t\tBR: {br: 6.3f}\t\t"
+            f"BM: {bm: 6.3f}\n"
+        )
 
     def motor_actual_callback(self, msg: Motors):
-        pass
+        N = 7
+        if self.__motor_order is None:
+            pairs = {f"motor_{i}": getattr(msg, f"motor_{i}") for i in range(1, N + 1)}
+        else:
+            pairs = {
+                f"motor_{i} ({self.__motor_order[i - 1].upper()})": getattr(
+                    msg, f"motor_{i}"
+                )
+                for i in range(1, N + 1)
+            }
+        self.__panel_motors.renderable = Text(
+            self.__motor_debug_str
+            + "\t".join((f"{k}: {v:04d}" for k, v in pairs.items()))
+        )
 
     def motor_order_callback(self, msg: String):
-        pass
+        try:
+            order = json.loads(msg.data)
+            self.__motor_order = {v: k for k, v in order.items()}
+        except json.JSONDecodeError:
+            self.get_logger().error("Invalid JSON in motor order")
+            self.__motor_order = None
 
     def rosout_callback(self, msg: Log):
         # TODO: how to map original time & file location to Rich logging?
