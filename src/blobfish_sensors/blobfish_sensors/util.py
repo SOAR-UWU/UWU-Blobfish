@@ -37,7 +37,5 @@ def average_quaternions(quaternions: np.ndarray):
 
 def remove_gravity_from_accel(rot: Rotation, g, x, y, z):
     """Remove effect of gravity on IMU acceleration."""
-    g_vec = np.array([0, 0, -g])
-    g_vec = rot.apply(g_vec, inverse=True)
-    gx, gy, gz = g_vec
+    gx, gy, gz = rot.apply((0, 0, -g), inverse=True)
     return x - gx, y - gy, z - gz
