@@ -22,6 +22,9 @@ setup(
     license="License declaration",
     tests_require=["pytest"],
     entry_points={
-        "console_scripts": ["motor = diagnostics.motor:main"],
+        "console_scripts": [
+            "motor = diagnostics.motor:main",
+            "monitor = diagnostics.monitor:main",
+        ],
     },
 )

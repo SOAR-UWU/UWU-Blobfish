@@ -5,6 +5,7 @@ from datetime import datetime
 
 import cv2
 import imutils
+from rcl_interfaces.msg import Log
 import rclpy
 from cv_bridge import CvBridge
 from rclpy.node import Node, SetParametersResult
@@ -17,6 +18,7 @@ NODE_NAME = "vid_record"
 IMG_TOPIC = "/image_raw"
 IMG_TOPIC_NAME = "img_topic"
 KEYPRESS_TOPIC = "/keypress"
+KEYPRESS_OUT_TOPIC = "/kpout"
 START_KEY = "g"
 STOP_KEY = "G"
 SCREENSHOT_KEY = "b"
@@ -36,6 +38,7 @@ class VidRecordNode(Node):
         self.add_on_set_parameters_callback(self.params_changed)
         self.create_timer(1 / OUT_FRAMERATE, self.write_frame)
         self.create_timer(DEBUG_RATE, self.print_debug)
+        _kp_log_pub = self.create_publisher(Log, KEYPRESS_OUT_TOPIC, 10)
 
         self.cv_bridge = CvBridge()
         self.is_recording = False
@@ -47,6 +50,7 @@ class VidRecordNode(Node):
         self.time_deque = deque([], 10)
         self.last_time = None
 
+        self.log_kp = lambda x: _kp_log_pub.publish(Log(name=self.get_name(), msg=x))
 
     @property
     def img_topic(self):
@@ -113,14 +117,14 @@ class VidRecordNode(Node):
     def keypress_callback(self, msg):
         key = chr(msg.data)
         if key == START_KEY:
-            self._logger.info("Manual recording triggered!")
+            self.log_kp("Manual recording triggered!")
             self.close()
             self.open()
         elif key == STOP_KEY:
-            self._logger.info("Manual stop triggered!")
+            self.log_kp("Manual stop triggered!")
             self.close()
         elif key == SCREENSHOT_KEY:
-            self._logger.info("Manual screenshot triggered!")
+            self.log_kp("Manual screenshot triggered!")
             self.screenshot()
 
     def screenshot(self):
