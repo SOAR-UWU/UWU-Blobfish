@@ -3,9 +3,10 @@
 from typing import Optional
 
 import rclpy
-from geometry_msgs.msg import TransformStamped, Twist
-from scipy.spatial.transform import Rotation
+from geometry_msgs.msg import TransformStamped
 from tf2_msgs.msg import TFMessage
+
+from blobfish_msgs.msg import Kinematics
 
 from .base_bridge import create_bridge
 
@@ -18,7 +19,7 @@ ROBOT_NAME = "blobfish"
 # Javin actually did configure the VectorNav's frame intentionally.
 
 
-def map_imu(msg: TFMessage, _) -> Optional[Twist]:
+def map_imu(msg: TFMessage, _) -> Optional[Kinematics]:
     """Map IMU."""
     pose: TransformStamped = next(
         (p for p in msg.transforms if p.child_frame_id == ROBOT_NAME), None
@@ -29,21 +30,19 @@ def map_imu(msg: TFMessage, _) -> Optional[Twist]:
     msg_rot = pose.transform.rotation
     msg_pos = pose.transform.translation
 
-    out = Twist()
-    rot = Rotation.from_quat((msg_rot.x, msg_rot.y, msg_rot.z, msg_rot.w))
-    rot_x, rot_y, rot_z = rot.as_euler("xyz", degrees=True)
-    out.angular.x = rot_x
-    out.angular.y = rot_y
-    out.angular.z = rot_z
-    out.linear.x = msg_pos.x
-    out.linear.y = msg_pos.y
-    out.linear.z = msg_pos.z
+    out = Kinematics()
+    out.p.orientation = msg_rot
+    out.p.position.x = msg_pos.x
+    out.p.position.y = msg_pos.y
+    out.p.position.z = msg_pos.z
     return out
 
 
 def main(args=None):
     rclpy.init(args=args)
-    node = create_bridge(map_imu, GZ_TOPIC, TFMessage, ROS_TOPIC, Twist, to_profile=0)
+    node = create_bridge(
+        map_imu, GZ_TOPIC, TFMessage, ROS_TOPIC, Kinematics, to_profile=0
+    )
     try:
         rclpy.spin(node)
     except KeyboardInterrupt:

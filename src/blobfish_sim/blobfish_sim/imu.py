@@ -3,9 +3,9 @@
 from typing import Optional
 
 import rclpy
-from geometry_msgs.msg import Twist
-from scipy.spatial.transform import Rotation
 from sensor_msgs.msg import Imu
+
+from blobfish_msgs.msg import Kinematics
 
 from .base_bridge import create_bridge
 
@@ -18,26 +18,17 @@ ROS_TOPIC = "/blobfish/imu_measurements"
 # the same thing.
 
 
-def map_imu(msg: Imu, _) -> Optional[Twist]:
+def map_imu(msg: Imu, _) -> Optional[Kinematics]:
     """Map IMU."""
-    out = Twist()
-    rot = Rotation.from_quat(
-        (msg.orientation.x, msg.orientation.y, msg.orientation.z, msg.orientation.w)
-    )
-    # xyz is extrinsic, XYZ is intrinsic. Probably is intrinsic?
-    rot_x, rot_y, rot_z = rot.as_euler("xyz", degrees=True)
-    out.angular.x = rot_x
-    out.angular.y = rot_y
-    out.angular.z = rot_z
-    out.linear.x = msg.linear_acceleration.x
-    out.linear.y = msg.linear_acceleration.y
-    out.linear.z = msg.linear_acceleration.z
+    out = Kinematics()
+    out.p.orientation = msg.orientation
+    out.a.linear = msg.linear_acceleration
     return out
 
 
 def main(args=None):
     rclpy.init(args=args)
-    node = create_bridge(map_imu, GZ_TOPIC, Imu, ROS_TOPIC, Twist, to_profile=0)
+    node = create_bridge(map_imu, GZ_TOPIC, Imu, ROS_TOPIC, Kinematics, to_profile=0)
     try:
         rclpy.spin(node)
     except KeyboardInterrupt:

@@ -2,13 +2,14 @@ import numpy as np
 import rclpy
 import rclpy.parameter
 import rclpy.qos
+from geometry_msgs.msg import Quaternion
 from rcl_interfaces.msg import Log
 from rclpy.node import Node
 from scipy.spatial.transform import Rotation
 from std_msgs.msg import Char
 from vectornav_msgs.msg import CommonGroup
 
-from blobfish_pid.blobfish_pid import Twist
+from blobfish_msgs.msg import Kinematics
 
 from .util import average_quaternions, remove_gravity_from_accel
 
@@ -34,13 +35,13 @@ class IMUCalculationNode(Node):
         self.create_subscription(CommonGroup, VN_TOPIC, self.imu_callback, QOS)
         self.create_subscription(Char, KEYPRESS_TOPIC, self.keypress_callback, 10)
 
-        _imu_pub = self.create_publisher(Twist, IMU_TOPIC, 0)
+        _imu_pub = self.create_publisher(Kinematics, IMU_TOPIC, 0)
         _kp_log_pub = self.create_publisher(Log, KEYPRESS_OUT_TOPIC, 10)
 
-        self.state = Twist()
+        self.state = Kinematics()
         self.log_kp = lambda x: _kp_log_pub.publish(Log(name=self.get_name(), msg=x))
         self.pub_imu = lambda: _imu_pub.publish(self.state)
-        self.offset_quat = None
+        self.offset_rot = None
         self.offset_grav = None
 
         self.start_calibration()
@@ -49,23 +50,26 @@ class IMUCalculationNode(Node):
         if self.is_calibrating:
             self.accum_calibration(msg)
             return
-        if self.offset_quat is None or self.offset_grav is None:
+        if self.offset_rot is None or self.offset_grav is None:
             return
 
         raw_quat = msg.quaternion
-        raw_quat = Rotation.from_quat((raw_quat.x, raw_quat.y, raw_quat.z, raw_quat.w))
-        quat = self.offset_quat.inv() * raw_quat
-        row, pitch, yaw = quat.as_euler("xyz", degrees=True)
+        raw_rot = Rotation.from_quat((raw_quat.x, raw_quat.y, raw_quat.z, raw_quat.w))
+        rot = self.offset_rot.inv() * raw_rot
+        quat = rot.as_quat()
 
         x, y, z = msg.accel.x, msg.accel.y, msg.accel.z
-        x, y, z = remove_gravity_from_accel(raw_quat, self.offset_grav, x, y, z)
+        x, y, z = remove_gravity_from_accel(raw_rot, self.offset_grav, x, y, z)
 
-        self.state.angular.x = row
-        self.state.angular.y = pitch
-        self.state.angular.z = yaw
-        self.state.linear.x = x
-        self.state.linear.y = y
-        self.state.linear.z = z
+        self.state.p.orientation = Quaternion(
+            x=quat[0], y=quat[1], z=quat[2], w=quat[3]
+        )
+        self.state.p.position.x = 0.0
+        self.state.p.position.y = 0.0
+        self.state.p.position.z = 0.0
+        self.state.a.linear.x = x
+        self.state.a.linear.y = y
+        self.state.a.linear.z = z
 
         self.pub_imu()
 
@@ -93,10 +97,10 @@ class IMUCalculationNode(Node):
     def finalize_calibration(self):
         self.is_calibrating = False
         w, x, y, z = average_quaternions(np.array(self.__accum_quat))
-        self.offset_quat = Rotation.from_quat((x, y, z, w))
+        self.offset_rot = Rotation.from_quat((x, y, z, w))
         self.offset_grav = self.__accum_grav / self.__total
         self.__accum_quat = None
-        r, p, h = self.offset_quat.as_euler("xyz", degrees=True)
+        r, p, h = self.offset_rot.as_euler("xyz", degrees=True)
         self.get_logger().info(
             f"Calibrated offsets r: {r:6.1f}\tp: {p:6.1f}\th: {h:6.1f}\tg: {self.offset_grav:4.3f}"
         )
