@@ -24,7 +24,8 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            "imu_publisher = blobfish_sensors.imu_publisher:main"
+            "imu_publisher = blobfish_sensors.imu_publisher:main",
+            "imu_v2 = blobfish_sensors.imuv2:main"
         ],
     },
 )
