@@ -1,0 +1,59 @@
+<?xml version="1.0"?>
+<robot name="blobfish">
+  <xacro:macro name="create_chassis" params="name">
+    <model name="${name}">
+
+      <link name="${name}/base_link">
+        <inertial>
+          <mass>8.135</mass>
+          <inertia>
+            <ixx>0.6125</ixx>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyy>0.35033</iyy>
+            <iyz>0</iyz>
+            <izz>0.35033</izz>
+          </inertia>
+        </inertial>
+        <collision name="${name}/tube_collision">
+          <pose relative_to="__model__" degrees="true">0 0 0 0 0 -90</pose>
+          <geometry>
+            <box>
+              <size>0.1651 0.29845 0.1651</size>
+            </box>
+          </geometry>
+        </collision>
+        <visual name="${name}/tube_visual">
+          <pose relative_to="__model__" degrees="true">0 0 0 0 0 -90</pose>
+          <geometry>
+            <mesh>
+              <scale>0.01 0.01 0.01</scale>
+              <uri>meshes/tube_1/body1_visual.obj</uri>
+            </mesh>
+          </geometry>
+        </visual>
+        <visual name="${name}/battery_box_visual">
+          <pose relative_to="__model__" degrees="true">0 0 0 0 0 -90</pose>
+          <geometry>
+            <mesh>
+              <scale>0.01 0.01 0.01</scale>
+              <uri>meshes/battery_box_1/body1_visual.obj</uri>
+            </mesh>
+          </geometry>
+        </visual>
+
+    <sensor name="${name}/imu_sensor" type="imu">
+        <pose relative_to="__model__" degrees="true">0 0 0 0 0 0</pose>
+        <always_on>1</always_on>
+        <update_rate>800</update_rate>
+        <topic>blobfish/imu</topic>
+
+        <imu>
+        <orientation_reference_frame>
+            <localization>CUSTOM</localization>
+            <custom_rpy>0 0 0</custom_rpy>
+        </orientation_reference_frame>
+        </imu>
+    </sensor>
+    </model>
+</robot>
