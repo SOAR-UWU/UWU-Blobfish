@@ -4,6 +4,7 @@ import rclpy.parameter
 import rclpy.qos
 from rcl_interfaces.msg import Log
 from rclpy.node import Node
+from rclpy.time import Time
 from scipy.spatial.transform import Rotation
 from std_msgs.msg import Char
 from vectornav_msgs.msg import CommonGroup
@@ -40,11 +41,13 @@ class IMUCalculationNode(Node):
         self.state = Kinematics()
         self.log_kp = lambda x: _kp_log_pub.publish(Log(name=self.get_name(), msg=x))
         self.pub_imu = lambda: _imu_pub.publish(self.state)
+
         self.offset_rot = None
         self.offset_grav = None
 
         self.start_calibration()
 
+    # TODO: Consider higher/arbitrary precision floats for better accuracy.
     def imu_callback(self, msg: CommonGroup):
         if self.is_calibrating:
             self.accum_calibration(msg)
@@ -72,11 +75,35 @@ class IMUCalculationNode(Node):
         self.state.p.orientation.z = qz
         self.state.p.orientation.w = qw
 
-        self.state.p.position.x = 0.0
-        self.state.p.position.y = 0.0
-        self.state.p.position.z = 0.0
+        t = Time.from_msg(msg.header.stamp)
+        self.accum_accel(ax, ay, az, t)
 
         self.pub_imu()
+
+    def accum_accel(self, ax: float, ay: float, az: float, t: Time):
+        try:
+            lt = self.__last_t
+        except AttributeError:
+            self.__last_t = t
+            return
+        self.__last_t = t
+
+        dt = (t - lt).nanoseconds
+        if dt < 0:
+            self.get_logger().error(
+                f"Negative time delta! t={t}, lt={lt}, dt={dt}",
+                skip_first=True,
+                throttle_duration_sec=2.0,
+            )
+        v = self.state.v.linear
+        p = self.state.p.position
+
+        p.x += v.x * dt * 1e-9
+        p.y += v.y * dt * 1e-9
+        p.z += v.z * dt * 1e-9
+        v.x += ax * dt * 1e-9
+        v.y += ay * dt * 1e-9
+        v.z += az * dt * 1e-9
 
     def start_calibration(self):
         self.is_calibrating = True
@@ -110,6 +137,15 @@ class IMUCalculationNode(Node):
             f"Calibrated offsets r: {r:6.1f}\tp: {p:6.1f}\th: {h:6.1f}\tg: {self.offset_grav:4.3f}"
         )
 
+    def recenter(self):
+        self.state.v.linear.x = 0.0
+        self.state.v.linear.y = 0.0
+        self.state.v.linear.z = 0.0
+        self.state.p.position.x = 0.0
+        self.state.p.position.y = 0.0
+        self.state.p.position.z = 0.0
+        self.get_logger().info("Recentered!")
+
     def keypress_callback(self, msg: Char):
         keypress = chr(msg.data)
         if self.is_calibrating:
@@ -119,6 +155,7 @@ class IMUCalculationNode(Node):
                 self.log_kp("Currently calibrating...")
             else:
                 self.log_kp("Press [ to start calibration.")
+                self.log_kp("Press \\ to recenter.")
         elif keypress == "[" and not self.is_calibrating:
             self._confirm_cal = True
             self.log_kp("Press ] to confirm calibration.")
@@ -129,6 +166,9 @@ class IMUCalculationNode(Node):
         ):
             self.start_calibration()
             self.log_kp("Confirmed calibration.")
+        elif keypress == "\\":
+            self.recenter()
+            self.log_kp("Recentered!")
 
 
 def main(args=None):

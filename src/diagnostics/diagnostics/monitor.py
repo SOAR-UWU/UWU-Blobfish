@@ -123,11 +123,13 @@ class MonitorNode(Node):
         )
 
     def imu_raw_callback(self, msg: CommonGroup):
-        ypr = msg.yawpitchroll
-        pos = msg.position  # Depending on how we decide to do the integrator
+        pos = msg.position  # Empty for VN-100
         acc = msg.accel
+        quat = msg.quaternion
+        rot = Rotation.from_quat((quat.x, quat.y, quat.z, quat.w))
+        r, p, h = rot.as_euler("xyz", degrees=True)
         self.__panel_imu_raw.renderable = Text(
-            f" r: {ypr.z: 8.1f}\t p: {ypr.y: 8.1f}\t h: {ypr.x: 8.1f}\n"
+            f" r: {r: 8.1f}\t p: {p: 8.1f}\t h: {h: 8.1f}\n"
             f" x: {pos.x: 8.3f}\t y: {pos.y: 8.3f}\t z: {pos.z: 8.3f}\n"
             f"ax: {acc.x: 8.3f}\tay: {acc.y: 8.3f}\taz: {acc.z: 8.3f}"
         )

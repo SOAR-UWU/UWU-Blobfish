@@ -42,4 +42,6 @@ Based on `types.h`, to turn on all fields of common group, use `0x7FFF`.
 
 However, the VN-100 leaves some fields blank, so to save baud rate, use `0x2f3d` (`hex(0b0010111100111101)`) instead. See section 4.4 for info on what is enabled.
 
-As for what we actually need, use `0x0138` (`hex(0b0000000100111000)`). Again, refer to section 4.4 to figure out why we turned specifically these on. `DeltaTheta` is disabled because although `dvel` actually seems to be linear velocity delta, its no more helpful than integrating acceleration directly.
+As for what is useful, use `0x0138` (`hex(0b0000000100111000)`). Again, refer to section 4.4 to figure out why we turned specifically these on. `DeltaTheta` is disabled because although `dvel` actually seems to be linear velocity delta, its no more helpful than integrating acceleration directly.
+
+The bare minimum: `0x0111` (`hex(0b0000000100010001)`).
