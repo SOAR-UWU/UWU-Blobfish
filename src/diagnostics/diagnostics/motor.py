@@ -102,7 +102,7 @@ class MotorTestNode(Node):
 
         msg = Motors()
         for name, val in zip(MOTOR_MSG_NAMES, vals):
-            setattr(msg, name, round(val))
+            setattr(msg, name, int(round(val)))
         self.pub_motors.publish(msg)
 
 

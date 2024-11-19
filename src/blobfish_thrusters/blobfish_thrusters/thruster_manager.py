@@ -18,24 +18,25 @@ from blobfish_msgs.msg import Motors, MotorsFloat
 # This works as our code correctly scales the PID to abs(SERVO_NEUTRAL-SERVO_FULL_FWD)
 # or abs(SERVO_NEUTRAL-SERVO_FULL_REV) depending on sign.
 # BlueRobotics Basic ESC datasheet: neutral=1500, full rev=1100, full fwd=1900.
+# NOTE: All motors have flipped polarity, keep that in mind when picking thrust scale.
 SERVO_NEUTRAL = 1500
-SERVO_FULL_REV = 1100
-SERVO_FULL_FWD = 1900
+SERVO_FULL_REV = 1500 - 170 * (4.1 / 5.25)  # Actually forwards
+SERVO_FULL_FWD = 1500 + 170  # Actually reverse
 # NOTE: Ratio of full speed range to use as the normal max speed when control effort
 # is 1. When final control effort exceeds 1, it can go pass the expected normal
 # max speed, so use SERVO_FULL_REV and SERVO_FULL_FWD as the true max speed.
-SPD_RATIO = 1.0
+SPD_RATIO = 0.8
 
 # fmt: off
 MOTOR_VECTOR_MATRIX = {
     # row pitch yaw forward lateral depth 
-    "fl": [   0,   0,  -1,   1,   0,   0],
-    "fr": [   0,   0,   1,   1,   0,   0],
-    "ml": [   1,   0,   0,   0,   0,  -1],
-    "mr": [  -1,   0,   0,   0,   0,  -1],
-    "bl": [   0,   0,   1,  -1,   0,   0],
-    "br": [   0,   0,  -1,  -1,   0,   0],
-    "bm": [   0,  -1,   0,   0,   0,   0],
+    "fl": [   0,   0,   1,  -1,   0,   0],
+    "fr": [   0,   0,  -1,  -1,   0,   0],
+    "ml": [  -1,   0,   0,   0,   0,   1],
+    "mr": [   1,   0,   0,   0,   0,   1],
+    "bl": [   0,   0,  -1,   1,   0,   0],
+    "br": [   0,   0,   1,   1,   0,   0],
+    "bm": [   0,   1,   0,   0,   0,   0],
 }
 # fmt: on
 # Attribute names of each motor in the blobfish_msgs/Motors message.

@@ -1,12 +1,12 @@
 enabled: false
 neutral: 1500
-max_rev: 1100
-max_fwd: 1900
+max_rev: 1400
+max_fwd: 1600
 order:
   - bm
-  - mr
-  - fl
   - ml
+  - fl
+  - mr
   - bl
   - br
   - fr
