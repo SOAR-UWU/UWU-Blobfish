@@ -8,11 +8,11 @@ from geometry_msgs.msg import Twist
 from rcl_interfaces.msg import Log
 from rclpy.node import Node
 from rclpy.qos import qos_profile_sensor_data as QOS
+from scipy.spatial.transform import Rotation
 from simple_pid import PID
 from std_msgs.msg import Char, Float32, Float64
 
-# TODO: Below code needs to have 2 modes, one where the accumulation is done by
-# the node, and the other where it relies on the IMU's dead reckoning.
+from blobfish_msgs.msg import Kinematics
 
 # NOTE: Below code assumes neutral pitch, and neutral row except when tilt strafing
 # for lateral movement.
@@ -105,7 +105,9 @@ class PIDNode(Node):
 
         self.output_pid = self.create_publisher(Twist, PID_TOPIC, 0)
         _kp_log_pub = self.create_publisher(Log, KEYPRESS_OUT_TOPIC, 10)
-        self.create_subscription(Twist, IMU_TOPIC, self.calculate_control_effort, QOS)
+        self.create_subscription(
+            Kinematics, IMU_TOPIC, self.calculate_control_effort, QOS
+        )
         self.create_subscription(Twist, STATE_TOPIC, self.set_setpoints, 10)
         self.create_subscription(Char, KEYPRESS_TOPIC, self.proc_keypress, 10)
         self.create_subscription(Float32, DEPTH_TOPIC, self.read_depth, QOS)
@@ -221,13 +223,16 @@ class PIDNode(Node):
         self.pid_l.tunings = (kp_lat, ki_lat, kd_lat)
         self.pid_z.tunings = (kp_z, ki_z, kd_z)
 
-    def calculate_control_effort(self, msg: Twist):
+    def calculate_control_effort(self, msg: Kinematics):
         self.update_pid_from_params()
         val = Twist()
 
-        cur_r, cur_p, cur_h = msg.angular.x, msg.angular.y, msg.angular.z
-        cur_x, cur_y = msg.linear.x, msg.linear.y
-        cur_z = self.current_depth if self.using_depth else msg.linear.z
+        quat = msg.p.orientation
+        rot = Rotation.from_quat((quat.x, quat.y, quat.z, quat.w))
+        # xyz is extrinsic, XYZ is intrinsic. Probably is intrinsic?
+        cur_r, cur_p, cur_h = rot.as_euler("xyz", degrees=True)
+        cur_x, cur_y = msg.p.position.x, msg.p.position.y
+        cur_z = self.current_depth if self.using_depth else msg.p.position.z
 
         # Convert position error to local frame, see proof.webp in this pkg folder
         cos_h, sin_h = np.cos(np.radians(cur_h)), np.sin(np.radians(cur_h))

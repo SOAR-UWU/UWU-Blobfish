@@ -18,6 +18,7 @@ rosidl_generate_interfaces(${PROJECT_NAME}
   "msg/MotorsFloat.msg"
   "msg/MotorOffset.msg"
   "msg/RotDepthVelocity.msg"
+  "msg/Kinematics.msg"
   DEPENDENCIES geometry_msgs
 )
 

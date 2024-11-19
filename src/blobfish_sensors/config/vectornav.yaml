@@ -1,12 +1,19 @@
+# Refer to both vectornav/src/vectornav.cc and vnproglib-1.2.0.0/../types.h
+# to have a chance at figuring this out.
 vectornav:
   ros__parameters:
+    # It's rumoured a lower baudrate is more stable to interference.
+    # If its not working, try going to the highest baudrate, then go back down.
+    # 921600 is the highest, 115200 is the default... and the minimum tested to
+    # work if using CommonField=0x7FFF at 40Hz. Higher Hz needs higher baudrate.
     baud: 115200
     reconnect_ms: 500
+    adjust_ros_timestamp: true
     # Reference vnproglib-1.2.0.0 headers for enum definitions
     # Async Output Type (ASCII)
     AsyncDataOutputType: 0           # VNOFF
     # Async output Frequency (Hz)
-    AsyncDataOutputFrequency: 20
+    AsyncDataOutputFrequency: 1
     # Sync control
     syncInMode: 3                    # SYNCINMODE_COUNT
     syncInEdge: 0                    # SYNCINEDGE_RISING
@@ -22,12 +29,16 @@ vectornav:
     spiStatus: 0                     # STATUSMODE_OFF
     serialChecksum: 1                # CHECKSUMMODE_CHECKSUM
     spiChecksum: 0                   # CHECKSUMMODE_OFF
-    errorMode: 1                     # ERRORMODE_SEND
+    errorMode: 0                     # ERRORMODE_IGNORE
     # Binary output register 1
     BO1:
-      asyncMode: 3                   # ASYNCMODE_BOTH
-      rateDivisor: 40                # 20 Hz
-      commonField: 0x7FFF
+      asyncMode: 1                   # ASYNCMODE_PORT1
+      rateDivisor: 10                # 80 Hz
+      # Enable all: 0x7FFF
+      # Enable only what VN-100 has: 0x2f3d
+      # Enable what is useful: 0x0138
+      # Enable the bare min: 0x0111
+      commonField: 0x0111
       timeField: 0x0000              # TIMEGROUP_NONE
       imuField: 0x0000               # IMUGROUP_NONE
       # set gpsField directly in source to enforce or condition

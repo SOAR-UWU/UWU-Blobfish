@@ -21,6 +21,7 @@ def generate_launch_description():
         executable="vectornav",
         parameters=[
             str(pkg_this / "config" / "vectornav.yaml"),
+            # str(pkg_this / "config" / "vn_100_800hz.yaml"),
             {"port": dev.device},
         ],
     )
@@ -33,13 +34,14 @@ def generate_launch_description():
 
     imu_node = Node(
         package="blobfish_sensors",
-        executable="imu_publisher",
+        # executable="imu_publisher",
+        executable="imu_v2",
         parameters=[str(pkg_this / "config" / "params.yaml")],
     )
 
     ld = LaunchDescription()
     ld.add_action(LogInfo(msg=f"IMU found: {dev.device}"))
     ld.add_action(vn_node)
-    ld.add_action(vn_msg_node)
+    # ld.add_action(vn_msg_node)
     ld.add_action(imu_node)
     return ld

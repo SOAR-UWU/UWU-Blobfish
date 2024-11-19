@@ -12,7 +12,6 @@ from collections import defaultdict, deque
 import getchlib
 import rclpy
 import rclpy.qos
-from geometry_msgs.msg import Twist
 from rcl_interfaces.msg import Log
 from rclpy.node import Node
 from rich.console import Console, ConsoleOptions
@@ -21,10 +20,11 @@ from rich.live import Live
 from rich.logging import RichHandler
 from rich.panel import Panel
 from rich.text import Text
+from scipy.spatial.transform import Rotation
 from std_msgs.msg import Char, String
 from vectornav_msgs.msg import CommonGroup
 
-from blobfish_msgs.msg import Motors, MotorsFloat
+from blobfish_msgs.msg import Kinematics, Motors, MotorsFloat
 
 NODE_NAME = "monitor"
 
@@ -53,7 +53,7 @@ class MonitorNode(Node):
         super(MonitorNode, self).__init__(NODE_NAME)
 
         self.create_subscription(CommonGroup, IMU_RAW_TOPIC, self.imu_raw_callback, QOS)
-        self.create_subscription(Twist, IMU_CAL_TOPIC, self.imu_cal_callback, QOS)
+        self.create_subscription(Kinematics, IMU_CAL_TOPIC, self.imu_cal_callback, QOS)
         self.create_subscription(
             MotorsFloat, MOTOR_DEBUG_TOPIC, self.motor_debug_callback, QOS
         )
@@ -123,11 +123,13 @@ class MonitorNode(Node):
         )
 
     def imu_raw_callback(self, msg: CommonGroup):
-        ypr = msg.yawpitchroll
-        pos = msg.position  # Depending on how we decide to do the integrator
+        pos = msg.position  # Empty for VN-100
         acc = msg.accel
+        quat = msg.quaternion
+        rot = Rotation.from_quat((quat.x, quat.y, quat.z, quat.w))
+        r, p, h = rot.as_euler("xyz", degrees=True)
         self.__panel_imu_raw.renderable = Text(
-            f" r: {ypr.z: 8.1f}\t p: {ypr.y: 8.1f}\t h: {ypr.x: 8.1f}\n"
+            f" r: {r: 8.1f}\t p: {p: 8.1f}\t h: {h: 8.1f}\n"
             f" x: {pos.x: 8.3f}\t y: {pos.y: 8.3f}\t z: {pos.z: 8.3f}\n"
             f"ax: {acc.x: 8.3f}\tay: {acc.y: 8.3f}\taz: {acc.z: 8.3f}"
         )
@@ -139,12 +141,16 @@ class MonitorNode(Node):
         # fps = 1 / max(1e-8, np.mean(self.__rate_buf["imu_raw"]))
         # self.__panel_imu_raw.subtitle = f"{fps: 5.1f} Hz"
 
-    def imu_cal_callback(self, msg: Twist):
-        pos = msg.linear
-        ang = msg.angular
+    def imu_cal_callback(self, msg: Kinematics):
+        pos = msg.p.position
+        acc = msg.a.linear
+        quat = msg.p.orientation
+        rot = Rotation.from_quat((quat.x, quat.y, quat.z, quat.w))
+        r, p, h = rot.as_euler("xyz", degrees=True)
         self.__panel_imu_cal.renderable = Text(
-            f" r: {ang.x: 8.1f}\t p: {ang.y: 8.1f}\t h: {ang.z: 8.1f}\n"
-            f" x: {pos.x: 8.3f}\t y: {pos.y: 8.3f}\t z: {pos.z: 8.3f}"
+            f" r: {r: 8.1f}\t p: {p: 8.1f}\t h: {h: 8.1f}\n"
+            f" x: {pos.x: 8.3f}\t y: {pos.y: 8.3f}\t z: {pos.z: 8.3f}\n"
+            f"ax: {acc.x: 8.3f}\tay: {acc.y: 8.3f}\taz: {acc.z: 8.3f}"
         )
 
     def motor_debug_callback(self, msg: MotorsFloat):
