@@ -34,10 +34,6 @@ class StrategyRocket(Node):
 
         self.declare_parameter("config_path", "")
 
-        self.state_subscriber_ = self.create_subscription(
-            Twist, STRAT_IMU, self._on_state_update, 10
-        )
-
         self.instruction_set = []
 
     def get_routine(self):
