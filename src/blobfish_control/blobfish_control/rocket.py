@@ -27,7 +27,10 @@ UPDATE_ROUTINE = 4
 
 
 class StrategyRocket(Node):
-    valid_params = ["speed", "wait"]
+    valid_params = {
+        "speed": [0.0, 0.0, 0.0],
+        "wait": 0
+    }
 
     def __init__(self):
         super(StrategyRocket, self).__init__("strat_rocket")
@@ -48,6 +51,25 @@ class StrategyRocket(Node):
         self.dni = False
 
         self.create_timer(1 / UPDATE_ROUTINE, self.get_routine)
+
+    def _validate(self, i: dict):
+        assert isinstance(i, dict)
+        assert len(i.keys()) == 1 # TODO: Make this compatible with multiple keys
+        k = list(i.keys())[0]
+        assert k in self.valid_params
+
+        if k not in self.valid_params:
+            self.get_logger().warn(f"Unknown parameter in config: {k}")
+
+        v = i[k]
+        if k == 'speed':
+            assert len(v) == 3
+            for val in range(len(v)):
+                v[val] = float(v[val])
+        elif k == 'wait':
+            assert isinstance(v, int)
+
+
 
     def get_routine(self):
         """Updates instruction set to reflect whatever's in the config file"""
@@ -79,26 +101,13 @@ class StrategyRocket(Node):
         if cfg_list is None:
             return
 
-        for i in cfg_list:
+        for i in cfg_list:           
             try:
-                assert isinstance(i, dict)
-                assert len(i.keys()) == 1 # TODO: Make this compatible with multiple keys
+                self._validate(i)
+                k = list(i.keys(0))[0]
+                v = i[k]
             except Exception:
                 self.get_logger().warn(f"Invalid instruction: {i}")
-                continue
-                
-            k = list(i.keys())[0]
-            if k not in self.valid_params:
-                self.get_logger().warn(f"Unknown parameter in config: {k}")
-                continue
-            try:
-                v = i[k]
-                assert isinstance(v, list)
-                assert len(v) == 3
-                for val in range(len(v)):
-                    v[val] = float(v[val])
-            except Exception:
-                self.get_logger().warn(f"Invalid type for parameter in config: {k}")
                 continue
 
             self.instruction_set.append([k, v])
@@ -125,11 +134,20 @@ class StrategyRocket(Node):
             else:
                 self.get_logger().warn(f"Invalid instruction {i}")
 
+            self.get_logger().info("Current routine complete.")
+
         self.instruction_set = []
         self.dni = False
 
     def keypress_callback(self, msg: Char):
         keypress = chr(msg.data)
+
+        if keypress == 'h':
+            if self.dni:
+                self.log_kp("Currently executing...")
+            else:
+                self.log_kp("Press e to execute current routine.")
+                self.log_kp("Press r to refresh current routine.")
 
         if self.dni:
             pass
