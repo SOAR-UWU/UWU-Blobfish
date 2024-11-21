@@ -1,13 +1,15 @@
 #!/usr/bin/env python3
+import time
+
 import rclpy
 import smach
-import time
+from geometry_msgs.msg import Pose2D, Twist, Vector3
 from rclpy.node import Node
 from std_msgs.msg import Float64
-from geometry_msgs.msg import Twist, Pose2D
 from vision_msgs.msg import BoundingBox2D
 
-#TO GO STRAIGHT
+# TO GO STRAIGHT
+
 
 class Input:
     def __init__(self):
@@ -16,7 +18,7 @@ class Input:
         self.current_pitch = 0
         self.effective_roll = 0
         self.initial_yaw = 0
-        self.initial_depth =  0
+        self.initial_depth = 0
         self.initial_pitch = 0
         self.gate_pos = BoundingBox2D()
         self.flare_pos = BoundingBox2D()
@@ -71,7 +73,7 @@ class Output:
 
 class BaseStrategyNode(Node):
     def __init__(self, outcomes=[], input_keys=[], output_keys=[]):
-        self.node_name = 'strategy'
+        self.node_name = "strategy"
         super().__init__(self.node_name)
         self.sm = smach.StateMachine(outcomes, input_keys, output_keys)
 
@@ -79,7 +81,8 @@ class BaseStrategyNode(Node):
 
         try:
             import smach_ros
-            sis = smach_ros.IntrospectionServer('server_name', self.sm, '/sm')
+
+            sis = smach_ros.IntrospectionServer("server_name", self.sm, "/sm")
             sis.start()
         except Exception:
             pass
@@ -87,14 +90,24 @@ class BaseStrategyNode(Node):
         self.input = Input()
         self.output = Output(self._on_output_update)
 
-        self._setpoint_pub = self.create_publisher(Twist, 'blobfish/state_setpoints', 10)
-        self._speed_setpoint_pub = self.create_publisher(Float64, 'blobfish/speed_setpoint', 10) 
+        self._setpoint_pub = self.create_publisher(
+            Twist, "blobfish/state_setpoints", 10
+        )
+        self._speed_setpoint_pub = self.create_publisher(
+            Vector3, "blobfish/speed_setpoint", 10
+        )
 
         self._state_first_update = True
-        self.state_subscriber_ = self.create_subscription(Twist, 'blobfish/imu_measurements', self._on_state_update, 10)
-        self.cv_gate_subscriber_ = self.create_subscription(BoundingBox2D, '/blobfish_cv/gate/pos', self._on_gate_pos_update, 10)
-        self.cv_flare_subscriber_ = self.create_subscription(BoundingBox2D, '/blobfish_cv/flare/pos', self._on_flare_pos_update, 10)
-        
+        self.state_subscriber_ = self.create_subscription(
+            Twist, "blobfish/imu_measurements", self._on_state_update, 10
+        )
+        self.cv_gate_subscriber_ = self.create_subscription(
+            BoundingBox2D, "/blobfish_cv/gate/pos", self._on_gate_pos_update, 10
+        )
+        self.cv_flare_subscriber_ = self.create_subscription(
+            BoundingBox2D, "/blobfish_cv/flare/pos", self._on_flare_pos_update, 10
+        )
+
         self._time_last_publish = 0
 
     def _on_state_update(self, msg):
@@ -121,12 +134,12 @@ class BaseStrategyNode(Node):
             self.effective_roll = 0
             self._time_last_publish = time.time()
 
-            self._output.angular.z = self.effective_yaw*1.0
-            self._output.linear.z = self.effective_depth*1.0
-            self._output.angular.y = self.effective_pitch*1.0
-            self._output.angular.x = self.effective_roll*1.0
-            
-            #self._roll_pub.publish(Float64(0))
+            self._output.angular.z = self.effective_yaw * 1.0
+            self._output.linear.z = self.effective_depth * 1.0
+            self._output.angular.y = self.effective_pitch * 1.0
+            self._output.angular.x = self.effective_roll * 1.0
+
+            # self._roll_pub.publish(Float64(0))
             speed = Float64()
             speed.data = 0.5
             self._setpoint_pub.publish(self._output)
@@ -135,10 +148,12 @@ class BaseStrategyNode(Node):
     def execute(self):
         return self.sm.execute()
 
+
 def main(args=None):
     rclpy.init(args=args)
     strategy = BaseStrategyNode()
     rclpy.spin(strategy)
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     main()
