@@ -87,7 +87,7 @@ class StrategyRocket(Node):
                 self.get_logger().warn(f"Invalid instruction: {i}")
                 continue
                 
-            k = i.keys()[0]
+            k = list(i.keys())[0]
             if k not in self.valid_params:
                 self.get_logger().warn(f"Unknown parameter in config: {k}")
                 continue
