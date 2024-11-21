@@ -18,8 +18,6 @@ from rclpy.node import Node
 STRAT_STATE_SETPOINTS = "/blobfish/state_setpoints"
 STRAT_SPEED_SETPOINTS = "/blobfish/speed_setpoint"
 STRAT_IMU = "/blobfish/imu_measurements"
-
-# TODO: Writing instruction node
 STRAT_INIT_DEPTH = Vector3(x=0, y=0, z=0)
 
 
@@ -27,8 +25,6 @@ class StrategyRocket(Node):
     valid_params = ["speed", "wait"]
 
     def __init__(self):
-        self.declare_parameter("speed", Vector3(x=0, y=0, z=0))
-
         super(StrategyRocket, self).__init__("strat_rocket")
 
         self._setpoint_pub = self.create_publisher(Twist, STRAT_STATE_SETPOINTS, 10)
@@ -74,14 +70,17 @@ class StrategyRocket(Node):
         if cfg_dict is None:
             return
 
-        for i in cfg_dict():
+        for i in cfg_dict:
             k = i.keys()[0]
-            v = i[k]
             if k not in self.valid_params:
                 self.get_logger().warn(f"Unknown parameter in config: {k}")
                 continue
             try:
-                v = type(self.get_parameter(k).value)(v)
+                v = i[k]
+                assert isinstance(v, list)
+                assert len(v) == 3
+                for val in range(len(v)):
+                    v[val] = float(v[val])
             except Exception:
                 self.get_logger().warn(f"Invalid type for parameter in config: {k}")
                 continue
