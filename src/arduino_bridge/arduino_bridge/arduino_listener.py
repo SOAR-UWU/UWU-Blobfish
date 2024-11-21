@@ -1,3 +1,4 @@
+import time
 import rclpy
 import rclpy.qos
 from rclpy.node import Node
@@ -19,6 +20,7 @@ import subprocess
 MOTOR_UPDATE_RATE = 90
 MOTOR_NEUTRAL = 1500
 MOTOR_TOPIC = "/blobfish/motor_values"
+SAFETY_TIMEOUT = 0.5  # Set motors to neutral after seconds of no messages
 QOS = rclpy.qos.qos_profile_sensor_data
 
 # TODO: Add magic version number to main.ino so we can detect if necessary to compile
@@ -68,9 +70,11 @@ class ArduinoBridge(Node):
         self.get_logger().info("Connection established, Arduino bridge started")
 
         self.motors = [MOTOR_NEUTRAL] * 7
+        self.__last_msg_time = time.time()
         self.create_timer(1 / MOTOR_UPDATE_RATE, self.update_motors)
 
     def listener_callback(self, msg: Motors):
+        self.__last_msg_time = time.time()
         self.motors[0] = msg.motor_1
         self.motors[1] = msg.motor_2
         self.motors[2] = msg.motor_3
@@ -80,6 +84,9 @@ class ArduinoBridge(Node):
         self.motors[6] = msg.motor_7
         
     def update_motors(self):
+        # Stop motors if no messages received for SAFETY_TIMEOUT seconds
+        if time.time() - self.__last_msg_time > SAFETY_TIMEOUT:
+            self.motors = [MOTOR_NEUTRAL] * 7
         self.jai.write_motor_values(self.motors)
         
     def check_depth_value(self):
@@ -95,13 +102,17 @@ def main(args=None):
     rclpy.init(args=args)
 
     bridge = ArduinoBridge()
-    rclpy.spin(bridge)
-    # while rclpy.ok():
-    #     rclpy.spin_once(bridge, timeout_sec=0.01)
-        # bridge.check_depth_value()
-
-    bridge.destroy_node()
-    rclpy.shutdown()
+    try:
+        rclpy.spin(bridge)
+        # while rclpy.ok():
+        #     rclpy.spin_once(bridge, timeout_sec=0.01)
+        #     bridge.check_depth_value()
+    except KeyboardInterrupt:
+        pass
+    finally:
+        # Stop the motors on shutdown.
+        bridge.jai.write_motor_values([MOTOR_NEUTRAL] * 7)
+        bridge.jai.ser.close()
 
 
 if __name__ == "__main__":
