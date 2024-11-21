@@ -48,6 +48,7 @@
           <update_rate>800</update_rate>
           <topic>blobfish/imu</topic>
 
+          <!-- TODO: Make sure this matches the real IMU now that we have the data. -->
           <imu>
             <orientation_reference_frame>
               <localization>CUSTOM</localization>

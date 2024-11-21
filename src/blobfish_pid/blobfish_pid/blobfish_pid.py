@@ -58,32 +58,32 @@ class PIDNode(Node):
         self.declare_parameter("config_path", "")
 
         # Declare pid coefficients
-        self.declare_parameter("kp_roll", 0.03)
+        self.declare_parameter("kp_roll", 0.0)
         self.declare_parameter("ki_roll", 0.0)
         self.declare_parameter("kd_roll", 0.0)
 
-        self.declare_parameter("kp_pitch", 0.03)
+        self.declare_parameter("kp_pitch", 0.0)
         self.declare_parameter("ki_pitch", 0.0)
         self.declare_parameter("kd_pitch", 0.0)
 
-        self.declare_parameter("kp_yaw", 0.03)
+        self.declare_parameter("kp_yaw", 0.0)
         self.declare_parameter("ki_yaw", 0.0)
         self.declare_parameter("kd_yaw", 0.0)
 
-        self.declare_parameter("kp_fwd", 0.03)
+        self.declare_parameter("kp_fwd", 0.0)
         self.declare_parameter("ki_fwd", 0.0)
         self.declare_parameter("kd_fwd", 0.0)
 
-        self.declare_parameter("kp_lat", 0.03)
+        self.declare_parameter("kp_lat", 0.0)
         self.declare_parameter("ki_lat", 0.0)
         self.declare_parameter("kd_lat", 0.0)
 
-        self.declare_parameter("kp_z", 0.03)
+        self.declare_parameter("kp_z", 0.0)
         self.declare_parameter("ki_z", 0.0)
         self.declare_parameter("kd_z", 0.0)
 
         # Just something to reduce the speed since it's not being put through PID
-        self.declare_parameter("speed_coeff", 0.03)
+        self.declare_parameter("speed_coeff", 0.0)
 
         self.setpoint_roll = 0.0
         self.setpoint_pitch = 0.0

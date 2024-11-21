@@ -26,7 +26,7 @@ GZ_TOPICS = dict(
 
 # TODO: When we fixed the cursed motor order either by improving the Arduino or wiring,
 # we can remove this:
-MOTOR_ORDER = [None, "BM", "MR", "FL", "ML", "BL", "BR", "FR"]
+MOTOR_ORDER = ["BM", "ML", "FL", "MR", "BL", "BR", "FR"]
 
 # See: https://bluerobotics.com/store/thrusters/t100-t200-thrusters/t200-thruster-r2-rp/
 # Ultimately, there's no reason to use the real values, but why not?
@@ -47,6 +47,10 @@ SERVO_DEADBAND = 25
 SERVO_FULL_REV = 1100
 SERVO_FULL_FWD = 1900
 
+IS_MOTOR_REVERSED = True
+if IS_MOTOR_REVERSED:
+    MAX_FWD_THRUST, MAX_REV_THRUST = MAX_REV_THRUST, MAX_FWD_THRUST
+
 
 class SimArduinoBridge(Node):
     """Send motor values to the Arduino (simulated)."""
@@ -62,13 +66,8 @@ class SimArduinoBridge(Node):
 
     def _map_motor_order(self, msg: Motors):
         vals = {}
-        vals[MOTOR_ORDER[1]] = msg.motor_1
-        vals[MOTOR_ORDER[2]] = msg.motor_2
-        vals[MOTOR_ORDER[3]] = msg.motor_3
-        vals[MOTOR_ORDER[4]] = msg.motor_4
-        vals[MOTOR_ORDER[5]] = msg.motor_5
-        vals[MOTOR_ORDER[6]] = msg.motor_6
-        vals[MOTOR_ORDER[7]] = msg.motor_7
+        for i in range(7):
+            vals[MOTOR_ORDER[i]] = getattr(msg, f"motor_{i+1}")
         return vals
 
     def _map_val_to_float(self, motors: dict):
@@ -93,6 +92,8 @@ class SimArduinoBridge(Node):
     def _map_float_to_thrust(self, motors: dict):
         out = {}
         for motor, val in motors.items():
+            if IS_MOTOR_REVERSED:
+                val *= -1
             val *= MAX_FWD_THRUST if val > 0 else MAX_REV_THRUST
             val = 0.0 if abs(val) < MIN_THURST else val
             out[motor] = val * THRUST_RESCALE
