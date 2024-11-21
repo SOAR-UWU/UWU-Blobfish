@@ -5,7 +5,7 @@ install/
 log/
 
 .vscode/*
-!.vscode/settings.json
+!.vscode/settings.template.json
 !.vscode/extensions.json
 !.vscode/launch.json
 !.vscode/tasks.json

@@ -1,0 +1,14 @@
+{
+  "ros.distro": "humble",
+  "editor.formatOnSave": true,
+  "editor.codeActionsOnSave": {
+    "source.organizeImports": "explicit"
+  },
+  // "terminal.integrated.profiles.linux": {
+  //     "bash_uwu": {
+  //       "path": "bash",
+  //       "args": ["${workspaceFolder}/scripts/activate.sh"]
+  //     }
+  //   },
+  // "terminal.integrated.defaultProfile.linux": "bash_uwu"
+}
