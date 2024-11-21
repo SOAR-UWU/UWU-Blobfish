@@ -53,20 +53,27 @@ class StrategyRocket(Node):
             return
         self.__last_config_mtime = new_mtime
 
-        cfg_dict = None
+        cfg_list = None
         try:
             with open(cfg_path, "r") as f:
                 cfg = yaml.safe_load(f)
                 assert isinstance(cfg, list)
-                cfg_dict = cfg
+                cfg_list = cfg
         except AssertionError:
             self.get_logger().warn(f"Config file must be a param map: {cfg_path}")
         except Exception:
             self.get_logger().warn(f"Failed to read config file: {cfg_path}")
-        if cfg_dict is None:
+        if cfg_list is None:
             return
 
-        for i in cfg_dict:
+        for i in cfg_list:
+            try:
+                assert isinstance(i, dict)
+                assert len(i.keys()) == 1 # TODO: Make this compatible with multiple keys
+            except Exception:
+                self.get_logger().warn(f"Invalid instruction: {i}")
+                continue
+                
             k = i.keys()[0]
             if k not in self.valid_params:
                 self.get_logger().warn(f"Unknown parameter in config: {k}")
@@ -103,6 +110,8 @@ class StrategyRocket(Node):
                 self._on_wait(v)
             else:
                 self.get_logger().warn(f"Invalid instruction {i}")
+
+        self.instruction_set = []
 
 
 def main(args=None):
