@@ -14,11 +14,16 @@ import rclpy
 import yaml
 from geometry_msgs.msg import Twist, Vector3
 from rclpy.node import Node
+from std_msgs.msg import Char
+from rcl_interfaces.msg import Log
 
 STRAT_STATE_SETPOINTS = "/blobfish/state_setpoints"
 STRAT_SPEED_SETPOINTS = "/blobfish/speed_setpoint"
 STRAT_IMU = "/blobfish/imu_measurements"
-STRAT_INIT_DEPTH = Vector3(x=0, y=0, z=0)
+KEYPRESS_TOPIC = "/keypress"
+KEYPRESS_OUT_TOPIC = "/kpout"
+
+UPDATE_ROUTINE = 4
 
 
 class StrategyRocket(Node):
@@ -26,6 +31,10 @@ class StrategyRocket(Node):
 
     def __init__(self):
         super(StrategyRocket, self).__init__("strat_rocket")
+
+        self.create_subscription(Char, KEYPRESS_TOPIC, self.keypress_callback, 0)
+        _kp_log_pub = self.create_publisher(Log, KEYPRESS_OUT_TOPIC, 0)
+        self.log_kp = lambda x: _kp_log_pub.publish(Log(name=self.get_name(), msg=x))
 
         self._setpoint_pub = self.create_publisher(Twist, STRAT_STATE_SETPOINTS, 10)
         self._speed_setpoint_pub = self.create_publisher(
@@ -35,6 +44,10 @@ class StrategyRocket(Node):
         self.declare_parameter("config_path", "")
 
         self.instruction_set = []
+
+        self.dni = False
+
+        self.create_timer(1 / UPDATE_ROUTINE, self.get_routine)
 
     def get_routine(self):
         """Updates instruction set to reflect whatever's in the config file"""
@@ -103,6 +116,7 @@ class StrategyRocket(Node):
 
     # Finish routine
     def execute_routine(self):
+        self.dni = True
         for i, v in self.instruction_set:
             if i == "speed":
                 self._on_update_speed(v)
@@ -112,6 +126,19 @@ class StrategyRocket(Node):
                 self.get_logger().warn(f"Invalid instruction {i}")
 
         self.instruction_set = []
+        self.dni = False
+
+    def keypress_callback(self, msg: Char):
+        keypress = chr(msg.data)
+
+        if self.dni:
+            pass
+        else:
+            if keypress == "e":
+                self.execute_routine()
+
+            elif keypress == "r":
+                self.get_routine()
 
 
 def main(args=None):
