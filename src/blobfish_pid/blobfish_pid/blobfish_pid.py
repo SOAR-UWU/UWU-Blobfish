@@ -4,7 +4,7 @@ import numpy as np
 import rclpy
 import rclpy.parameter
 import yaml
-from geometry_msgs.msg import Twist
+from geometry_msgs.msg import Twist, Vector3
 from rcl_interfaces.msg import Log
 from rclpy.node import Node
 from rclpy.qos import qos_profile_sensor_data as QOS
@@ -25,6 +25,7 @@ STATE_TOPIC = "/blobfish/state_setpoints"
 DEPTH_TOPIC = "/blobfish/depth"
 KEYPRESS_TOPIC = "/keypress"
 KEYPRESS_OUT_TOPIC = "/kpout"
+SPEED_SETPOINTS_TOPIC = "/blobfish/speed_setpoint"
 
 
 NODE_NAME = "pid_node"
@@ -92,7 +93,7 @@ class PIDNode(Node):
         self.setpoint_y = 0.0
         self.setpoint_depth = 0.0
 
-        self.speed = 0.0
+        self.speed = Vector3(x=0, y=0, z=0)
         self.speed_coeff = self.get_parameter("speed_coeff").value
 
         self.pid_r = PID(output_limits=(-1.0, 1.0), sample_time=0.005, setpoint=0)
@@ -112,7 +113,7 @@ class PIDNode(Node):
         self.create_subscription(Char, KEYPRESS_TOPIC, self.proc_keypress, 10)
         self.create_subscription(Float32, DEPTH_TOPIC, self.read_depth, QOS)
         # Deprecated, use set_setpoints instead to move.
-        self.create_subscription(Float64, "blobfish/speed_setpoint", self.set_speed, 10)
+        self.create_subscription(Vector3, SPEED_SETPOINTS_TOPIC, self.set_speed, 10)
 
         # Variable to buffer depth to publish it together with the other values
         self.current_depth = 0.0
@@ -257,6 +258,12 @@ class PIDNode(Node):
         val.angular.x = self.pid_r(err_r)
         val.angular.y = self.pid_p(err_p)
         val.angular.z = self.pid_h(err_h)
+
+        # override
+        val.linear.x += self.speed.x
+        val.linear.y += self.speed.y
+        val.linear.z += self.speed.z
+
         # val.linear.x = self.speed * self.speed_coeff
         # val.linear.y = 0.0   # not correcting for y axis (sideways movement)
 
@@ -276,8 +283,8 @@ class PIDNode(Node):
         #     f"Setpoints set: {self.setpoint_depth}, {self.setpoint_roll}, {self.setpoint_pitch}, {self.setpoint_yaw}"
         # )
 
-    def set_speed(self, msg):
-        self.speed = msg.data
+    def set_speed(self, msg: Vector3):
+        self.speed = msg
 
     # TODO: Remove most tuning keypresses. Tuning from pid.yaml is easier, and this
     # reduces the amount of reserved keypresses.
