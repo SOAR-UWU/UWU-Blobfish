@@ -115,10 +115,12 @@ class StrategyRocket(Node):
 
     def _on_wait(self, t):
         time.sleep(t)
+        self.get_logger().info(f"waiting for {t}")
 
     def _on_update_speed(self, s: list):
         speed = Vector3(x=s[0], y=s[1], z=s[2])
         self._speed_setpoint_pub.publish(speed)
+        self.get_logger().info(f"speed set to {s}")
 
     # Finish routine
     def execute_routine(self):
