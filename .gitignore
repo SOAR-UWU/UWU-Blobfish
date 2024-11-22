@@ -9,3 +9,6 @@ log/
 !.vscode/extensions.json
 !.vscode/launch.json
 !.vscode/tasks.json
+
+# Allow selectively enabling/disabling packages for build.
+src/*/COLCON_IGNORE
