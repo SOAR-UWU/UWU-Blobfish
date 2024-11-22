@@ -12,6 +12,7 @@ from collections import defaultdict, deque
 import getchlib
 import rclpy
 import rclpy.qos
+from geometry_msgs.msg import Twist
 from rcl_interfaces.msg import Log
 from rclpy.node import Node
 from rich.console import Console, ConsoleOptions
@@ -30,6 +31,7 @@ NODE_NAME = "monitor"
 
 IMU_RAW_TOPIC = "/vectornav/raw/common"
 IMU_CAL_TOPIC = "/blobfish/imu_measurements"
+PID_TOPIC = "/blobfish/control_effort"
 MOTOR_DEBUG_TOPIC = "/blobfish/motor_floats"
 MOTOR_ACTUAL_TOPIC = "/blobfish/motor_values"
 MOTOR_ORDER_TOPIC = "/blobfish/motor_order"
@@ -39,7 +41,7 @@ KEYPRESS_TOPIC = "/keypress"
 
 QOS = rclpy.qos.qos_profile_sensor_data
 ROSOUT_LOG_LEVEL = logging.INFO
-RATE = 30
+RATE = 120
 
 # TODO:
 # - why aren't we using RViz/RQT?
@@ -60,6 +62,7 @@ class MonitorNode(Node):
         self.create_subscription(
             Motors, MOTOR_ACTUAL_TOPIC, self.motor_actual_callback, QOS
         )
+        self.create_subscription(Twist, PID_TOPIC, self.pid_callback, QOS)
         self.create_subscription(
             String, MOTOR_ORDER_TOPIC, self.motor_order_callback, 10
         )
@@ -67,22 +70,24 @@ class MonitorNode(Node):
         self.create_subscription(
             Log, KEYPRESS_OUT_TOPIC, self.keypress_out_callback, 10
         )
-        self.create_timer(1 / RATE, self.key_timer_callback)
-
         self.__key_pub = self.create_publisher(Char, KEYPRESS_TOPIC, 10)
         self.create_layout(live)
+        self.create_timer(1 / RATE, self.update_display)
 
     def create_layout(self, live: Live):
         L = Layout()
         rosout = ConsolePanel()
         kpout = ConsolePanel()
-        imu_raw = Panel("no data yet", title="VN-100")
-        imu_cal = Panel("no data yet", title="Calibrated")
-        motors = Panel("no data yet", title="Motors")
+        text_motors = Text("no data yet")
+        text_imu_cal = Text("no data yet")
+        text_imu_raw = Text("no data yet")
+        imu_raw = Panel(text_imu_raw, title="VN-100")
+        imu_cal = Panel(text_imu_cal, title="Calibrated")
+        motors = Panel(text_motors, title="Motors")
 
         L.split_column(
             Layout(name="imu", size=5),
-            Layout(motors, name="motor", size=4),
+            Layout(motors, name="motor", size=5),
             Layout(name="log"),
             # Layout(name="keypress"),
         )
@@ -98,14 +103,17 @@ class MonitorNode(Node):
         live.update(L)
 
         self.__live = live
-        self.__layout = L
-        self.__panel_imu_raw = imu_raw
-        self.__panel_imu_cal = imu_cal
-        self.__panel_motors = motors
+        self.__text_imu_raw = text_imu_raw
+        self.__text_imu_cal = text_imu_cal
+        self.__text_motors = text_motors
         self.__rate_buf = defaultdict(lambda: deque(maxlen=10))
         self.__rate_last = defaultdict(int)
         self.__motor_order = None
-        self.__motor_debug_str = ""
+        self.__motor_debug_str = "No motor percent data yet\n"
+        self.__motor_actual_str = "No motor data yet\n"
+        self.__pid_str = "No PID data yet\n"
+        self.__imu_raw_str = "No IMU data yet\n"
+        self.__imu_cal_str = "No IMU calibrated data yet\n"
         self.__handler = RichHandler(
             rich_tracebacks=True,
             tracebacks_suppress=[rclpy],
@@ -128,7 +136,7 @@ class MonitorNode(Node):
         quat = msg.quaternion
         rot = Rotation.from_quat((quat.x, quat.y, quat.z, quat.w))
         r, p, h = rot.as_euler("xyz", degrees=True)
-        self.__panel_imu_raw.renderable = Text(
+        self.__imu_raw_str = (
             f" r: {r: 8.1f}\t p: {p: 8.1f}\t h: {h: 8.1f}\n"
             f" x: {pos.x: 8.3f}\t y: {pos.y: 8.3f}\t z: {pos.z: 8.3f}\n"
             f"ax: {acc.x: 8.3f}\tay: {acc.y: 8.3f}\taz: {acc.z: 8.3f}"
@@ -147,7 +155,7 @@ class MonitorNode(Node):
         quat = msg.p.orientation
         rot = Rotation.from_quat((quat.x, quat.y, quat.z, quat.w))
         r, p, h = rot.as_euler("xyz", degrees=True)
-        self.__panel_imu_cal.renderable = Text(
+        self.__imu_cal_str = (
             f" r: {r: 8.1f}\t p: {p: 8.1f}\t h: {h: 8.1f}\n"
             f" x: {pos.x: 8.3f}\t y: {pos.y: 8.3f}\t z: {pos.z: 8.3f}\n"
             f"ax: {acc.x: 8.3f}\tay: {acc.y: 8.3f}\taz: {acc.z: 8.3f}"
@@ -176,8 +184,9 @@ class MonitorNode(Node):
                 )
                 for i in range(1, N + 1)
             }
-        self.__panel_motors.renderable = Text(
-            self.__motor_debug_str
+        self.__motor_actual_str = (
+            self.__pid_str
+            + self.__motor_debug_str
             + "\t".join((f"{k}: {v:04d}" for k, v in pairs.items()))
         )
 
@@ -188,6 +197,11 @@ class MonitorNode(Node):
         except json.JSONDecodeError:
             self.get_logger().error("Invalid JSON in motor order")
             self.__motor_order = None
+
+    def pid_callback(self, msg: Twist):
+        ang = msg.angular
+        lin = msg.linear
+        self.__pid_str = f"r: {ang.x: 6.3f}\tp: {ang.y: 6.1f}\th: {ang.z: 6.1f}\tf: {lin.x: 6.1f}\tl: {lin.y: 6.1f}\tz: {lin.z: 6.1f}\n"
 
     def rosout_callback(self, msg: Log):
         # TODO: how to map original time & file location to Rich logging?
@@ -218,17 +232,24 @@ class MonitorNode(Node):
 
         log.info(msg.msg)
 
-    def key_timer_callback(self):
+    def get_key(self):
+        ch: str = getchlib.getkey(False, echo=False)
+        return None if ch == "" else ch
+
+    def update_display(self):
+        # Must get key before refreshing
         key = self.get_key()
         if key is not None:
             for k in key:
                 msg = Char()
                 msg.data = ord(k)
                 self.__key_pub.publish(msg)
-
-    def get_key(self):
-        ch: str = getchlib.getkey(False, echo=False)
-        return None if ch == "" else ch
+        self.__text_imu_raw.plain = self.__imu_raw_str
+        self.__text_imu_cal.plain = self.__imu_cal_str
+        self.__text_motors.plain = (
+            self.__pid_str + self.__motor_actual_str + self.__motor_debug_str
+        )
+        self.__live.refresh()
 
 
 # Taken from https://stackoverflow.com/a/74134595
@@ -256,7 +277,7 @@ class ConsolePanel(Console):
 
 def main(args=None):
     rclpy.init(args=args)
-    with Live(refresh_per_second=RATE, screen=True) as live:
+    with Live(auto_refresh=False, screen=False) as live:
         node = MonitorNode(live)
         try:
             rclpy.spin(node)
