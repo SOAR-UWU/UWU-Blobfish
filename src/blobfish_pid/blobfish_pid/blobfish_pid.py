@@ -93,7 +93,7 @@ class PIDNode(Node):
         self.setpoint_y = 0.0
         self.setpoint_depth = 0.0
 
-        self.speed = Vector3(x=0, y=0, z=0)
+        self.speed = Vector3(x=0.0, y=0.0, z=0.0)
         self.speed_coeff = self.get_parameter("speed_coeff").value
 
         self.pid_r = PID(output_limits=(-1.0, 1.0), sample_time=0.005, setpoint=0)

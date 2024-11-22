@@ -75,13 +75,8 @@ class ArduinoBridge(Node):
 
     def listener_callback(self, msg: Motors):
         self.__last_msg_time = time.time()
-        self.motors[0] = msg.motor_1
-        self.motors[1] = msg.motor_2
-        self.motors[2] = msg.motor_3
-        self.motors[3] = msg.motor_4
-        self.motors[4] = msg.motor_5
-        self.motors[5] = msg.motor_6
-        self.motors[6] = msg.motor_7
+        for i in range(7):
+            self.motors[i] = getattr(msg, f"motor_{i+1}")
         
     def update_motors(self):
         # Stop motors if no messages received for SAFETY_TIMEOUT seconds
