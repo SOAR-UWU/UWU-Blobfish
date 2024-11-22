@@ -11,6 +11,7 @@ from .base_bridge import create_bridge
 
 GZ_TOPIC = "/gz/blobfish/imu"
 ROS_TOPIC = "/blobfish/imu_measurements"
+CORRECT_REAL_IMU_ROTATION = True
 
 # TODO: IMU_Publisher_Node (kebab-case monstrosity) has a parameter `imu_num_cal_samples`,
 # emulate that? There's now a separate list of tasks for the original imu_publisher.py...
@@ -21,7 +22,23 @@ ROS_TOPIC = "/blobfish/imu_measurements"
 def map_imu(msg: Imu, _) -> Optional[Kinematics]:
     """Map IMU."""
     out = Kinematics()
-    out.p.orientation = msg.orientation
+    og_quat = msg.orientation
+
+    # Flip from Gazebo sim to our actual IMU's orientation
+    qx = -og_quat.x
+    qy = og_quat.y
+    qz = -og_quat.z
+    qw = og_quat.w
+
+    # Flip from actual IMU orientation to Gazebo sim
+    if CORRECT_REAL_IMU_ROTATION:
+        qx = -qx
+        qz = -qz
+
+    out.p.orientation.x = qx
+    out.p.orientation.y = qy
+    out.p.orientation.z = qz
+    out.p.orientation.w = qw
     out.a.linear = msg.linear_acceleration
     return out
 

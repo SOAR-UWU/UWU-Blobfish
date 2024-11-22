@@ -6,7 +6,7 @@ from launch_ros.actions import Node
 
 THIS_NAME = "blobfish_sim"
 # Position IMU emulates IMUs like VectorNav with built-in position dead reckoning.
-USE_POS_IMU = True
+USE_POS_IMU = False
 
 
 def generate_launch_description():
