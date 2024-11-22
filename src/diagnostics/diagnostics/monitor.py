@@ -43,7 +43,7 @@ KEYPRESS_TOPIC = "/keypress"
 
 QOS = rclpy.qos.qos_profile_sensor_data
 ROSOUT_LOG_LEVEL = logging.INFO
-RATE = 120
+RATE = 30
 
 # TODO:
 # - why aren't we using RViz/RQT?
@@ -249,14 +249,16 @@ class MonitorNode(Node):
         ch: str = getchlib.getkey(False, echo=False)
         return None if ch == "" else ch
 
-    def update_display(self):
-        # Must get key before refreshing
+    def pub_key(self):
         key = self.get_key()
         if key is not None:
             for k in key:
                 msg = Char()
                 msg.data = ord(k)
                 self.__key_pub.publish(msg)
+
+    def update_display(self):
+        self.pub_key()
         self.__text_imu_raw.plain = self.__imu_raw_str
         self.__text_imu_cal.plain = self.__imu_cal_str
         self.__text_motors.plain = (
@@ -266,6 +268,7 @@ class MonitorNode(Node):
         #     f"{k}: {v: 5.1f}" for k, v in self.__rate_fps.items()
         # )
         self.__live.refresh()
+        self.pub_key()
 
 
 # Taken from https://stackoverflow.com/a/74134595
