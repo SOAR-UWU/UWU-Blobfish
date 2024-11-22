@@ -7,9 +7,11 @@ import itertools
 import json
 import logging
 import os
+import time
 from collections import defaultdict, deque
 
 import getchlib
+import numpy as np
 import rclpy
 import rclpy.qos
 from geometry_msgs.msg import Twist
@@ -47,7 +49,6 @@ RATE = 120
 # - why aren't we using RViz/RQT?
 # - OG keypress node should use keypress out too
 # - tmux shell scripts for sim, irl & sim-irl testing
-# - Put rate monitors into panel title for each msg type
 
 
 class MonitorNode(Node):
@@ -81,13 +82,16 @@ class MonitorNode(Node):
         text_motors = Text("no data yet")
         text_imu_cal = Text("no data yet")
         text_imu_raw = Text("no data yet")
+        text_fps = Text("no data yet")
         imu_raw = Panel(text_imu_raw, title="VN-100")
         imu_cal = Panel(text_imu_cal, title="Calibrated")
         motors = Panel(text_motors, title="Motors")
+        fps = Panel(text_fps, title="FPS")
 
         L.split_column(
             Layout(name="imu", size=5),
             Layout(motors, name="motor", size=5),
+            Layout(fps, name="fps", size=3),
             Layout(name="log"),
             # Layout(name="keypress"),
         )
@@ -106,8 +110,10 @@ class MonitorNode(Node):
         self.__text_imu_raw = text_imu_raw
         self.__text_imu_cal = text_imu_cal
         self.__text_motors = text_motors
+        self.__text_fps = text_fps
         self.__rate_buf = defaultdict(lambda: deque(maxlen=10))
         self.__rate_last = defaultdict(int)
+        self.__rate_fps = defaultdict(int)
         self.__motor_order = None
         self.__motor_debug_str = "No motor percent data yet\n"
         self.__motor_actual_str = "No motor data yet\n"
@@ -130,6 +136,15 @@ class MonitorNode(Node):
             show_path=False,
         )
 
+    def track_rate(self, name):
+        # TODO: Rate measurement can't keep up. The live update is STILL too laggy.
+        last = self.__rate_last[name]
+        now = time.time()
+        self.__rate_buf[name].append(now - last)
+        self.__rate_last[name] = now
+        fps = 1 / max(1e-8, np.mean(self.__rate_buf[name]))
+        self.__rate_fps[name] = fps
+
     def imu_raw_callback(self, msg: CommonGroup):
         pos = msg.position  # Empty for VN-100
         acc = msg.accel
@@ -141,13 +156,7 @@ class MonitorNode(Node):
             f" x: {pos.x: 8.3f}\t y: {pos.y: 8.3f}\t z: {pos.z: 8.3f}\n"
             f"ax: {acc.x: 8.3f}\tay: {acc.y: 8.3f}\taz: {acc.z: 8.3f}"
         )
-        # TODO: Rate measurement can't keep up
-        # last = self.__rate_last["imu_raw"]
-        # now = time.time()
-        # self.__rate_buf["imu_raw"].append(now - last)
-        # self.__rate_last["imu_raw"] = now
-        # fps = 1 / max(1e-8, np.mean(self.__rate_buf["imu_raw"]))
-        # self.__panel_imu_raw.subtitle = f"{fps: 5.1f} Hz"
+        self.track_rate("imu_raw")
 
     def imu_cal_callback(self, msg: Kinematics):
         pos = msg.p.position
@@ -160,6 +169,7 @@ class MonitorNode(Node):
             f" x: {pos.x: 8.3f}\t y: {pos.y: 8.3f}\t z: {pos.z: 8.3f}\n"
             f"ax: {acc.x: 8.3f}\tay: {acc.y: 8.3f}\taz: {acc.z: 8.3f}"
         )
+        self.track_rate("imu_cal")
 
     def motor_debug_callback(self, msg: MotorsFloat):
         fl, fr = msg.fl, msg.fr
@@ -172,6 +182,7 @@ class MonitorNode(Node):
             f"BL: {bl: 6.3f}\t\tBR: {br: 6.3f}\t\t"
             f"BM: {bm: 6.3f}\n"
         )
+        self.track_rate("motor_debug")
 
     def motor_actual_callback(self, msg: Motors):
         N = 7
@@ -189,6 +200,7 @@ class MonitorNode(Node):
             + self.__motor_debug_str
             + "\t".join((f"{k}: {v:04d}" for k, v in pairs.items()))
         )
+        self.track_rate("motor_actual")
 
     def motor_order_callback(self, msg: String):
         try:
@@ -202,6 +214,7 @@ class MonitorNode(Node):
         ang = msg.angular
         lin = msg.linear
         self.__pid_str = f"r: {ang.x: 6.3f}\tp: {ang.y: 6.1f}\th: {ang.z: 6.1f}\tf: {lin.x: 6.1f}\tl: {lin.y: 6.1f}\tz: {lin.z: 6.1f}\n"
+        self.track_rate("pid")
 
     def rosout_callback(self, msg: Log):
         # TODO: how to map original time & file location to Rich logging?
@@ -249,6 +262,9 @@ class MonitorNode(Node):
         self.__text_motors.plain = (
             self.__pid_str + self.__motor_actual_str + self.__motor_debug_str
         )
+        # self.__text_fps.plain = "FPS: " + "\t".join(
+        #     f"{k}: {v: 5.1f}" for k, v in self.__rate_fps.items()
+        # )
         self.__live.refresh()
 
 
