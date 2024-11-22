@@ -104,7 +104,7 @@ class StrategyRocket(Node):
         for i in cfg_list:           
             try:
                 self._validate(i)
-                k = list(i.keys(0))[0]
+                k = list(i.keys())[0]
                 v = i[k]
             except Exception:
                 self.get_logger().warn(f"Invalid instruction: {i}")
@@ -125,6 +125,9 @@ class StrategyRocket(Node):
 
     # Finish routine
     def execute_routine(self):
+
+        self.get_logger().info("Executing routine...")
+
         self.dni = True
         for i, v in self.instruction_set:
             if i == "speed":
@@ -134,7 +137,7 @@ class StrategyRocket(Node):
             else:
                 self.get_logger().warn(f"Invalid instruction {i}")
 
-            self.get_logger().info("Current routine complete.")
+        self.get_logger().info("Current routine complete.")
 
         self.instruction_set = []
         self.dni = False

@@ -9,7 +9,7 @@ def generate_launch_description():
     exe = Node(
         package="blobfish_control",
         executable="rocket",
-        paramters=[{"config_path": str(pkg_this / "config" / "routine.yaml")}],
+        parameters=[{"config_path": str(pkg_this / "config" / "routine.yaml")}],
     )
 
     ld = LaunchDescription()
