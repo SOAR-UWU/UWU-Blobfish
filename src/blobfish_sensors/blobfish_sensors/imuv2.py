@@ -20,7 +20,7 @@ IMU_TOPIC = "/blobfish/imu_measurements"
 KEYPRESS_TOPIC = "/keypress"
 KEYPRESS_OUT_TOPIC = "/kpout"
 
-# TODO: separate method to calibrate IMU & gravity from recentering
+CORRECT_REAL_IMU_ROTATION = True
 
 QOS = rclpy.qos.qos_profile_sensor_data
 
@@ -66,14 +66,19 @@ class IMUCalculationNode(Node):
         ax, ay, az = remove_gravity_from_accel(raw_rot, self.offset_grav, ax, ay, az)
         ax, ay, az = raw_rot.apply((ax, ay, az))
 
-        self.state.a.linear.x = float(ax)
-        self.state.a.linear.y = float(ay)
-        self.state.a.linear.z = float(az)
+        # Flip IMU orientation.
+        if CORRECT_REAL_IMU_ROTATION:
+            qx, qz = -qx, -qz
+            ay, az = -ay, -az
 
-        self.state.p.orientation.x = float(qx)
-        self.state.p.orientation.y = float(qy)
-        self.state.p.orientation.z = float(qz)
-        self.state.p.orientation.w = float(qw)
+        self.state.a.linear.x = ax
+        self.state.a.linear.y = ay
+        self.state.a.linear.z = az
+
+        self.state.p.orientation.x = qx
+        self.state.p.orientation.y = qy
+        self.state.p.orientation.z = qz
+        self.state.p.orientation.w = qw
 
         t = Time.from_msg(msg.header.stamp)
         self.accum_accel(ax, ay, az, t)

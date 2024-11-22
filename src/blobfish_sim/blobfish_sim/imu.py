@@ -22,24 +22,30 @@ CORRECT_REAL_IMU_ROTATION = True
 def map_imu(msg: Imu, _) -> Optional[Kinematics]:
     """Map IMU."""
     out = Kinematics()
-    og_quat = msg.orientation
+    quat = msg.orientation
+    acc = msg.linear_acceleration
 
     # Flip from Gazebo sim to our actual IMU's orientation
-    qx = -og_quat.x
-    qy = og_quat.y
-    qz = -og_quat.z
-    qw = og_quat.w
+    qx = -quat.x
+    qy = quat.y
+    qz = -quat.z
+    qw = quat.w
+    ax = acc.x
+    ay = -acc.y
+    az = -acc.z
 
     # Flip from actual IMU orientation to Gazebo sim
     if CORRECT_REAL_IMU_ROTATION:
-        qx = -qx
-        qz = -qz
+        qx, qz = -qx, -qz
+        ay, az = -ay, -az
 
     out.p.orientation.x = qx
     out.p.orientation.y = qy
     out.p.orientation.z = qz
     out.p.orientation.w = qw
-    out.a.linear = msg.linear_acceleration
+    out.a.linear.x = ax
+    out.a.linear.y = ay
+    out.a.linear.z = az
     return out
 
 
