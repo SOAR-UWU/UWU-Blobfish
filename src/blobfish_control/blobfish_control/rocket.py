@@ -68,7 +68,6 @@ class StrategyRocket(Node):
 
     def get_routine(self):
         """Updates instruction set to reflect whatever's in the config file"""
-        self.instruction_set = []
 
         cfg_path = self.get_parameter("config_path").value
         if cfg_path == "":
@@ -86,6 +85,7 @@ class StrategyRocket(Node):
         self.__last_config_mtime = new_mtime
 
         cfg_list = None
+        self.instruction_set = []
         try:
             with open(cfg_path, "r") as f:
                 cfg = yaml.safe_load(f)
@@ -114,8 +114,8 @@ class StrategyRocket(Node):
         )
 
     def _on_wait(self, t):
-        time.sleep(t)
         self.get_logger().info(f"waiting for {t}")
+        time.sleep(t)
 
     def _on_update_speed(self, s: list):
         speed = Vector3(x=s[0], y=s[1], z=s[2])
