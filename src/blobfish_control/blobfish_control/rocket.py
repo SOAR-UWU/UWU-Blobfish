@@ -27,10 +27,7 @@ UPDATE_ROUTINE = 4
 
 
 class StrategyRocket(Node):
-    valid_params = {
-        "speed": [0.0, 0.0, 0.0],
-        "wait": 0
-    }
+    valid_params = {"speed": [0.0, 0.0, 0.0], "wait": 0}
 
     def __init__(self):
         super(StrategyRocket, self).__init__("strat_rocket")
@@ -54,7 +51,7 @@ class StrategyRocket(Node):
 
     def _validate(self, i: dict):
         assert isinstance(i, dict)
-        assert len(i.keys()) == 1 # TODO: Make this compatible with multiple keys
+        assert len(i.keys()) == 1  # TODO: Make this compatible with multiple keys
         k = list(i.keys())[0]
         assert k in self.valid_params
 
@@ -62,17 +59,17 @@ class StrategyRocket(Node):
             self.get_logger().warn(f"Unknown parameter in config: {k}")
 
         v = i[k]
-        if k == 'speed':
+        if k == "speed":
             assert len(v) == 3
             for val in range(len(v)):
                 v[val] = float(v[val])
-        elif k == 'wait':
+        elif k == "wait":
             assert isinstance(v, int)
-
-
 
     def get_routine(self):
         """Updates instruction set to reflect whatever's in the config file"""
+        self.instruction_set = []
+
         cfg_path = self.get_parameter("config_path").value
         if cfg_path == "":
             self.__last_config_mtime = -1
@@ -101,7 +98,7 @@ class StrategyRocket(Node):
         if cfg_list is None:
             return
 
-        for i in cfg_list:           
+        for i in cfg_list:
             try:
                 self._validate(i)
                 k = list(i.keys())[0]
@@ -125,7 +122,6 @@ class StrategyRocket(Node):
 
     # Finish routine
     def execute_routine(self):
-
         self.get_logger().info("Executing routine...")
 
         self.dni = True
@@ -145,7 +141,7 @@ class StrategyRocket(Node):
     def keypress_callback(self, msg: Char):
         keypress = chr(msg.data)
 
-        if keypress == 'h':
+        if keypress == "h":
             if self.dni:
                 self.log_kp("Currently executing...")
             else:
