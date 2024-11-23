@@ -1,2 +1,1 @@
-rich~=13.9.4
-getchlib~=1.1.1
+textual~=0.86.3
