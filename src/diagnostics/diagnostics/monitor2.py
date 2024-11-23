@@ -39,7 +39,7 @@ class AppMode(IntEnum):
 
 
 ENUM_NAMES = {AppMode.KP: "KP Mode", AppMode.VIEW_ONLY: "View Mode"}
-MODE_CYCLE_KEY = "m"
+MODE_CYCLE_KEY = "ctrl+m"
 
 
 class MonitorApp(App):
@@ -54,7 +54,7 @@ class MonitorApp(App):
     TITLE = "J-H's Monitor"
     NOTIFICATION_TIMEOUT = 1
 
-    app_mode = var(AppMode.KP, bindings=True)
+    app_mode = var(AppMode.VIEW_ONLY, bindings=True)
 
     def compose(self) -> ComposeResult:
         """Generator that yields the widgets to render."""
@@ -62,7 +62,7 @@ class MonitorApp(App):
 
         self.txt_kp_log = kp_log
 
-        yield Header()
+        yield Header(show_clock=True)
         yield kp_log
         yield Footer()
 
@@ -86,6 +86,12 @@ class MonitorApp(App):
     # https://textual.textualize.io/events/mount/
     def on_mount(self) -> None:
         """Mount event handler."""
+        # fmt: off
+        self.write_kp_log(
+            "Press 'ctrl+m' till its 'KP Mode'\n"
+            " to intercept keypresses."
+        )
+        # fmt: on
 
     # https://textual.textualize.io/events/key/
     def on_key(self, event: events.Key) -> None:
@@ -169,7 +175,10 @@ class MonitorApp(App):
         if len(name) > MAX_LEN - 3:
             name = f"{name[:MAX_LEN-3]}.."
         name = f"{name}".rjust(MAX_LEN)
-        self.txt_kp_log.write(f"{name}|{msg}")
+        lines = msg.splitlines()
+        self.txt_kp_log.write(f"{name}|{lines[0].strip()}")
+        for line in lines[1:]:
+            self.txt_kp_log.write(f"{' ' * MAX_LEN} {line.strip()}")
 
 
 def main():
