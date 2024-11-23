@@ -7,11 +7,13 @@ import textual.events as events
 from geometry_msgs.msg import Twist
 from rcl_interfaces.msg import Log
 from rclpy.node import Node
+from rich.highlighter import ReprHighlighter
+from rich.text import Text
 from std_msgs.msg import Char, String
 from textual.app import App, ComposeResult
 from textual.binding import Binding
 from textual.reactive import var
-from textual.widgets import Footer, Header, RichLog
+from textual.widgets import DataTable, Footer, Header
 from vectornav_msgs.msg import CommonGroup
 
 from blobfish_msgs.msg import Kinematics, Motors, MotorsFloat
@@ -58,12 +60,16 @@ class MonitorApp(App):
 
     def compose(self) -> ComposeResult:
         """Generator that yields the widgets to render."""
-        kp_log = RichLog(id="kp_log", name="KeyPress", highlight=True, max_lines=256)
+        kp_table = DataTable(fixed_columns=1, show_header=False, zebra_stripes=True)
+        kp_table.add_column("Node", width=12)
+        kp_col_msg = kp_table.columns[kp_table.add_column("Message", width=88)]
 
-        self.txt_kp_log = kp_log
+        self.txt_kp_table = kp_table
+        self.txt_kp_col_msg = kp_col_msg
+        self.txt_highlighter = ReprHighlighter()
 
         yield Header(show_clock=True)
-        yield kp_log
+        yield kp_table
         yield Footer()
 
     # https://textual.textualize.io/guide/actions/
@@ -86,12 +92,7 @@ class MonitorApp(App):
     # https://textual.textualize.io/events/mount/
     def on_mount(self) -> None:
         """Mount event handler."""
-        # fmt: off
-        self.write_kp_log(
-            "Press 'ctrl+m' till its 'KP Mode'\n"
-            " to intercept keypresses."
-        )
-        # fmt: on
+        self.write_kp_log("Press 'ctrl+m' till its 'KP Mode' to intercept keypresses.")
 
     # https://textual.textualize.io/events/key/
     def on_key(self, event: events.Key) -> None:
@@ -169,16 +170,18 @@ class MonitorApp(App):
             self.write_kp_log(f"Sent: '{event.character}'")
             (f"Sent: {event.character}")
 
-    def write_kp_log(self, msg: str, name="self"):
+    def write_kp_log(self, msg: str, name="self", trim_rows=256):
         """Write a message to the kp_log."""
-        MAX_LEN = 12
-        if len(name) > MAX_LEN - 3:
-            name = f"{name[:MAX_LEN-3]}.."
-        name = f"{name}".rjust(MAX_LEN)
-        lines = msg.splitlines()
-        self.txt_kp_log.write(f"{name}|{lines[0].strip()}")
-        for line in lines[1:]:
-            self.txt_kp_log.write(f"{' ' * MAX_LEN} {line.strip()}")
+        # NOTE: I can't find a way to dynamically wrap so we hardcode the width above.
+        col_w = self.txt_kp_col_msg.width
+        txt_name = Text(name, style="grey66", justify="right")
+        lines = self.txt_highlighter(msg).wrap(None, col_w)
+        self.txt_kp_table.add_row(txt_name, lines, height=len(lines))
+        self.txt_kp_table.scroll_end(animate=False)
+
+        keys = iter(self.txt_kp_table.rows)
+        while self.txt_kp_table.row_count > trim_rows:
+            self.txt_kp_table.remove_row(next(keys))
 
 
 def main():
