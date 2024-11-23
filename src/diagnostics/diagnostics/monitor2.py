@@ -172,6 +172,13 @@ class MonitorApp(App):
 
     def write_kp_log(self, msg: str, name="self", trim_rows=256):
         """Write a message to the kp_log."""
+        # Don't show repeated names in consecutive rows.
+        prev_name = getattr(self, "_prev_kp_name", None)
+        if prev_name == name:
+            name = ""
+        else:
+            self._prev_kp_name = name
+
         # NOTE: I can't find a way to dynamically wrap so we hardcode the width above.
         col_w = self.txt_kp_col_msg.width
         txt_name = Text(name, style="grey66", justify="right")
