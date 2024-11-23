@@ -1,5 +1,8 @@
 import logging
+import time
+from datetime import datetime
 from enum import IntEnum
+from math import floor
 
 import rclpy
 import rclpy.qos
@@ -7,6 +10,7 @@ import textual.events as events
 from geometry_msgs.msg import Twist
 from rcl_interfaces.msg import Log
 from rclpy.node import Node
+from rclpy.time import Time
 from rich.highlighter import ReprHighlighter
 from rich.text import Text
 from std_msgs.msg import Char, String
@@ -62,14 +66,20 @@ class MonitorApp(App):
         """Generator that yields the widgets to render."""
         kp_table = DataTable(fixed_columns=1, show_header=False, zebra_stripes=True)
         kp_table.add_column("Node", width=12)
-        kp_col_msg = kp_table.columns[kp_table.add_column("Message", width=88)]
+        kp_table.add_column("Message", width=88)
+
+        rosout_table = DataTable(fixed_columns=1, show_header=False, zebra_stripes=True)
+        rosout_table.add_column("Node", width=12)
+        rosout_table.add_column("Message", width=80)
+        rosout_table.add_column("Time", width=8)
 
         self.txt_kp_table = kp_table
-        self.txt_kp_col_msg = kp_col_msg
+        self.txt_rosout_table = rosout_table
         self.txt_highlighter = ReprHighlighter()
 
         yield Header(show_clock=True)
-        yield kp_table
+        # yield kp_table
+        yield rosout_table
         yield Footer()
 
     # https://textual.textualize.io/guide/actions/
@@ -152,7 +162,10 @@ class MonitorApp(App):
         pass
 
     def ros_cb_rosout(self, msg: Log):
-        pass
+        """Write rosout msgs to rosout_log."""
+        time = Time.from_msg(msg.stamp)
+        s, _ = time.seconds_nanoseconds()
+        self.write_rosout_log(msg.msg, name=msg.name, ts=s)
 
     def ros_cb_kp_out(self, msg: Log):
         """Write keypress msgs to kp_log."""
@@ -171,7 +184,7 @@ class MonitorApp(App):
             (f"Sent: {event.character}")
 
     def write_kp_log(self, msg: str, name="self", trim_rows=256):
-        """Write a message to the kp_log."""
+        """Write a message to the kp log."""
         # Don't show repeated names in consecutive rows.
         prev_name = getattr(self, "_prev_kp_name", None)
         if prev_name == name:
@@ -179,16 +192,46 @@ class MonitorApp(App):
         else:
             self._prev_kp_name = name
 
-        # NOTE: I can't find a way to dynamically wrap so we hardcode the width above.
-        col_w = self.txt_kp_col_msg.width
-        txt_name = Text(name, style="grey66", justify="right")
-        lines = self.txt_highlighter(msg).wrap(None, col_w)
-        self.txt_kp_table.add_row(txt_name, lines, height=len(lines))
-        self.txt_kp_table.scroll_end(animate=False)
+        txt_name = Text(
+            name, style="grey66", justify="right", no_wrap=True, overflow="ellipsis"
+        )
+        txt_msg = self.txt_highlighter(msg)
+        self.txt_kp_table.add_row(txt_name, txt_msg, height=None)
 
         keys = iter(self.txt_kp_table.rows)
         while self.txt_kp_table.row_count > trim_rows:
             self.txt_kp_table.remove_row(next(keys))
+
+        self.txt_kp_table.scroll_end(animate=False)
+
+    def write_rosout_log(self, msg: str, name="self", ts=None, trim_rows=1024):
+        """Write a message to the rosout log."""
+        ts = time.time() if ts is None else ts
+        ts = int(floor(ts))
+
+        # Don't show repeated name/time in consecutive rows.
+        prev_name = getattr(self, "_prev_rosout_name", None)
+        prev_ts = getattr(self, "_prev_rosout_ts", None)
+        if prev_name == name and prev_ts == ts:
+            name = ""
+            ts = -1
+        else:
+            self._prev_rosout_name = name
+            self._prev_rosout_ts = ts
+
+        tstr = str(datetime.fromtimestamp(ts).strftime("%H:%M:%S")) if ts != -1 else ""
+        txt_name = Text(
+            name, style="grey66", justify="right", no_wrap=True, overflow="ellipsis"
+        )
+        txt_msg = self.txt_highlighter(msg)
+        txt_time = Text(tstr, style="grey66", justify="right")
+        self.txt_rosout_table.add_row(txt_name, txt_msg, txt_time, height=None)
+
+        keys = iter(self.txt_rosout_table.rows)
+        while self.txt_rosout_table.row_count > trim_rows:
+            self.txt_rosout_table.remove_row(next(keys))
+
+        self.txt_rosout_table.scroll_end(animate=False)
 
 
 def main():
