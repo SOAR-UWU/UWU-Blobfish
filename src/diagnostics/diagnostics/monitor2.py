@@ -70,6 +70,8 @@ class MonitorApp(App):
     CSS = """
     DataTable {
         height: 1fr;
+        scrollbar-size: 1 1;
+        overflow-y: scroll;
     }
     #kp_outer {
         width: 1fr;
@@ -98,12 +100,7 @@ class MonitorApp(App):
         rosout_table.add_column("Time", width=1, key="time")
         rosout_table.add_column("Message", width=1, key="msg")
 
-        self.txt_kp_table = kp_table
-        self.txt_rosout_table = rosout_table
-        self.tables = {
-            "kp": kp_table,
-            "rosout": rosout_table,
-        }
+        self.tables = {"kp": kp_table, "rosout": rosout_table}
         self.txt_highlighter = ReprHighlighter()
 
         yield Header(show_clock=True)
@@ -133,6 +130,8 @@ class MonitorApp(App):
         """Load event handler."""
         self.ros_init()
 
+        self.__prev_table_row_val = {}
+
     # https://textual.textualize.io/events/mount/
     def on_mount(self) -> None:
         """Mount event handler."""
@@ -159,7 +158,7 @@ class MonitorApp(App):
         # Assume the table is in a Vertical container.
         outer: Vertical = table.parent
 
-        w = outer.size.width - 2 * table.cell_padding
+        w = outer.size.width - 2 * table.cell_padding - table.scrollbar_size_vertical
         ew = 0
         for k, col in table.columns.items():
             colw = COL_WIDTHS.get(k, 0)
@@ -256,55 +255,62 @@ class MonitorApp(App):
             self.write_kp_log(f"Sent: '{event.character}'")
             (f"Sent: {event.character}")
 
-    def write_kp_log(self, msg: str, name="self", trim_rows=256):
-        """Write a message to the kp log."""
-        # Don't show repeated names in consecutive rows.
-        prev_name = getattr(self, "_prev_kp_name", None)
-        if prev_name == name:
-            name = ""
-        else:
-            self._prev_kp_name = name
-
-        txt_name = Text(
-            name, style="grey66", justify="right", no_wrap=True, overflow="ellipsis"
-        )
-        txt_msg = self.txt_highlighter(msg)
-        self.txt_kp_table.add_row(txt_name, txt_msg, height=None)
-
-        keys = iter(self.txt_kp_table.rows)
-        while self.txt_kp_table.row_count > trim_rows:
-            self.txt_kp_table.remove_row(next(keys))
-
-        self.txt_kp_table.scroll_end(animate=False)
-
-    def write_rosout_log(self, msg: str, name="self", ts=None, trim_rows=1024):
-        """Write a message to the rosout log."""
-        ts = time.time() if ts is None else ts
-        ts = int(floor(ts))
+    def write_datatable(
+        self,
+        table_name: str,
+        msg: str,
+        name: str,
+        ts: int,
+        has_ts: bool,
+        trim_rows: int,
+    ):
+        """Write a log message to a datatable."""
+        prev_name = self.__prev_table_row_val.get(f"{table_name}_name", "")
+        prev_ts = self.__prev_table_row_val.get(f"{table_name}_ts", -1)
 
         # Don't show repeated name/time in consecutive rows.
-        prev_name = getattr(self, "_prev_rosout_name", None)
-        prev_ts = getattr(self, "_prev_rosout_ts", None)
         if prev_name == name and prev_ts == ts:
             name = ""
             ts = -1
         else:
-            self._prev_rosout_name = name
-            self._prev_rosout_ts = ts
+            self.__prev_table_row_val[f"{table_name}_name"] = name
+            self.__prev_table_row_val[f"{table_name}_ts"] = ts
 
-        tstr = str(datetime.fromtimestamp(ts).strftime("%H:%M:%S")) if ts != -1 else ""
+        time_str = (
+            str(datetime.fromtimestamp(ts).strftime("%H:%M:%S")) if ts != -1 else ""
+        )
+
         txt_name = Text(
             name, style="grey66", justify="right", no_wrap=True, overflow="ellipsis"
         )
-        txt_time = Text(tstr, style="grey66", justify="right")
+        txt_time = Text(
+            time_str, style="grey66", justify="right", no_wrap=True, overflow="ellipsis"
+        )
         txt_msg = self.txt_highlighter(msg)
-        self.txt_rosout_table.add_row(txt_name, txt_time, txt_msg, height=None)
 
-        keys = iter(self.txt_rosout_table.rows)
-        while self.txt_rosout_table.row_count > trim_rows:
-            self.txt_rosout_table.remove_row(next(keys))
+        table = self.tables[table_name]
+        if has_ts:  # height=None enables auto height
+            table.add_row(txt_name, txt_time, txt_msg, height=None)
+        else:
+            table.add_row(txt_name, txt_msg, height=None)
 
-        self.txt_rosout_table.scroll_end(animate=False)
+        # Remove oldest rows if needed.
+        keys = iter(table.rows)
+        while table.row_count > trim_rows:
+            table.remove_row(next(keys))
+
+        table.scroll_end(animate=False)
+
+    def write_kp_log(self, msg: str, name="self", trim_rows=256):
+        """Write a message to the kp log."""
+        self.write_datatable("kp", msg, name, -1, False, trim_rows)
+
+    def write_rosout_log(self, msg: str, name="self", ts=None, trim_rows=1024):
+        """Write a message to the rosout log."""
+        if ts is None:
+            ts = time.time()
+
+        self.write_datatable("rosout", msg, name, int(floor(ts)), True, trim_rows)
 
 
 def main():
