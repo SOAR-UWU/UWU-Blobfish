@@ -16,8 +16,9 @@ from rich.text import Text
 from std_msgs.msg import Char, String
 from textual.app import App, ComposeResult
 from textual.binding import Binding
+from textual.containers import Horizontal, Vertical
 from textual.reactive import var
-from textual.widgets import DataTable, Footer, Header
+from textual.widgets import DataTable, Footer, Header, Label
 from vectornav_msgs.msg import CommonGroup
 
 from blobfish_msgs.msg import Kinematics, Motors, MotorsFloat
@@ -46,6 +47,12 @@ class AppMode(IntEnum):
 
 ENUM_NAMES = {AppMode.KP: "KP Mode", AppMode.VIEW_ONLY: "View Mode"}
 MODE_CYCLE_KEY = "ctrl+m"
+COL_WIDTHS = {"name": 10, "time": 8}
+COL_RESIZE_MIN_WIDTH = 32
+
+# TODO:
+# - Use tabs to create other screens? https://textual.textualize.io/widgets/tabbed_content/
+# - Sparklines for numerical data in another tab? https://textual.textualize.io/widgets/sparkline/
 
 
 class MonitorApp(App):
@@ -60,26 +67,53 @@ class MonitorApp(App):
     TITLE = "J-H's Monitor"
     NOTIFICATION_TIMEOUT = 1
 
+    CSS = """
+    DataTable {
+        height: 1fr;
+    }
+    #kp_outer {
+        width: 1fr;
+    }
+    #rosout_outer {
+        width: 3fr;
+    }
+    Vertical > Label {
+        width: 100%;
+        height: 1;
+        text-align: center;
+    }
+    """
+
     app_mode = var(AppMode.VIEW_ONLY, bindings=True)
 
     def compose(self) -> ComposeResult:
         """Generator that yields the widgets to render."""
+        # We have code that dynamically resizes the columns of these tables.
         kp_table = DataTable(fixed_columns=1, show_header=False, zebra_stripes=True)
-        kp_table.add_column("Node", width=12)
-        kp_table.add_column("Message", width=88)
+        kp_table.add_column("Node", width=1, key="name")
+        kp_table.add_column("Message", width=1, key="msg")
 
-        rosout_table = DataTable(fixed_columns=1, show_header=False, zebra_stripes=True)
-        rosout_table.add_column("Node", width=12)
-        rosout_table.add_column("Message", width=80)
-        rosout_table.add_column("Time", width=8)
+        rosout_table = DataTable(fixed_columns=2, show_header=False, zebra_stripes=True)
+        rosout_table.add_column("Node", width=1, key="name")
+        rosout_table.add_column("Time", width=1, key="time")
+        rosout_table.add_column("Message", width=1, key="msg")
 
         self.txt_kp_table = kp_table
         self.txt_rosout_table = rosout_table
+        self.tables = {
+            "kp": kp_table,
+            "rosout": rosout_table,
+        }
         self.txt_highlighter = ReprHighlighter()
 
         yield Header(show_clock=True)
-        # yield kp_table
-        yield rosout_table
+        with Horizontal():
+            with Vertical(id="kp_outer"):
+                yield Label("keypress log")
+                yield kp_table
+            with Vertical(id="rosout_outer"):
+                yield Label("rosout log")
+                yield rosout_table
         yield Footer()
 
     # https://textual.textualize.io/guide/actions/
@@ -103,11 +137,50 @@ class MonitorApp(App):
     def on_mount(self) -> None:
         """Mount event handler."""
         self.write_kp_log("Press 'ctrl+m' till its 'KP Mode' to intercept keypresses.")
+        self.refresh_datatable_sizes()
 
     # https://textual.textualize.io/events/key/
     def on_key(self, event: events.Key) -> None:
         """Handle keypress events."""
         self.ros_pub_kp(event)
+
+    # https://textual.textualize.io/events/resize/
+    def on_resize(self, event: events.Resize) -> None:
+        """Handle resize events."""
+        self.refresh_datatable_sizes()
+
+    def refresh_datatable_sizes(self):
+        """Refresh sizes of all data tables."""
+        for table in self.tables.values():
+            table.call_after_refresh(self.handle_table_resize, table)
+
+    def handle_table_resize(self, table: DataTable, col_to_resize="msg"):
+        """Resize table's msg column to fit."""
+        # Assume the table is in a Vertical container.
+        outer: Vertical = table.parent
+
+        w = outer.size.width - 2 * table.cell_padding
+        ew = 0
+        for k, col in table.columns.items():
+            colw = COL_WIDTHS.get(k, 0)
+            if colw > 0:
+                w -= colw + 2 * table.cell_padding
+                # If later w < COL_RESIZE_MIN_WIDTH, all other cols are set to 1.
+                ew += colw - 1
+                col.width = colw
+
+        if w >= COL_RESIZE_MIN_WIDTH:
+            table.columns[col_to_resize].width = w
+        else:
+            for col in table.columns.values():
+                col.width = 1
+            table.columns[col_to_resize].width = max(w + ew, 1)
+
+        # Force row height to update.
+        rows = list(table.rows.keys())
+        for r in rows:
+            table.rows[r].height = 0
+        table._update_dimensions(rows)
 
     def watch_app_mode(self, mode: AppMode):
         """Watch app mode changes."""
@@ -223,9 +296,9 @@ class MonitorApp(App):
         txt_name = Text(
             name, style="grey66", justify="right", no_wrap=True, overflow="ellipsis"
         )
-        txt_msg = self.txt_highlighter(msg)
         txt_time = Text(tstr, style="grey66", justify="right")
-        self.txt_rosout_table.add_row(txt_name, txt_msg, txt_time, height=None)
+        txt_msg = self.txt_highlighter(msg)
+        self.txt_rosout_table.add_row(txt_name, txt_time, txt_msg, height=None)
 
         keys = iter(self.txt_rosout_table.rows)
         while self.txt_rosout_table.row_count > trim_rows:
