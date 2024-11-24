@@ -2,7 +2,6 @@
 
 import functools
 import json
-import logging
 import time
 from collections import defaultdict, deque
 from datetime import datetime
@@ -32,7 +31,6 @@ from vectornav_msgs.msg import CommonGroup
 from blobfish_msgs.msg import Kinematics, Motors, MotorsFloat
 
 NODE_NAME = "monitor"
-ROSOUT_LOG_LEVEL = logging.INFO
 QOS = rclpy.qos.qos_profile_sensor_data
 
 IMU_RAW_TOPIC = "/vectornav/raw/common"
@@ -57,8 +55,8 @@ ENUM_NAMES = {AppMode.KP: "KP Mode", AppMode.VIEW_ONLY: "View Mode"}
 MODE_CYCLE_KEY = "ctrl+m"
 COL_WIDTHS = {"name": 10, "time": 8}
 COL_RESIZE_MIN_WIDTH = 32
-UPDATE_RATE = 5
-MAX_VAL_BUF = 30
+DISPLAY_UPDATE_RATE = 4
+MAX_VAL_BUF = 10
 
 # TODO:
 # - Use tabs to create other screens? https://textual.textualize.io/widgets/tabbed_content/
@@ -203,10 +201,9 @@ class MonitorApp(App):
     # https://textual.textualize.io/events/mount/
     def on_mount(self) -> None:
         """Mount event handler."""
-        self.write_kp_log("FPS rates aren't accurate beyond 100Hz due to limitations.")
         self.write_kp_log("Press 'ctrl+m' till its 'KP Mode' to intercept keypresses.")
         self.refresh_datatable_sizes()
-        self.set_interval(1.0 / UPDATE_RATE, self.update_display)
+        self.set_interval(1.0 / DISPLAY_UPDATE_RATE, self.update_display)
 
     # https://textual.textualize.io/events/key/
     def on_key(self, event: events.Key) -> None:
@@ -276,8 +273,15 @@ class MonitorApp(App):
         kp_pub = node.create_publisher(Char, KEYPRESS_TOPIC, 10)
         # fmt: on
 
-        # Schedule ROS spin at 1000Hz.
-        self.set_interval(1e-3, lambda: rclpy.spin_once(node, timeout_sec=0))
+        async def spin_task():
+            def spin():
+                while self.is_running:
+                    rclpy.spin_once(node, timeout_sec=0)
+
+            await self._loop.run_in_executor(None, spin)
+
+        self._loop.create_task(spin_task())
+        # self.set_interval(1.0 / ROS_UPDATE_RATE, lambda: rclpy.spin_once(node, timeout_sec=0))
 
         self.ros_node = node
         self.ros_kp_pub = kp_pub
