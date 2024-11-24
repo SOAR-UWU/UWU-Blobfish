@@ -4,15 +4,16 @@ import functools
 import json
 import logging
 import time
-from collections import deque
+from collections import defaultdict, deque
 from datetime import datetime
 from enum import IntEnum
 from math import floor
+from typing import Dict
 
 import rclpy
 import rclpy.qos
 import textual.events as events
-from geometry_msgs.msg import Twist
+from geometry_msgs.msg import Point, Quaternion, Twist, Vector3
 from rcl_interfaces.msg import Log
 from rclpy.node import Node
 from rclpy.time import Time
@@ -65,8 +66,6 @@ MAX_VAL_BUF = 30
 # - Table tooltips/select cell to copy.
 # - Tooltips for widgets.
 # - why aren't we using RViz/RQT?
-# - OG keypress node should use keypress out too
-# - tmux shell scripts for sim, irl & sim-irl testing
 
 
 class MonitorApp(App):
@@ -80,70 +79,22 @@ class MonitorApp(App):
     # fmt: on
     TITLE = "J-H's Monitor"
     NOTIFICATION_TIMEOUT = 1
-
-    CSS = """
-    DataTable {
-        height: 1fr;
-        padding-bottom: 1;
-        scrollbar-size: 1 1;
-        overflow-y: scroll;
-    }
-    #kp_outer {
-        width: 1fr;
-    }
-    #rosout_outer {
-        width: 2fr;
-    }
-    #log_outer {
-        height: 1fr;
-    }
-    Horizontal {
-        height: auto;
-    }
-    Placeholder {
-        height: auto;
-    }
-    Collapsible {
-        border: none;
-        padding: 0 0 0 0;
-        & > Contents {
-            padding: 0 0 0 0;
-        }
-    }
-    Label.stats {
-        width: 1fr;
-        height: 1;
-    }
-    Container.grid33 {
-        layout: grid;
-        grid-size: 3 3;
-        height: auto;
-    }
-    Container.grid73 {
-        layout: grid;
-        grid-size: 7 3;
-        height: auto;
-    }
-    """
+    CSS_PATH = "monitor2.tcss"
 
     app_mode = var(AppMode.VIEW_ONLY, bindings=True)
 
     # NOTE: Due to limitations, the tracked rate is multiple times lower than the actual rate.
-    def rate_hz(name: str, window=30):
+    def rate_hz(name: str):
         """Decorator to calculate the frequency of a function call."""
 
         def decorator(callable):
             @functools.wraps(callable)
             def wrapper(self, *args, **kwargs):
-                buf: deque = self.__rate_buf.setdefault(name, deque(maxlen=window))
-                last = self.__rate_last.get(name, 0)
+                buf = self.__rate_buf[name]
+                last = self.__rate_last[name]
                 now = time.monotonic()
                 buf.append(now - last)
                 self.__rate_last[name] = now
-                dur = sum(buf)
-                if dur < 1e-6:
-                    self.__rate_fps[name] = 0.0
-                self.__rate_fps[name] = 1.0 / max((dur / len(buf), 1e-6))
                 return callable(self, *args, **kwargs)
 
             return wrapper
@@ -162,6 +113,9 @@ class MonitorApp(App):
         rosout_table.add_column("Time", width=1, key="time")
         rosout_table.add_column("Message", width=1, key="msg")
 
+        self.txt_highlighter = ReprHighlighter()
+        self.tables = {"kp": kp_table, "rosout": rosout_table}
+        # NOTE: Almost all names below are mapped to the ROS msg fields, change with caution.
         self.labels_rate = {
             k: Label(classes="stats") for k in ["imu_raw", "imu_cal", "motor", "pid"]
         }
@@ -186,9 +140,6 @@ class MonitorApp(App):
             k: Label(classes="stats")
             for k in ["M1", "M2", "M3", "M4", "M5", "M6", "M7"]
         }
-
-        self.tables = {"kp": kp_table, "rosout": rosout_table}
-        self.txt_highlighter = ReprHighlighter()
 
         yield Header(show_clock=True)
         with Horizontal():
@@ -246,9 +197,8 @@ class MonitorApp(App):
         self.ros_init()
 
         self.__prev_table_row_val = {}
-        self.__rate_buf = {}
-        self.__rate_last = {}
-        self.__rate_fps = {}
+        self.__rate_buf = defaultdict(lambda: deque(maxlen=MAX_VAL_BUF))
+        self.__rate_last = defaultdict(int)
 
     # https://textual.textualize.io/events/mount/
     def on_mount(self) -> None:
@@ -326,13 +276,10 @@ class MonitorApp(App):
         kp_pub = node.create_publisher(Char, KEYPRESS_TOPIC, 10)
         # fmt: on
 
-        # TODO implement all default state w/o reactivity
-
         # Schedule ROS spin at 1000Hz.
-        timer = self.set_interval(1e-3, lambda: rclpy.spin_once(node, timeout_sec=0))
+        self.set_interval(1e-3, lambda: rclpy.spin_once(node, timeout_sec=0))
 
         self.ros_node = node
-        self.ros_timer = timer
         self.ros_kp_pub = kp_pub
         self.ros_imu_raw = CommonGroup()
         self.ros_imu_cal = Kinematics()
@@ -349,12 +296,9 @@ class MonitorApp(App):
         state.quaternion = msg.quaternion
         state.position = msg.position
         # Get max acceleration within buffer.
-        self.buf_imu_raw_acc["x"].append(msg.accel.x)
-        self.buf_imu_raw_acc["y"].append(msg.accel.y)
-        self.buf_imu_raw_acc["z"].append(msg.accel.z)
-        state.accel.x = max(self.buf_imu_raw_acc["x"], key=abs)
-        state.accel.y = max(self.buf_imu_raw_acc["y"], key=abs)
-        state.accel.z = max(self.buf_imu_raw_acc["z"], key=abs)
+        for k, buf in self.buf_imu_raw_acc.items():
+            buf.append(getattr(msg.accel, k))
+            setattr(state.accel, k, max(buf, key=abs))
 
     @rate_hz("imu_cal")
     def ros_cb_imu_cal(self, msg: Kinematics):
@@ -362,12 +306,9 @@ class MonitorApp(App):
         state.p.orientation = msg.p.orientation
         state.p.position = msg.p.position
         # Get max acceleration within buffer.
-        self.buf_imu_cal_acc["x"].append(msg.a.linear.x)
-        self.buf_imu_cal_acc["y"].append(msg.a.linear.y)
-        self.buf_imu_cal_acc["z"].append(msg.a.linear.z)
-        state.a.linear.x = max(self.buf_imu_cal_acc["x"], key=abs)
-        state.a.linear.y = max(self.buf_imu_cal_acc["y"], key=abs)
-        state.a.linear.z = max(self.buf_imu_cal_acc["z"], key=abs)
+        for k, buf in self.buf_imu_cal_acc.items():
+            buf.append(getattr(msg.a.linear, k))
+            setattr(state.a.linear, k, max(buf, key=abs))
 
     def ros_cb_motor_order(self, msg: String):
         try:
@@ -375,7 +316,9 @@ class MonitorApp(App):
             self.ros_motor_order = {v: k for k, v in order.items()}
         except json.JSONDecodeError:
             self.ros_motor_order = None
-            self.ros_node.get_logger().error("Failed to parse motor order JSON.")
+            self.ros_node.get_logger().error(
+                f"Failed to parse motor order JSON: {msg.data}"
+            )
 
     def ros_cb_motor_dbg(self, msg: MotorsFloat):
         self.ros_motor_dbg = msg
@@ -390,6 +333,8 @@ class MonitorApp(App):
 
     def ros_cb_rosout(self, msg: Log):
         """Write rosout msgs to rosout_log."""
+        # TODO: how to map original file location? Use a Link widget?
+        # msg.stamp, msg.level, msg.name, msg.msg, msg.file, msg.function, msg.line
         time = Time.from_msg(msg.stamp)
         s, _ = time.seconds_nanoseconds()
         self.write_rosout_log(msg.msg, name=msg.name, ts=s)
@@ -408,85 +353,83 @@ class MonitorApp(App):
             msg.data = ord(event.character)
             self.ros_kp_pub.publish(msg)
             self.write_kp_log(f"Sent: '{event.character}'")
-            (f"Sent: {event.character}")
+
+    def update_display_rate(self):
+        """Update rate labels."""
+        lbls = self.labels_rate
+        for k, lbl in lbls.items():
+            buf = self.__rate_buf[k]
+            fps = 0.0
+            if len(buf) > 0:
+                fps = 1.0 / max(sum(buf) / len(buf), 1e-6)
+                # Allow stale rate values to be removed.
+                buf.popleft()
+            lbl.update(f"{k}: [bold bright_cyan]{fps: 5.1f}[/bold bright_cyan] Hz")
+
+    def update_display_imu_rot(self, lbls: Dict[str, Label], q: Quaternion):
+        """Update imu rotation labels."""
+        rot = Rotation.from_quat((q.x, q.y, q.z, q.w)).as_euler("xyz", degrees=True)
+        for i, (k, lbl) in enumerate(lbls.items()):
+            lbl.update(f"{k: >2}: [bold bright_cyan]{rot[i]: 8.1f}")
+
+    def update_display_imu_pos(self, lbls: Dict[str, Label], p: Point):
+        """Update imu position labels."""
+        for k, lbl in lbls.items():
+            lbl.update(f"{k: >2}: [bold bright_cyan]{getattr(p, k): 8.3f}")
+
+    def update_display_imu_acc(self, lbls: Dict[str, Label], a: Vector3):
+        for k, lbl in lbls.items():
+            lbl.update(f"{k: >2}: [bold bright_cyan]{getattr(a, k[1]): 8.3f}")
+
+    def update_display_pid(self):
+        """Update pid labels."""
+        ang = self.ros_pid.angular
+        lin = self.ros_pid.linear
+
+        self.labels_pid["r"].update(f"{'r': >6}: [bold bright_cyan]{ang.x: 6.3f}")
+        self.labels_pid["p"].update(f"{'p': >6}: [bold bright_cyan]{ang.y: 6.3f}")
+        self.labels_pid["h"].update(f"{'h': >6}: [bold bright_cyan]{ang.z: 6.3f}")
+        self.labels_pid["f"].update(f"{'f': >6}: [bold bright_cyan]{lin.x: 6.3f}")
+        self.labels_pid["l"].update(f"{'l': >6}: [bold bright_cyan]{lin.y: 6.3f}")
+        self.labels_pid["z"].update(f"{'z': >6}: [bold bright_cyan]{lin.z: 6.3f}")
+
+    def update_display_motor_dbg(self):
+        """Update motor debug labels."""
+        for k, lbl in self.labels_motor_dbg.items():
+            m = getattr(self.ros_motor_dbg, k.lower())
+            lbl.update(f"{k: >6}: [bold bright_cyan]{m: 6.3f}")
+
+    def update_display_motor_actual(self):
+        """Update motor actual labels."""
+        N = 7
+        order = self.ros_motor_order
+        lbls = self.labels_motor_actual
+        for i in range(1, N + 1):
+            k = f"M{i}"
+            o = "" if order is None else f"({order[i-1].upper()})"
+            n = f"{o}{k}"
+            v = getattr(self.ros_motor_actual, f"motor_{i}")
+            lbls[k].update(f"{n: >6}:  [bold bright_cyan]{v:04d}")
 
     def update_display(self):
         """Update display with new data."""
-        # Allow stale rate values to be removed.
-        for name, buf in self.__rate_buf.items():
-            if len(buf) > 0:
-                self.__rate_fps[name] = 1 / max(sum(buf) / len(buf), 1e-6)
-                buf.popleft()
-            else:
-                self.__rate_fps[name] = 0.0
-        # Update rate labels.
-        for k, v in self.labels_rate.items():
-            v.update(
-                f"{k}: [bold bright_cyan]{self.__rate_fps.get(k, 0): 5.1f}[/bold bright_cyan] Hz"
-            )
+        self.update_display_rate()
+        self.update_display_imu_rot(
+            self.labels_imu_raw_rot, self.ros_imu_raw.quaternion
+        )
+        self.update_display_imu_pos(self.labels_imu_raw_pos, self.ros_imu_raw.position)
+        self.update_display_imu_acc(self.labels_imu_raw_acc, self.ros_imu_raw.accel)
 
-        # Update imu raw labels.
-        quat = self.ros_imu_raw.quaternion
-        rot = Rotation.from_quat((quat.x, quat.y, quat.z, quat.w))
-        r, p, h = rot.as_euler("xyz", degrees=True)
-        self.labels_imu_raw_rot["r"].update(f" r: [bold bright_cyan]{r: 8.1f}")
-        self.labels_imu_raw_rot["p"].update(f" p: [bold bright_cyan]{p: 8.1f}")
-        self.labels_imu_raw_rot["h"].update(f" h: [bold bright_cyan]{h: 8.1f}")
-        pos = self.ros_imu_raw.position
-        self.labels_imu_raw_pos["x"].update(f" x: [bold bright_cyan]{pos.x: 8.3f}")
-        self.labels_imu_raw_pos["y"].update(f" y: [bold bright_cyan]{pos.y: 8.3f}")
-        self.labels_imu_raw_pos["z"].update(f" z: [bold bright_cyan]{pos.z: 8.3f}")
-        acc = self.ros_imu_raw.accel
-        self.labels_imu_raw_acc["ax"].update(f"ax: [bold bright_cyan]{acc.x: 8.3f}")
-        self.labels_imu_raw_acc["ay"].update(f"ay: [bold bright_cyan]{acc.y: 8.3f}")
-        self.labels_imu_raw_acc["az"].update(f"az: [bold bright_cyan]{acc.z: 8.3f}")
-
-        # Update imu cal labels.
-        quat = self.ros_imu_cal.p.orientation
-        rot = Rotation.from_quat((quat.x, quat.y, quat.z, quat.w))
-        r, p, h = rot.as_euler("xyz", degrees=True)
-        self.labels_imu_cal_rot["r"].update(f" r: [bold bright_cyan]{r: 8.1f}")
-        self.labels_imu_cal_rot["p"].update(f" p: [bold bright_cyan]{p: 8.1f}")
-        self.labels_imu_cal_rot["h"].update(f" h: [bold bright_cyan]{h: 8.1f}")
-        pos = self.ros_imu_cal.p.position
-        self.labels_imu_cal_pos["x"].update(f" x: [bold bright_cyan]{pos.x: 8.3f}")
-        self.labels_imu_cal_pos["y"].update(f" y: [bold bright_cyan]{pos.y: 8.3f}")
-        self.labels_imu_cal_pos["z"].update(f" z: [bold bright_cyan]{pos.z: 8.3f}")
-        acc = self.ros_imu_cal.a.linear
-        self.labels_imu_cal_acc["ax"].update(f"ax: [bold bright_cyan]{acc.x: 8.3f}")
-        self.labels_imu_cal_acc["ay"].update(f"ay: [bold bright_cyan]{acc.y: 8.3f}")
-        self.labels_imu_cal_acc["az"].update(f"az: [bold bright_cyan]{acc.z: 8.3f}")
-
-        # Update pid labels.
-        ang = self.ros_pid.angular
-        lin = self.ros_pid.linear
-        self.labels_pid["r"].update(f"     r: [bold bright_cyan]{ang.x: 6.3f}")
-        self.labels_pid["p"].update(f"     p: [bold bright_cyan]{ang.y: 6.3f}")
-        self.labels_pid["h"].update(f"     h: [bold bright_cyan]{ang.z: 6.3f}")
-        self.labels_pid["f"].update(f"     f: [bold bright_cyan]{lin.x: 6.3f}")
-        self.labels_pid["l"].update(f"     l: [bold bright_cyan]{lin.y: 6.3f}")
-        self.labels_pid["z"].update(f"     z: [bold bright_cyan]{lin.z: 6.3f}")
-
-        # Update motor debug labels.
-        for k, v in self.labels_motor_dbg.items():
-            m = getattr(self.ros_motor_dbg, k.lower(), None)
-            if m is not None:
-                v.update(f"{k: >6}: [bold bright_cyan]{m: 6.3f}")
-
-        # Update motor actual labels.
-        N = 7
-        pairs = {
-            f"M{i}": (
-                f"M{i}{'' if self.ros_motor_order is None else f'({self.ros_motor_order[i-1].upper()})'}",
-                getattr(self.ros_motor_actual, f"motor_{i}", None),
-            )
-            for i in range(1, N + 1)
-        }
-        for k, (name, m) in pairs.items():
-            if m is not None:
-                self.labels_motor_actual[k].update(
-                    f"{name: >6}:  [bold bright_cyan]{m:04d}"
-                )
+        self.update_display_imu_rot(
+            self.labels_imu_cal_rot, self.ros_imu_cal.p.orientation
+        )
+        self.update_display_imu_pos(
+            self.labels_imu_cal_pos, self.ros_imu_cal.p.position
+        )
+        self.update_display_imu_acc(self.labels_imu_cal_acc, self.ros_imu_cal.a.linear)
+        self.update_display_pid()
+        self.update_display_motor_dbg()
+        self.update_display_motor_actual()
 
     def write_datatable(
         self,

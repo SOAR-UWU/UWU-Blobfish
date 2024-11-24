@@ -45,11 +45,6 @@ QOS = rclpy.qos.qos_profile_sensor_data
 ROSOUT_LOG_LEVEL = logging.INFO
 RATE = 30
 
-# TODO:
-# - why aren't we using RViz/RQT?
-# - OG keypress node should use keypress out too
-# - tmux shell scripts for sim, irl & sim-irl testing
-
 
 class MonitorNode(Node):
     def __init__(self, live: Live):
@@ -137,7 +132,6 @@ class MonitorNode(Node):
         )
 
     def track_rate(self, name):
-        # TODO: Rate measurement can't keep up. The live update is STILL too laggy.
         last = self.__rate_last[name]
         now = time.time()
         self.__rate_buf[name].append(now - last)
@@ -213,7 +207,6 @@ class MonitorNode(Node):
         self.track_rate("pid")
 
     def rosout_callback(self, msg: Log):
-        # TODO: how to map original time & file location to Rich logging?
         # msg.stamp, msg.level, msg.name, msg.msg, msg.file, msg.function, msg.line
         log = logging.getLogger(f"rosout/{msg.name}")
         if self.__handler not in log.handlers:
