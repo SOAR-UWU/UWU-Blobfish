@@ -27,7 +27,7 @@ UPDATE_ROUTINE = 4
 
 
 class StrategyRocket(Node):
-    valid_params = {"speed": [0.0, 0.0, 0.0], "wait": 0}
+    valid_params = {"speed": [0.0, 0.0, 0.0], "wait": 0, "rph": Twist()}
 
     def __init__(self):
         super(StrategyRocket, self).__init__("strat_rocket")
@@ -36,7 +36,7 @@ class StrategyRocket(Node):
         _kp_log_pub = self.create_publisher(Log, KEYPRESS_OUT_TOPIC, 0)
         self.log_kp = lambda x: _kp_log_pub.publish(Log(name=self.get_name(), msg=x))
 
-        self._setpoint_pub = self.create_publisher(Twist, STRAT_STATE_SETPOINTS, 10)
+        self._state_setpoint_pub = self.create_publisher(Twist, STRAT_STATE_SETPOINTS, 10)
         self._speed_setpoint_pub = self.create_publisher(
             Vector3, STRAT_SPEED_SETPOINTS, 10
         )
@@ -60,11 +60,21 @@ class StrategyRocket(Node):
 
         v = i[k]
         if k == "speed":
+            assert isinstance(v, list)
             assert len(v) == 3
             for val in range(len(v)):
                 v[val] = float(v[val])
+
         elif k == "wait":
             assert isinstance(v, int)
+
+        elif k == "rph":
+            assert isinstance(v, list)
+            assert len(v) == 2
+            for ls in range(len(v)):
+                assert len(v[ls]) == 3
+                for val in range(len(v[ls])):
+                    v[ls][val] = float(v[ls][val])                
 
     def get_routine(self):
         """Updates instruction set to reflect whatever's in the config file"""
@@ -118,9 +128,27 @@ class StrategyRocket(Node):
         time.sleep(t)
 
     def _on_update_speed(self, s: list):
+        self.get_logger().info(f"setting speed to {s}")
         speed = Vector3(x=s[0], y=s[1], z=s[2])
         self._speed_setpoint_pub.publish(speed)
         self.get_logger().info(f"speed set to {s}")
+
+    def _on_update_state(self, s: list):
+        self.get_logger().info(f"setting state to {s}")
+        ax, ay, az = s[0]
+        lx, ly, lz = s[1]
+
+        rph = Twist()
+        rph.linear.x = lx
+        rph.linear.y = ly
+        rph.linear.z = lz
+
+        rph.angular.x = ax
+        rph.angular.y = ay
+        rph.angular.z = az
+
+        self._state_setpoint_pub.publish(rph)
+        self.get_logger().info(f"state set to {s}")
 
     # Finish routine
     def execute_routine(self):
@@ -132,6 +160,8 @@ class StrategyRocket(Node):
                 self._on_update_speed(v)
             elif i == "wait":
                 self._on_wait(v)
+            elif i == "rph":
+                self._on_update_state(v)
             else:
                 self.get_logger().warn(f"Invalid instruction {i}")
 
