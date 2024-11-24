@@ -18,9 +18,10 @@ from rich.text import Text
 from std_msgs.msg import Char, String
 from textual.app import App, ComposeResult
 from textual.binding import Binding
-from textual.containers import Horizontal, Vertical
+from textual.containers import Horizontal
 from textual.reactive import var
-from textual.widgets import DataTable, Footer, Header, Label
+from textual.widget import Widget
+from textual.widgets import Collapsible, DataTable, Footer, Header, Placeholder
 from vectornav_msgs.msg import CommonGroup
 
 from blobfish_msgs.msg import Kinematics, Motors, MotorsFloat
@@ -83,10 +84,21 @@ class MonitorApp(App):
     #rosout_outer {
         width: 3fr;
     }
-    Vertical > Label {
-        width: 100%;
-        height: 1;
-        text-align: center;
+    #log_outer {
+        height: 1fr;
+    }
+    Horizontal {
+        height: auto;
+    }
+    Placeholder {
+        height: auto;
+    }
+    Collapsible {
+        border: none;
+        padding: 0 0 0 0;
+        & > Contents {
+            padding: 0 0 0 0;
+        }
     }
     """
 
@@ -109,11 +121,20 @@ class MonitorApp(App):
 
         yield Header(show_clock=True)
         with Horizontal():
-            with Vertical(id="kp_outer"):
-                yield Label("keypress log")
+            yield Placeholder("FPS")
+        with Horizontal():
+            with Collapsible(title="Raw IMU", collapsed=False):
+                yield Placeholder("Raw IMU Values\na\na")
+            with Collapsible(title="Calibrated IMU", collapsed=False):
+                yield Placeholder("Cal IMU Values\na\na")
+        with Collapsible(title="Motor Signals", collapsed=False):
+            yield Placeholder("PID Values")
+            yield Placeholder("Motor Debug")
+            yield Placeholder("Motor Actual")
+        with Horizontal(id="log_outer"):
+            with Collapsible(id="kp_outer", title="Keypress Log", collapsed=False):
                 yield kp_table
-            with Vertical(id="rosout_outer"):
-                yield Label("rosout log")
+            with Collapsible(id="rosout_outer", title="Rosout Log", collapsed=False):
                 yield rosout_table
         yield Footer()
 
@@ -162,8 +183,7 @@ class MonitorApp(App):
 
     def handle_table_resize(self, table: DataTable, col_to_resize="msg"):
         """Resize table's msg column to fit."""
-        # Assume the table is in a Vertical container.
-        outer: Vertical = table.parent
+        outer: Widget = table.parent
 
         w = outer.size.width - 2 * table.cell_padding - table.scrollbar_size_vertical
         ew = 0
@@ -306,7 +326,9 @@ class MonitorApp(App):
         while table.row_count > trim_rows:
             table.remove_row(next(keys))
 
-        table.scroll_end(animate=False)
+        # Scroll only if at the bottom.
+        if abs(table.scroll_y - table.max_scroll_y) < 5:
+            table.scroll_end(animate=False)
 
     def write_kp_log(self, msg: str, name="self", trim_rows=256):
         """Write a message to the kp log."""
@@ -321,11 +343,11 @@ class MonitorApp(App):
 
     def rate_hz(self, name: str, window=30):
         """Decorator to calculate the frequency of a function call."""
-        buf: deque = self.__rate_buf.setdefault(name, deque(maxlen=window))
 
         def decorator(callable):
             @functools.wraps(callable)
             def wrapper(*args, **kwargs):
+                buf: deque = self.__rate_buf.setdefault(name, deque(maxlen=window))
                 last = self.__rate_last.get(name, 0)
                 now = time.monotonic()
                 buf.append(now - last)
