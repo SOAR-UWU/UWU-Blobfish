@@ -1,4 +1,7 @@
+"""Can RViz work over SSH? This is superior."""
+
 import functools
+import json
 import logging
 import time
 from collections import deque
@@ -15,13 +18,14 @@ from rclpy.node import Node
 from rclpy.time import Time
 from rich.highlighter import ReprHighlighter
 from rich.text import Text
+from scipy.spatial.transform import Rotation
 from std_msgs.msg import Char, String
 from textual.app import App, ComposeResult
 from textual.binding import Binding
-from textual.containers import Horizontal
+from textual.containers import Container, Horizontal
 from textual.reactive import var
 from textual.widget import Widget
-from textual.widgets import Collapsible, DataTable, Footer, Header, Label, Placeholder
+from textual.widgets import Collapsible, DataTable, Footer, Header, Label
 from vectornav_msgs.msg import CommonGroup
 
 from blobfish_msgs.msg import Kinematics, Motors, MotorsFloat
@@ -53,13 +57,16 @@ MODE_CYCLE_KEY = "ctrl+m"
 COL_WIDTHS = {"name": 10, "time": 8}
 COL_RESIZE_MIN_WIDTH = 32
 UPDATE_RATE = 5
-RATE_TRACKED = ["imu_raw", "imu_cal", "motor", "pid"]
+MAX_VAL_BUF = 30
 
 # TODO:
 # - Use tabs to create other screens? https://textual.textualize.io/widgets/tabbed_content/
 # - Sparklines for numerical data in another tab? https://textual.textualize.io/widgets/sparkline/
 # - Table tooltips/select cell to copy.
 # - Tooltips for widgets.
+# - why aren't we using RViz/RQT?
+# - OG keypress node should use keypress out too
+# - tmux shell scripts for sim, irl & sim-irl testing
 
 
 class MonitorApp(App):
@@ -105,6 +112,17 @@ class MonitorApp(App):
     }
     Label.stats {
         width: 1fr;
+        height: 1;
+    }
+    Container.grid33 {
+        layout: grid;
+        grid-size: 3 3;
+        height: auto;
+    }
+    Container.grid73 {
+        layout: grid;
+        grid-size: 7 3;
+        height: auto;
     }
     """
 
@@ -144,24 +162,65 @@ class MonitorApp(App):
         rosout_table.add_column("Time", width=1, key="time")
         rosout_table.add_column("Message", width=1, key="msg")
 
-        self.rate_labels = {k: Label(classes="stats") for k in RATE_TRACKED}
+        self.labels_rate = {
+            k: Label(classes="stats") for k in ["imu_raw", "imu_cal", "motor", "pid"]
+        }
+        self.labels_imu_raw_rot = {k: Label(classes="stats") for k in ["r", "p", "h"]}
+        self.labels_imu_raw_pos = {k: Label(classes="stats") for k in ["x", "y", "z"]}
+        self.labels_imu_raw_acc = {
+            k: Label(classes="stats") for k in ["ax", "ay", "az"]
+        }
+        self.labels_imu_cal_rot = {k: Label(classes="stats") for k in ["r", "p", "h"]}
+        self.labels_imu_cal_pos = {k: Label(classes="stats") for k in ["x", "y", "z"]}
+        self.labels_imu_cal_acc = {
+            k: Label(classes="stats") for k in ["ax", "ay", "az"]
+        }
+        self.labels_pid = {
+            k: Label(classes="stats") for k in ["r", "p", "h", "f", "l", "z"]
+        }
+        self.labels_motor_dbg = {
+            k: Label(classes="stats")
+            for k in ["FL", "FR", "ML", "MR", "BL", "BR", "BM"]
+        }
+        self.labels_motor_actual = {
+            k: Label(classes="stats")
+            for k in ["M1", "M2", "M3", "M4", "M5", "M6", "M7"]
+        }
 
         self.tables = {"kp": kp_table, "rosout": rosout_table}
         self.txt_highlighter = ReprHighlighter()
 
         yield Header(show_clock=True)
         with Horizontal():
-            for v in self.rate_labels.values():
+            for v in self.labels_rate.values():
                 yield v
         with Horizontal():
             with Collapsible(title="Raw IMU", collapsed=False):
-                yield Placeholder("Raw IMU Values\na\na")
+                with Container(classes="grid33"):
+                    for v in self.labels_imu_raw_rot.values():
+                        yield v
+                    for v in self.labels_imu_raw_pos.values():
+                        yield v
+                    for v in self.labels_imu_raw_acc.values():
+                        yield v
             with Collapsible(title="Calibrated IMU", collapsed=False):
-                yield Placeholder("Cal IMU Values\na\na")
+                with Container(classes="grid33"):
+                    for v in self.labels_imu_cal_rot.values():
+                        yield v
+                    for v in self.labels_imu_cal_pos.values():
+                        yield v
+                    for v in self.labels_imu_cal_acc.values():
+                        yield v
         with Collapsible(title="Motor Signals", collapsed=False):
-            yield Placeholder("PID Values")
-            yield Placeholder("Motor Debug")
-            yield Placeholder("Motor Actual")
+            with Container(classes="grid73"):
+                for v in self.labels_pid.values():
+                    yield v
+                # Extra label to fill space.
+                yield Label(classes="stats")
+                for v in self.labels_motor_dbg.values():
+                    yield v
+                for v in self.labels_motor_actual.values():
+                    yield v
         with Horizontal(id="log_outer"):
             with Collapsible(id="kp_outer", title="Keypress Log", collapsed=False):
                 yield kp_table
@@ -194,6 +253,7 @@ class MonitorApp(App):
     # https://textual.textualize.io/events/mount/
     def on_mount(self) -> None:
         """Mount event handler."""
+        self.write_kp_log("FPS rates aren't accurate beyond 100Hz due to limitations.")
         self.write_kp_log("Press 'ctrl+m' till its 'KP Mode' to intercept keypresses.")
         self.refresh_datatable_sizes()
         self.set_interval(1.0 / UPDATE_RATE, self.update_display)
@@ -274,28 +334,59 @@ class MonitorApp(App):
         self.ros_node = node
         self.ros_timer = timer
         self.ros_kp_pub = kp_pub
+        self.ros_imu_raw = CommonGroup()
+        self.ros_imu_cal = Kinematics()
+        self.ros_motor_order = None
+        self.ros_motor_dbg = MotorsFloat()
+        self.ros_motor_actual = Motors()
+        self.ros_pid = Twist()
+        self.buf_imu_raw_acc = {k: deque(maxlen=MAX_VAL_BUF) for k in ["x", "y", "z"]}
+        self.buf_imu_cal_acc = {k: deque(maxlen=MAX_VAL_BUF) for k in ["x", "y", "z"]}
 
     @rate_hz("imu_raw")
     def ros_cb_imu_raw(self, msg: CommonGroup):
-        pass
+        state = self.ros_imu_raw
+        state.quaternion = msg.quaternion
+        state.position = msg.position
+        # Get max acceleration within buffer.
+        self.buf_imu_raw_acc["x"].append(msg.accel.x)
+        self.buf_imu_raw_acc["y"].append(msg.accel.y)
+        self.buf_imu_raw_acc["z"].append(msg.accel.z)
+        state.accel.x = max(self.buf_imu_raw_acc["x"], key=abs)
+        state.accel.y = max(self.buf_imu_raw_acc["y"], key=abs)
+        state.accel.z = max(self.buf_imu_raw_acc["z"], key=abs)
 
     @rate_hz("imu_cal")
     def ros_cb_imu_cal(self, msg: Kinematics):
-        pass
+        state = self.ros_imu_cal
+        state.p.orientation = msg.p.orientation
+        state.p.position = msg.p.position
+        # Get max acceleration within buffer.
+        self.buf_imu_cal_acc["x"].append(msg.a.linear.x)
+        self.buf_imu_cal_acc["y"].append(msg.a.linear.y)
+        self.buf_imu_cal_acc["z"].append(msg.a.linear.z)
+        state.a.linear.x = max(self.buf_imu_cal_acc["x"], key=abs)
+        state.a.linear.y = max(self.buf_imu_cal_acc["y"], key=abs)
+        state.a.linear.z = max(self.buf_imu_cal_acc["z"], key=abs)
 
     def ros_cb_motor_order(self, msg: String):
-        pass
+        try:
+            order = json.loads(msg.data)
+            self.ros_motor_order = {v: k for k, v in order.items()}
+        except json.JSONDecodeError:
+            self.ros_motor_order = None
+            self.ros_node.get_logger().error("Failed to parse motor order JSON.")
 
     def ros_cb_motor_dbg(self, msg: MotorsFloat):
-        pass
+        self.ros_motor_dbg = msg
 
     @rate_hz("motor")
     def ros_cb_motor_real(self, msg: Motors):
-        pass
+        self.ros_motor_actual = msg
 
     @rate_hz("pid")
     def ros_cb_pid(self, msg: Twist):
-        pass
+        self.ros_pid = msg
 
     def ros_cb_rosout(self, msg: Log):
         """Write rosout msgs to rosout_log."""
@@ -329,10 +420,73 @@ class MonitorApp(App):
             else:
                 self.__rate_fps[name] = 0.0
         # Update rate labels.
-        for k in RATE_TRACKED:
-            self.rate_labels[k].update(
+        for k, v in self.labels_rate.items():
+            v.update(
                 f"{k}: [bold bright_cyan]{self.__rate_fps.get(k, 0): 5.1f}[/bold bright_cyan] Hz"
             )
+
+        # Update imu raw labels.
+        quat = self.ros_imu_raw.quaternion
+        rot = Rotation.from_quat((quat.x, quat.y, quat.z, quat.w))
+        r, p, h = rot.as_euler("xyz", degrees=True)
+        self.labels_imu_raw_rot["r"].update(f" r: [bold bright_cyan]{r: 8.1f}")
+        self.labels_imu_raw_rot["p"].update(f" p: [bold bright_cyan]{p: 8.1f}")
+        self.labels_imu_raw_rot["h"].update(f" h: [bold bright_cyan]{h: 8.1f}")
+        pos = self.ros_imu_raw.position
+        self.labels_imu_raw_pos["x"].update(f" x: [bold bright_cyan]{pos.x: 8.3f}")
+        self.labels_imu_raw_pos["y"].update(f" y: [bold bright_cyan]{pos.y: 8.3f}")
+        self.labels_imu_raw_pos["z"].update(f" z: [bold bright_cyan]{pos.z: 8.3f}")
+        acc = self.ros_imu_raw.accel
+        self.labels_imu_raw_acc["ax"].update(f"ax: [bold bright_cyan]{acc.x: 8.3f}")
+        self.labels_imu_raw_acc["ay"].update(f"ay: [bold bright_cyan]{acc.y: 8.3f}")
+        self.labels_imu_raw_acc["az"].update(f"az: [bold bright_cyan]{acc.z: 8.3f}")
+
+        # Update imu cal labels.
+        quat = self.ros_imu_cal.p.orientation
+        rot = Rotation.from_quat((quat.x, quat.y, quat.z, quat.w))
+        r, p, h = rot.as_euler("xyz", degrees=True)
+        self.labels_imu_cal_rot["r"].update(f" r: [bold bright_cyan]{r: 8.1f}")
+        self.labels_imu_cal_rot["p"].update(f" p: [bold bright_cyan]{p: 8.1f}")
+        self.labels_imu_cal_rot["h"].update(f" h: [bold bright_cyan]{h: 8.1f}")
+        pos = self.ros_imu_cal.p.position
+        self.labels_imu_cal_pos["x"].update(f" x: [bold bright_cyan]{pos.x: 8.3f}")
+        self.labels_imu_cal_pos["y"].update(f" y: [bold bright_cyan]{pos.y: 8.3f}")
+        self.labels_imu_cal_pos["z"].update(f" z: [bold bright_cyan]{pos.z: 8.3f}")
+        acc = self.ros_imu_cal.a.linear
+        self.labels_imu_cal_acc["ax"].update(f"ax: [bold bright_cyan]{acc.x: 8.3f}")
+        self.labels_imu_cal_acc["ay"].update(f"ay: [bold bright_cyan]{acc.y: 8.3f}")
+        self.labels_imu_cal_acc["az"].update(f"az: [bold bright_cyan]{acc.z: 8.3f}")
+
+        # Update pid labels.
+        ang = self.ros_pid.angular
+        lin = self.ros_pid.linear
+        self.labels_pid["r"].update(f"     r: [bold bright_cyan]{ang.x: 6.3f}")
+        self.labels_pid["p"].update(f"     p: [bold bright_cyan]{ang.y: 6.3f}")
+        self.labels_pid["h"].update(f"     h: [bold bright_cyan]{ang.z: 6.3f}")
+        self.labels_pid["f"].update(f"     f: [bold bright_cyan]{lin.x: 6.3f}")
+        self.labels_pid["l"].update(f"     l: [bold bright_cyan]{lin.y: 6.3f}")
+        self.labels_pid["z"].update(f"     z: [bold bright_cyan]{lin.z: 6.3f}")
+
+        # Update motor debug labels.
+        for k, v in self.labels_motor_dbg.items():
+            m = getattr(self.ros_motor_dbg, k.lower(), None)
+            if m is not None:
+                v.update(f"{k: >6}: [bold bright_cyan]{m: 6.3f}")
+
+        # Update motor actual labels.
+        N = 7
+        pairs = {
+            f"M{i}": (
+                f"M{i}{'' if self.ros_motor_order is None else f'({self.ros_motor_order[i-1].upper()})'}",
+                getattr(self.ros_motor_actual, f"motor_{i}", None),
+            )
+            for i in range(1, N + 1)
+        }
+        for k, (name, m) in pairs.items():
+            if m is not None:
+                self.labels_motor_actual[k].update(
+                    f"{name: >6}:  [bold bright_cyan]{m:04d}"
+                )
 
     def write_datatable(
         self,
