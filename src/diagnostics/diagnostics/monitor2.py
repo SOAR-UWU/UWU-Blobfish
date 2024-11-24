@@ -21,7 +21,7 @@ from textual.binding import Binding
 from textual.containers import Horizontal
 from textual.reactive import var
 from textual.widget import Widget
-from textual.widgets import Collapsible, DataTable, Footer, Header, Placeholder
+from textual.widgets import Collapsible, DataTable, Footer, Header, Label, Placeholder
 from vectornav_msgs.msg import CommonGroup
 
 from blobfish_msgs.msg import Kinematics, Motors, MotorsFloat
@@ -52,6 +52,8 @@ ENUM_NAMES = {AppMode.KP: "KP Mode", AppMode.VIEW_ONLY: "View Mode"}
 MODE_CYCLE_KEY = "ctrl+m"
 COL_WIDTHS = {"name": 10, "time": 8}
 COL_RESIZE_MIN_WIDTH = 32
+UPDATE_RATE = 5
+RATE_TRACKED = ["imu_raw", "imu_cal", "motor", "pid"]
 
 # TODO:
 # - Use tabs to create other screens? https://textual.textualize.io/widgets/tabbed_content/
@@ -75,6 +77,7 @@ class MonitorApp(App):
     CSS = """
     DataTable {
         height: 1fr;
+        padding-bottom: 1;
         scrollbar-size: 1 1;
         overflow-y: scroll;
     }
@@ -82,7 +85,7 @@ class MonitorApp(App):
         width: 1fr;
     }
     #rosout_outer {
-        width: 3fr;
+        width: 2fr;
     }
     #log_outer {
         height: 1fr;
@@ -100,9 +103,34 @@ class MonitorApp(App):
             padding: 0 0 0 0;
         }
     }
+    Label.stats {
+        width: 1fr;
+    }
     """
 
     app_mode = var(AppMode.VIEW_ONLY, bindings=True)
+
+    # NOTE: Due to limitations, the tracked rate is multiple times lower than the actual rate.
+    def rate_hz(name: str, window=30):
+        """Decorator to calculate the frequency of a function call."""
+
+        def decorator(callable):
+            @functools.wraps(callable)
+            def wrapper(self, *args, **kwargs):
+                buf: deque = self.__rate_buf.setdefault(name, deque(maxlen=window))
+                last = self.__rate_last.get(name, 0)
+                now = time.monotonic()
+                buf.append(now - last)
+                self.__rate_last[name] = now
+                dur = sum(buf)
+                if dur < 1e-6:
+                    self.__rate_fps[name] = 0.0
+                self.__rate_fps[name] = 1.0 / max((dur / len(buf), 1e-6))
+                return callable(self, *args, **kwargs)
+
+            return wrapper
+
+        return decorator
 
     def compose(self) -> ComposeResult:
         """Generator that yields the widgets to render."""
@@ -116,12 +144,15 @@ class MonitorApp(App):
         rosout_table.add_column("Time", width=1, key="time")
         rosout_table.add_column("Message", width=1, key="msg")
 
+        self.rate_labels = {k: Label(classes="stats") for k in RATE_TRACKED}
+
         self.tables = {"kp": kp_table, "rosout": rosout_table}
         self.txt_highlighter = ReprHighlighter()
 
         yield Header(show_clock=True)
         with Horizontal():
-            yield Placeholder("FPS")
+            for v in self.rate_labels.values():
+                yield v
         with Horizontal():
             with Collapsible(title="Raw IMU", collapsed=False):
                 yield Placeholder("Raw IMU Values\na\na")
@@ -165,6 +196,7 @@ class MonitorApp(App):
         """Mount event handler."""
         self.write_kp_log("Press 'ctrl+m' till its 'KP Mode' to intercept keypresses.")
         self.refresh_datatable_sizes()
+        self.set_interval(1.0 / UPDATE_RATE, self.update_display)
 
     # https://textual.textualize.io/events/key/
     def on_key(self, event: events.Key) -> None:
@@ -207,6 +239,7 @@ class MonitorApp(App):
         for r in rows:
             table.rows[r].height = 0
         table._update_dimensions(rows)
+        table.call_after_refresh(table.scroll_end, animate=False)
 
     def watch_app_mode(self, mode: AppMode):
         """Watch app mode changes."""
@@ -242,9 +275,11 @@ class MonitorApp(App):
         self.ros_timer = timer
         self.ros_kp_pub = kp_pub
 
+    @rate_hz("imu_raw")
     def ros_cb_imu_raw(self, msg: CommonGroup):
         pass
 
+    @rate_hz("imu_cal")
     def ros_cb_imu_cal(self, msg: Kinematics):
         pass
 
@@ -254,9 +289,11 @@ class MonitorApp(App):
     def ros_cb_motor_dbg(self, msg: MotorsFloat):
         pass
 
+    @rate_hz("motor")
     def ros_cb_motor_real(self, msg: Motors):
         pass
 
+    @rate_hz("pid")
     def ros_cb_pid(self, msg: Twist):
         pass
 
@@ -281,6 +318,21 @@ class MonitorApp(App):
             self.ros_kp_pub.publish(msg)
             self.write_kp_log(f"Sent: '{event.character}'")
             (f"Sent: {event.character}")
+
+    def update_display(self):
+        """Update display with new data."""
+        # Allow stale rate values to be removed.
+        for name, buf in self.__rate_buf.items():
+            if len(buf) > 0:
+                self.__rate_fps[name] = 1 / max(sum(buf) / len(buf), 1e-6)
+                buf.popleft()
+            else:
+                self.__rate_fps[name] = 0.0
+        # Update rate labels.
+        for k in RATE_TRACKED:
+            self.rate_labels[k].update(
+                f"{k}: [bold bright_cyan]{self.__rate_fps.get(k, 0): 5.1f}[/bold bright_cyan] Hz"
+            )
 
     def write_datatable(
         self,
@@ -340,24 +392,6 @@ class MonitorApp(App):
             ts = time.time()
 
         self.write_datatable("rosout", msg, name, int(floor(ts)), True, trim_rows)
-
-    def rate_hz(self, name: str, window=30):
-        """Decorator to calculate the frequency of a function call."""
-
-        def decorator(callable):
-            @functools.wraps(callable)
-            def wrapper(*args, **kwargs):
-                buf: deque = self.__rate_buf.setdefault(name, deque(maxlen=window))
-                last = self.__rate_last.get(name, 0)
-                now = time.monotonic()
-                buf.append(now - last)
-                self.__rate_last[name] = now
-                self.__rate_fps[name] = 1.0 / max((sum(buf) / len(buf), 1e-6))
-                return callable(*args, **kwargs)
-
-            return wrapper
-
-        return decorator
 
 
 def main():
