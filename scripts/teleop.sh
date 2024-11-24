@@ -9,4 +9,4 @@ WS_DIR=$(realpath "$SCRIPT_DIR"/..)
 
 source install/setup.bash
 
-ros2 run diagnostics monitor
+ros2 run diagnostics monitor2

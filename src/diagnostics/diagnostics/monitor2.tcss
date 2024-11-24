@@ -1,0 +1,52 @@
+DataTable {
+  height: 1fr;
+  padding-bottom: 1;
+  scrollbar-size: 1 1;
+  overflow-y: scroll;
+}
+
+#kp_outer {
+  width: 1fr;
+}
+
+#rosout_outer {
+  width: 2fr;
+}
+
+#log_outer {
+  height: 1fr;
+}
+
+Horizontal {
+  height: auto;
+}
+
+Placeholder {
+  height: auto;
+}
+
+Collapsible {
+  border: none;
+  padding: 0 0 0 0;
+
+  &>Contents {
+    padding: 0 0 0 0;
+  }
+}
+
+Label.stats {
+  width: 1fr;
+  height: 1;
+}
+
+Container.grid33 {
+  layout: grid;
+  grid-size: 3 3;
+  height: auto;
+}
+
+Container.grid73 {
+  layout: grid;
+  grid-size: 7 3;
+  height: auto;
+}

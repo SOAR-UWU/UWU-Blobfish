@@ -25,6 +25,7 @@ setup(
         "console_scripts": [
             "motor = diagnostics.motor:main",
             "monitor = diagnostics.monitor:main",
+            "monitor2 = diagnostics.monitor2:main",
         ],
     },
 )
