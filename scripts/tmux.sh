@@ -9,6 +9,15 @@ WS_DIR=$(realpath "$SCRIPT_DIR"/..)
 
 source install/setup.bash
 
-tmux new-session -s ros2 "ros2 launch launch-all.py" \; \
-  new-window -n "monitor" "scripts/teleop.sh" \; \
-  new-window -n "routine" "ros2 run blobfish_control rocket" \;
+if tmux ls | grep -q ros2; then
+  tmux attach -t ros2
+  exit
+fi
+
+# https://man7.org/linux/man-pages/man1/tmux.1.html
+tmux new -ds ros2 -n launch "ros2 launch launch-all.py" \; \
+  neww -dn "monitor" "scripts/teleop.sh" \; \
+  neww -dn "routine" "ros2 run blobfish_control rocket" \; \
+  attach
+
+# TODO: Other tmux scripts for sim and sim-irl hybrid testing.
