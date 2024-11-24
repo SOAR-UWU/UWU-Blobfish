@@ -1,5 +1,7 @@
+import functools
 import logging
 import time
+from collections import deque
 from datetime import datetime
 from enum import IntEnum
 from math import floor
@@ -53,6 +55,8 @@ COL_RESIZE_MIN_WIDTH = 32
 # TODO:
 # - Use tabs to create other screens? https://textual.textualize.io/widgets/tabbed_content/
 # - Sparklines for numerical data in another tab? https://textual.textualize.io/widgets/sparkline/
+# - Table tooltips/select cell to copy.
+# - Tooltips for widgets.
 
 
 class MonitorApp(App):
@@ -131,6 +135,9 @@ class MonitorApp(App):
         self.ros_init()
 
         self.__prev_table_row_val = {}
+        self.__rate_buf = {}
+        self.__rate_last = {}
+        self.__rate_fps = {}
 
     # https://textual.textualize.io/events/mount/
     def on_mount(self) -> None:
@@ -311,6 +318,24 @@ class MonitorApp(App):
             ts = time.time()
 
         self.write_datatable("rosout", msg, name, int(floor(ts)), True, trim_rows)
+
+    def rate_hz(self, name: str, window=30):
+        """Decorator to calculate the frequency of a function call."""
+        buf: deque = self.__rate_buf.setdefault(name, deque(maxlen=window))
+
+        def decorator(callable):
+            @functools.wraps(callable)
+            def wrapper(*args, **kwargs):
+                last = self.__rate_last.get(name, 0)
+                now = time.monotonic()
+                buf.append(now - last)
+                self.__rate_last[name] = now
+                self.__rate_fps[name] = 1.0 / max((sum(buf) / len(buf), 1e-6))
+                return callable(*args, **kwargs)
+
+            return wrapper
+
+        return decorator
 
 
 def main():
