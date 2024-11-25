@@ -292,7 +292,7 @@ class PIDNode(Node):
         keypress = chr(msg.data)
 
         # Disable the use of the depth sensor (current depth always reads 0)
-        if keypress == "q":
+        if keypress == "/":
             self.using_depth = not self.using_depth
             self.log_kp(f"Using depth sensor for control: {self.using_depth}")
             if not self.using_depth:
@@ -302,9 +302,9 @@ class PIDNode(Node):
             if keypress == "h":
                 self.log_kp("Press 'c' to tune PID parameters")
                 if self.using_depth:
-                    self.log_kp("Press 'q' to disable depth reading from sensor")
+                    self.log_kp("Press '/' to disable depth reading from sensor")
                 else:
-                    self.log_kp("Press 'q' to enable depth reading from sensor")
+                    self.log_kp("Press '/' to enable depth reading from sensor")
             elif keypress == "c":
                 self.log_kp("Tuning PID parameters, press 'c' again to stop")
                 self.tuning = True
@@ -360,9 +360,9 @@ class PIDNode(Node):
                 f"Current coefficient: {self.current_variable}"
             )
             if self.using_depth:
-                self.log_kp("Press 'q' to disable depth reading from sensor")
+                self.log_kp("Press '/' to disable depth reading from sensor")
             else:
-                self.log_kp("Press 'q' to enable depth reading from sensor")
+                self.log_kp("Press '/' to enable depth reading from sensor")
 
         if self.current_axis is not None and self.current_variable is not None:
             if keypress in ",.":
