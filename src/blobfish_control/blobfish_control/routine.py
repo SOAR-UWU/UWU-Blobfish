@@ -9,13 +9,14 @@ Strategy for sending it forward in a straight line.
 #!/usr/bin/env python3
 import os
 import time
+from collections import deque
 
 import rclpy
 import yaml
 from geometry_msgs.msg import Twist, Vector3
+from rcl_interfaces.msg import Log
 from rclpy.node import Node
 from std_msgs.msg import Char
-from rcl_interfaces.msg import Log
 
 STRAT_STATE_SETPOINTS = "/blobfish/state_setpoints"
 STRAT_SPEED_SETPOINTS = "/blobfish/speed_setpoint"
@@ -36,7 +37,9 @@ class StrategyRocket(Node):
         _kp_log_pub = self.create_publisher(Log, KEYPRESS_OUT_TOPIC, 0)
         self.log_kp = lambda x: _kp_log_pub.publish(Log(name=self.get_name(), msg=x))
 
-        self._state_setpoint_pub = self.create_publisher(Twist, STRAT_STATE_SETPOINTS, 10)
+        self._state_setpoint_pub = self.create_publisher(
+            Twist, STRAT_STATE_SETPOINTS, 10
+        )
         self._speed_setpoint_pub = self.create_publisher(
             Vector3, STRAT_SPEED_SETPOINTS, 10
         )
@@ -44,10 +47,12 @@ class StrategyRocket(Node):
         self.declare_parameter("config_path", "")
 
         self.instruction_set = []
-
-        self.dni = False
+        self.cur_instructions = deque()
+        self.is_waiting = False
+        self.is_running = False
 
         self.create_timer(1 / UPDATE_ROUTINE, self.get_routine)
+        self.create_timer(1 / 60, self.execute_instruction)
 
     def _validate(self, i: dict):
         assert isinstance(i, dict)
@@ -70,11 +75,11 @@ class StrategyRocket(Node):
 
         elif k == "rph":
             assert isinstance(v, list)
-            assert len(v) == 2
-            for ls in range(len(v)):
-                assert len(v[ls]) == 3
-                for val in range(len(v[ls])):
-                    v[ls][val] = float(v[ls][val])                
+            assert len(v) == 3
+            for val in range(len(v)):
+                v[val] = float(v[val])
+
+        # TODO: handle position setpoints when they become relevant
 
     def get_routine(self):
         """Updates instruction set to reflect whatever's in the config file"""
@@ -124,8 +129,20 @@ class StrategyRocket(Node):
         )
 
     def _on_wait(self, t):
-        self.get_logger().info(f"waiting for {t}")
-        time.sleep(t)
+        if not self.is_running:
+            self.is_waiting = False
+            self.get_logger().info("Wait interrupted.")
+            return
+        if self.is_waiting:
+            if time.monotonic() - self.wait_start > self.wait_dur:
+                self.is_waiting = False
+                self.get_logger().info(f"waited for {self.wait_dur}")
+            return
+
+        self.wait_dur = t
+        self.wait_start = time.monotonic()
+        self.is_waiting = True
+        self.get_logger().info(f"waiting for {self.wait_dur}")
 
     def _on_update_speed(self, s: list):
         self.get_logger().info(f"setting speed to {s}")
@@ -135,13 +152,13 @@ class StrategyRocket(Node):
 
     def _on_update_state(self, s: list):
         self.get_logger().info(f"setting state to {s}")
-        ax, ay, az = s[0]
-        lx, ly, lz = s[1]
+        ax, ay, az = s
+        # lx, ly, lz = s[1]
 
         rph = Twist()
-        rph.linear.x = lx
-        rph.linear.y = ly
-        rph.linear.z = lz
+        # rph.linear.x = lx
+        # rph.linear.y = ly
+        # rph.linear.z = lz
 
         rph.angular.x = ax
         rph.angular.y = ay
@@ -150,44 +167,56 @@ class StrategyRocket(Node):
         self._state_setpoint_pub.publish(rph)
         self.get_logger().info(f"state set to {s}")
 
-    # Finish routine
-    def execute_routine(self):
-        self.get_logger().info("Executing routine...")
+    def execute_instruction(self):
+        if self.is_running and len(self.cur_instructions) == 0:
+            self.get_logger().info("Routine complete.")
+            self.is_running = False
+            self.is_waiting = False
+            return
+        if not self.is_running:
+            if len(self.cur_instructions) > 0:
+                self.get_logger().info("Routine interrupted.")
+                self.cur_instructions.clear()
+            return
 
-        self.dni = True
-        for i, v in self.instruction_set:
+        if self.is_waiting:
+            self._on_wait(None)
+            return
+
+        while len(self.cur_instructions) > 0:
+            i, v = self.cur_instructions.popleft()
             if i == "speed":
                 self._on_update_speed(v)
             elif i == "wait":
                 self._on_wait(v)
+                return
             elif i == "rph":
                 self._on_update_state(v)
             else:
                 self.get_logger().warn(f"Invalid instruction {i}")
 
-        self.get_logger().info("Current routine complete.")
-
-        self.instruction_set = []
-        self.dni = False
+    # Finish routine
+    def execute_routine(self):
+        self.get_logger().info("Executing routine...")
+        self.is_running = True
+        self.cur_instructions = deque(self.instruction_set)
 
     def keypress_callback(self, msg: Char):
         keypress = chr(msg.data)
 
         if keypress == "h":
-            if self.dni:
-                self.log_kp("Currently executing...")
-            else:
-                self.log_kp("Press e to execute current routine.")
-                self.log_kp("Press r to refresh current routine.")
-
-        if self.dni:
-            pass
+            self.log_kp("Press e to execute current routine.")
+            self.log_kp("Press r to refresh current routine.")
+            self.log_kp("Press q to interrupt routine.")
         else:
             if keypress == "e":
                 self.execute_routine()
 
             elif keypress == "r":
                 self.get_routine()
+
+            elif keypress == "q":
+                self.is_running = False
 
 
 def main(args=None):
