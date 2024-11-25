@@ -26,6 +26,7 @@ KEYPRESS_OUT_TOPIC = "/kpout"
 
 UPDATE_ROUTINE = 4
 
+# TODO: keypress to pause routine
 
 class StrategyRocket(Node):
     valid_params = {"speed": [0.0, 0.0, 0.0], "wait": 0, "rph": Twist()}
