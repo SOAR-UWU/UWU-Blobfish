@@ -29,7 +29,7 @@ setup(
             "manual_setpoint = blobfish_control.manual_setpoints:main",
             "base_strategy = blobfish_control.base_strategy:main",
             "sauvc_2024 = blobfish_control.sauvc_2024:main",
-            "rocket = blobfish_control.rocket:main",
+            "routine = blobfish_control.routine:main",
         ],
     },
 )
