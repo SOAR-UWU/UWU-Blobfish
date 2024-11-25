@@ -1,5 +1,15 @@
 - speed: [0.0, 0.0, -0.5]
 
+# # Later when we get the depth values
+# - speed: [0.0, 0.0, 0.0]
+# - rph: [0.0, 0.0, 0.0]
+# - wait: 1
+# - speed: [0.0, 0.0, DOWNWARDS_DEPTH]
+# - wait: 3
+# - speed: [0.5, 0.0, NEUTRAL_DEPTH]
+# - wait: 15
+# # Simulate out of control situation so we can film the E-stop.
+# - speed: [0.0, 0.0, 1.0]
 
 # For testing the routine node itself.
 # - speed: [0.0, 0.0, 0.0]
