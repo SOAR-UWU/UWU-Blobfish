@@ -1,4 +1,5 @@
 import os
+import time
 
 import numpy as np
 import rclpy
@@ -26,6 +27,10 @@ DEPTH_TOPIC = "/blobfish/depth"
 KEYPRESS_TOPIC = "/keypress"
 KEYPRESS_OUT_TOPIC = "/kpout"
 SPEED_SETPOINTS_TOPIC = "/blobfish/speed_setpoint"
+# TODO: The logic of automatically setting state_setpoint to the new position after
+# moving based only on speed might be reusable.
+GAME_SETPOINTS_TOPIC = "/blobfish/game_setpoint"
+GAME_RESET_TIME = 0.3
 
 
 NODE_NAME = "pid_node"
@@ -91,7 +96,7 @@ class PIDNode(Node):
         self.setpoint_yaw = 0.0
         self.setpoint_x = 0.0
         self.setpoint_y = 0.0
-        self.setpoint_depth = 0.0
+        self.setpoint_depth = -0.5
 
         self.speed = Vector3(x=0.0, y=0.0, z=0.0)
         self.speed_coeff = self.get_parameter("speed_coeff").value
@@ -114,6 +119,7 @@ class PIDNode(Node):
         self.create_subscription(Float32, DEPTH_TOPIC, self.read_depth, QOS)
         # Deprecated, use set_setpoints instead to move.
         self.create_subscription(Vector3, SPEED_SETPOINTS_TOPIC, self.set_speed, 10)
+        self.create_subscription(Twist, GAME_SETPOINTS_TOPIC, self.set_game, 10)
 
         # Variable to buffer depth to publish it together with the other values
         self.current_depth = 0.0
@@ -123,6 +129,10 @@ class PIDNode(Node):
         self.unit = 0.003
         self.using_depth = True
         self.log_kp = lambda x: _kp_log_pub.publish(Log(name=self.get_name(), msg=x))
+
+        # Game stuff
+        self.game_ctrl_state = Twist()
+        self.__last_game_set = None
 
     # NOTE: Updating params wont update the config file. This is to prevent infinite
     # loops. Changes to params via other means are only temporary until the config
@@ -234,6 +244,8 @@ class PIDNode(Node):
         cur_r, cur_p, cur_h = rot.as_euler("xyz", degrees=True)
         cur_x, cur_y = msg.p.position.x, msg.p.position.y
         cur_z = self.current_depth if self.using_depth else msg.p.position.z
+        # Temporary for game.
+        self.reset_game_setpoint(cur_r, cur_p, cur_h, cur_x, cur_y, cur_z)
 
         # Convert position error to local frame, see proof.webp in this pkg folder
         cos_h, sin_h = np.cos(np.radians(cur_h)), np.sin(np.radians(cur_h))
@@ -267,6 +279,21 @@ class PIDNode(Node):
         # val.linear.x = self.speed * self.speed_coeff
         # val.linear.y = 0.0   # not correcting for y axis (sideways movement)
 
+        # Game Override
+        if self.__last_game_set is not None:
+            ovr = self.game_ctrl_state
+            if ovr.linear.x != 0.0:
+                val.linear.x = ovr.linear.x
+            if ovr.linear.y != 0.0:
+                val.linear.y = ovr.linear.y
+            if ovr.linear.z != 0.0:
+                val.linear.z = ovr.linear.z
+            if ovr.angular.x != 0.0:
+                val.angular.x = ovr.angular.x
+            if ovr.angular.y != 0.0:
+                val.angular.y = ovr.angular.y
+            if ovr.angular.z != 0.0:
+                val.angular.z = ovr.angular.z
         self.output_pid.publish(val)
 
     def read_depth(self, msg: Float32):
@@ -285,6 +312,26 @@ class PIDNode(Node):
 
     def set_speed(self, msg: Vector3):
         self.speed = msg
+
+    def set_game(self, msg: Twist):
+        self.__last_game_set = time.monotonic()
+        self.game_ctrl_state = msg
+
+    def reset_game_setpoint(self, r, p, h, x, y, z):
+        if self.__last_game_set is None:
+            return
+        if time.monotonic() - self.__last_game_set < GAME_RESET_TIME:
+            return
+        self.__last_game_set = None
+        self.game_ctrl_state = Twist()
+
+        # Only let some changes be permanent.
+        # self.setpoint_roll = r
+        # self.setpoint_pitch = p
+        self.setpoint_yaw = h
+        self.setpoint_x = x
+        self.setpoint_y = y
+        self.setpoint_depth = z
 
     # TODO: Remove most tuning keypresses. Tuning from pid.yaml is easier, and this
     # reduces the amount of reserved keypresses.

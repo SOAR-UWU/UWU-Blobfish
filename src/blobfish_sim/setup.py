@@ -28,6 +28,7 @@ setup(
             "sim_pos_imu = blobfish_sim.pos_imu:main",
             "sim_depth = blobfish_sim.depth:main",
             "sim_arduino = blobfish_sim.arduino:main",
+            "sim_game = blobfish_sim.game:main",
         ],
     },
 )
