@@ -45,7 +45,7 @@
         <sensor name="${name}/imu_sensor" type="imu">
           <pose relative_to="__model__" degrees="true">0 0 0 0 0 0</pose>
           <always_on>1</always_on>
-          <update_rate>800</update_rate>
+          <update_rate>40</update_rate>
           <topic>blobfish/imu</topic>
 
           <!-- TODO: Make sure this matches the real IMU now that we have the data. -->
@@ -59,7 +59,7 @@
         <sensor name="${name}/rgbd_camera" type="rgbd_camera">
           <pose relative_to="__model__">0.15 0 0 0 0 0</pose>
           <always_on>1</always_on>
-          <update_rate>30</update_rate>
+          <update_rate>15</update_rate>
           <topic>blobfish/rgbd</topic>
 
           <camera>
@@ -71,7 +71,7 @@
         </sensor>
         <sensor name="${name}/depth_sensor" type="altimeter">
           <always_on>1</always_on>
-          <update_rate>800</update_rate>
+          <update_rate>40</update_rate>
           <topic>blobfish/depth</topic>
         </sensor>
 

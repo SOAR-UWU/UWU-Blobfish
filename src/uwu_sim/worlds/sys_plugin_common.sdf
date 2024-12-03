@@ -8,8 +8,8 @@
   Also see list: https://gazebosim.org/api/sim/8/namespacegz_1_1sim_1_1systems.html
   -->
 <sdf version="1.11">
-  <physics name="1ms" type="ode">
-    <max_step_size>0.001</max_step_size>
+  <physics name="10ms" type="ode">
+    <max_step_size>0.010</max_step_size>
     <real_time_factor>1.0</real_time_factor>
   </physics>
 
