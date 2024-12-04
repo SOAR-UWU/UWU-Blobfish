@@ -11,7 +11,8 @@ from .base_bridge import create_bridge
 GZ_TOPIC = "/gz/keyboard/keypress"
 GAME_TOPIC = "/blobfish/game_setpoint"
 LIN_MAG = 0.2
-ROT_MAG = 0.4
+DEP_MAG = 1.0
+ROT_MAG = 0.6
 
 
 def map_keypress(msg: Int32, node: Node) -> Optional[Twist]:
@@ -59,11 +60,11 @@ def map_keypress(msg: Int32, node: Node) -> Optional[Twist]:
             return out
         # move up
         elif typed in "eE":
-            out.linear.z = LIN_MAG * 2
+            out.linear.z = DEP_MAG
             return out
         # move down
         elif typed in "qQ":
-            out.linear.z = -LIN_MAG * 2
+            out.linear.z = -DEP_MAG
             return out
         # roll left
         elif typed in "zZ":

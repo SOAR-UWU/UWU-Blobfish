@@ -30,7 +30,7 @@ SPEED_SETPOINTS_TOPIC = "/blobfish/speed_setpoint"
 # TODO: The logic of automatically setting state_setpoint to the new position after
 # moving based only on speed might be reusable.
 GAME_SETPOINTS_TOPIC = "/blobfish/game_setpoint"
-GAME_RESET_TIME = 0.3
+GAME_RESET_TIME = 0.2
 
 
 NODE_NAME = "pid_node"
