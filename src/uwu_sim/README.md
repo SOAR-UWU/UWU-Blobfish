@@ -15,6 +15,7 @@ If Gazebo is acting weird (blank render screen, loading old worlds only), make s
 - Gazebo Advanced Tutorial Index Page: <https://gazebosim.org/api/sim/8/tutorials.html>
   - Includes tutorials on every feature for advanced users. Of particular interest below:
   - **Maritime**: <https://gazebosim.org/api/sim/8/tutorials.html#autotoc_md428>
+  - Actual Location of all API tutorial files: <https://github.com/gazebosim/gz-sim/tree/gz-sim8/tutorials/files>
   - Migration from Gazebo classic: <https://gazebosim.org/api/sim/8/tutorials.html#autotoc_md421>
 - Xacro Template Engine Guide: <https://github.com/ros/xacro/wiki>
   - Componentize URDF/SDF files.
